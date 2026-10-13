@@ -44,6 +44,15 @@ export default function HomeQuotes() {
       .finally(() => setLoading(false));
   }, []);
 
+  const quoteLength = selected?.quote_text.length ?? 0;
+  const quoteSizeClass = quoteLength > 480
+    ? "quote-size-extra-long"
+    : quoteLength > 300
+      ? "quote-size-long"
+      : quoteLength > 170
+        ? "quote-size-medium"
+        : "";
+
   function showAnotherPair() {
     if (quotes.length === 0) return;
     if (quotes.length > 1) {
@@ -65,7 +74,7 @@ export default function HomeQuotes() {
         sizes="(max-width: 720px) 100vw, calc(100vw - 244px)"
       />
       <div className="quote-image-shade" />
-      <div className="quote-image-content" aria-live="polite">
+      <div className={`quote-image-content ${quoteSizeClass}`} aria-live="polite">
         {selected ? (
           <>
             <blockquote>{cleanQuote(selected.quote_text)}</blockquote>
