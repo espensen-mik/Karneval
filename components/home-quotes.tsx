@@ -13,6 +13,9 @@ type Quote = {
   category: string;
 };
 
+function formatQuote(text: string) {
+  return text.trim().replace(/^[“„"]+|[”"]+$/g, "").trim();
+}
 export default function HomeQuotes() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [selected, setSelected] = useState<Quote | null>(null);
@@ -48,7 +51,7 @@ export default function HomeQuotes() {
           <>
             <span className="quote-feature-mark" aria-hidden="true">“</span>
             <span className="quote-feature-category">{selected.category}</span>
-            <blockquote>{selected.quote_text}</blockquote>
+            <blockquote>{formatQuote(selected.quote_text)}</blockquote>
             <div className="quote-feature-bottom">
               <div className="quote-feature-attribution">
                 <strong>{selected.person_name}</strong>
