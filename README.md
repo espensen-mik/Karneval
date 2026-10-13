@@ -1,11 +1,20 @@
 # Sjælen af Karneval
 
-Internt researchværktøj til at samle viden, kilder og senere data om Aalborg Karneval.
+Internt researchværktøj til at samle viden, kilder og perspektiver om Aalborg Karneval.
 
-## Første version
+## Udvikling
 
-Starter med en wiki og et kilderegister. Indholdet er endnu ikke koblet til Supabase.
+Projektet bruger Next.js App Router og deployes via Vercel fra GitHub.
 
-## Sikkerhed
+### Citatarkiv
 
-Dette repository er i øjeblikket offentligt. Brug ikke repository'et til interne kilder, rå spørgeskemadata, personoplysninger eller hemmelige nøgler, før synligheden er ændret og appen har adgangskontrol.
+Citatsiden ligger på `/citater`. Den bruger Supabase REST API fra en server route og kræver disse Vercel environment variables:
+
+- `SUPABASE_URL`: projektets URL
+- `SUPABASE_PUBLISHABLE_KEY`: projektets publishable key (eller legacy anon key)
+
+Kør migrationsfilerne i `supabase/migrations` i Supabase SQL Editor, i tidsstempelrækkefølge. Citatindsendelser bliver synlige straks efter indsendelse. De tilladte kategorier er Generel, Parade, Kildeparken, Børnekarneval og Gløden.
+
+## Adgang og data
+
+Der er ingen login eller godkendelse på citatsiden i denne testversion. Linket giver adgang til at læse og indsende citater, så brug kun testindhold, som må være offentligt. Supabase-nøglen skal ligge som server environment variable i Vercel og må ikke indsættes i kildekoden.
