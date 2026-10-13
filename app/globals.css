@@ -100,7 +100,7 @@ button { font: inherit; }
 .content-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 21px 0 13px; color: #848ba0; font-size: 11px; }
 .result-count { color: #888ea1; font-size: 9px; letter-spacing: .12em; }
 .article-list { display: grid; }
-.article-row { display: grid; grid-template-columns: 102px minmax(0, 1fr) 24px; gap: 20px; align-items: start; padding: 23px 0; border-top: 1px solid var(--line); }
+.article-row { display: grid; grid-template-columns: 145px minmax(0, 1fr) 24px; gap: 20px; align-items: start; padding: 23px 0; border-top: 1px solid var(--line); }
 .article-category { padding-top: 5px; color: var(--red); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
 .article-row h2 { margin: 0 0 8px; color: var(--navy); font: 500 23px/1.13 "Funnel Display", sans-serif; letter-spacing: -.02em; }
 .article-row p { max-width: 610px; margin: 0; color: #67718b; font-size: 12px; line-height: 1.65; }
