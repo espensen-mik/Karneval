@@ -1,41 +1,35 @@
 import Link from "next/link";
-
-const kinds = ["Alle typer", "Webkilder", "Arkivmateriale", "Rapporter", "Interviews"];
+import { sources } from "@/lib/research-data";
 
 export default function SourcesPage() {
   return (
     <div className="page-wrap">
       <header className="topbar">
-        <div className="breadcrumbs"><Link href="/">RESEARCHRUM</Link><i>/</i> Kilderegister</div>
-        <div className="topbar-status"><span className="status-dot" /> Kilder kan registreres her</div>
+        <div className="breadcrumbs"><Link href="/">RESEARCHRUM</Link><i>/</i> Kilder</div>
+        <div className="topbar-status"><span className="status-dot" /> {sources.length} kilder</div>
       </header>
       <section className="subpage-hero">
-        <div className="eyebrow"><span /> DOKUMENTATION & SPOR</div>
-        <h1>Kilderegister<span className="title-period">.</span></h1>
-        <p>Et samlet register over kilder fra nettet, arkiver og samtaler — med tydelig vej tilbage til belægget.</p>
+        <div className="eyebrow">DOKUMENTATION & SPOR</div>
+        <h1>Kilder<span className="title-period">.</span></h1>
+        <p>Et register over det materiale, som wikiartiklerne bygger på. Kilderne beskrives med ophav, type, placering og metode, hvor det er relevant.</p>
       </section>
-      <div className="source-toolbar">
-        <div className="search-placeholder"><span>⌕</span> Søg på titel, person eller årstal <kbd>⌘ K</kbd></div>
-        <button className="quiet-button" type="button" disabled>+ Registrér kilde</button>
-      </div>
-      <div className="filter-row">
-        {kinds.map((kind, index) => <span className={index === 0 ? "filter-chip selected" : "filter-chip"} key={kind}>{kind}</span>)}
-        <span className="filter-spacer" />
-        <span className="result-count">0 KILDER</span>
-      </div>
-      <section className="source-empty">
-        <div className="empty-symbol">↗</div>
-        <div className="eyebrow muted">REGISTERET ER KLAR</div>
-        <h2>Første kilde mangler kun en registrering</h2>
-        <p>Her samler vi kildeoplysninger, arkivsignaturer, links, sidetal og noter om relevans.</p>
-        <div className="source-fields">
-          <span>Titel</span><span>Ophav</span><span>År</span><span>Type</span><span>Placering</span>
-        </div>
+      <div className="source-toolbar"><span>ALLE REGISTREREDE KILDER</span><span className="result-count">{sources.length} KILDER</span></div>
+      <section className="source-list">
+        {sources.map((source, index) => (
+          <article className="source-card" id={source.id} key={source.id}>
+            <span className="source-symbol" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+            <div>
+              <div className="source-kind">{source.kind}</div>
+              <h2>{source.title}</h2>
+              <p className="source-creator">{source.creator} · {source.date}</p>
+              <p>{source.description}</p>
+              {source.method && <p className="source-method"><strong>Metode / forbehold:</strong> {source.method}</p>}
+            </div>
+            <div className="source-location">{source.location}{source.url && <a href={source.url} target="_blank" rel="noreferrer">Åbn kilde ↗</a>}</div>
+          </article>
+        ))}
       </section>
-      <footer className="page-footer">
-        <span>SJÆLEN AF KARNEVAL <i>·</i> KILDEREGISTER</span>
-        <span>LINKS, ARKIVER, RAPPORTER & SAMTALER</span>
-      </footer>
+      <footer className="page-footer"><span>SJÆLEN AF KARNEVAL <i>·</i> KILDEREGISTER</span><span>OPDATERET I TAKT MED RESEARCHEN</span></footer>
     </div>
   );
 }
