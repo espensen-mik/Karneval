@@ -77,7 +77,7 @@ button { font: inherit; }
 .section-heading { display: flex; justify-content: space-between; align-items: end; margin: 42px 0 19px; }
 .section-heading h2 { margin: 8px 0 0; color: var(--navy); font: 500 29px/1.1 "Funnel Display", sans-serif; letter-spacing: -.025em; }
 .section-index { padding-bottom: 5px; color: #969bae; font-size: 9px; letter-spacing: .14em; }
-.area-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.area-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .area-card {
   position: relative; min-height: 167px; padding: 22px 23px; border: 1px solid var(--line); background: var(--white);
   transition: border-color .18s, transform .18s;
@@ -147,6 +147,7 @@ button { font: inherit; }
 .image-strip { position: relative; height: 185px; overflow: hidden; margin: 28px 0 5px; background: var(--rose); }
 .image-strip img { object-fit: cover; object-position: center 40%; }
 @media (max-width: 1040px) {
+  .area-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .page-wrap { padding-right: 36px; padding-left: 36px; }
   .hero { gap: 26px; grid-template-columns: minmax(0,1fr) minmax(240px,.8fr); }
   .hero-image { height: 305px; }
