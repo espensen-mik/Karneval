@@ -6,10 +6,10 @@ create table if not exists public.quotes (
   id uuid primary key default gen_random_uuid(),
   quote_text text not null
     check (char_length(btrim(quote_text)) between 1 and 3000),
-  person_name text
-    check (person_name is null or char_length(btrim(person_name)) <= 160),
-  person_title text
-    check (person_title is null or char_length(btrim(person_title)) <= 200),
+  person_name text not null
+    check (char_length(btrim(person_name)) between 1 and 160),
+  person_title text not null
+    check (char_length(btrim(person_title)) between 1 and 200),
   organization text
     check (organization is null or char_length(btrim(organization)) <= 200),
   quote_source text
