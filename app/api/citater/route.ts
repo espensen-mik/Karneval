@@ -92,3 +92,45 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Indsendelsen kunne ikke læses. Prøv igen." }, { status: 400 });
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  const supabase = config();
+  if (!supabase) return NextResponse.json({ error: "Citater er ikke sat op endnu." }, { status: 503 });
+  try {
+    const body = await request.json();
+    const id = typeof body.id === "string" ? body.id : "";
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return NextResponse.json({ error: "Citatets id er ugyldigt." }, { status: 400 });
+    const quote_text = typeof body.quote_text === "string" ? body.quote_text.trim() : "";
+    const person_name = typeof body.person_name === "string" ? body.person_name.trim() : "";
+    const person_title = typeof body.person_title === "string" ? body.person_title.trim() : "";
+    const organization = typeof body.organization === "string" ? body.organization.trim() : "";
+    const quote_source = typeof body.quote_source === "string" ? body.quote_source.trim() : "";
+    const category = typeof body.category === "string" ? body.category : "";
+    if (quote_text.length < 1 || quote_text.length > 3000) return NextResponse.json({ error: "Citatet skal være mellem 1 og 3.000 tegn." }, { status: 400 });
+    if (person_name.length < 1 || person_name.length > 160) return NextResponse.json({ error: "Navnet skal være mellem 1 og 160 tegn." }, { status: 400 });
+    if (person_title.length < 1 || person_title.length > 200) return NextResponse.json({ error: "Titel skal være mellem 1 og 200 tegn." }, { status: 400 });
+    if (organization.length > 200 || quote_source.length > 500) return NextResponse.json({ error: "Et af de valgfrie felter er for langt." }, { status: 400 });
+    if (!categories.includes(category as (typeof categories)[number])) return NextResponse.json({ error: "Vælg en gyldig kategori." }, { status: 400 });
+    const url = new URL(`${supabase.url}/rest/v1/quotes`); url.searchParams.set("id", `eq.${id}`); url.searchParams.set("select", columns);
+    const response = await fetch(url, { method: "PATCH", headers: headers(supabase.key, "return=representation"), body: JSON.stringify({ quote_text, person_name, person_title, organization: organization || null, quote_source: quote_source || null, category, publication_consent: true, status: "approved" }), cache: "no-store" });
+    if (!response.ok) return NextResponse.json({ error: "Citatet kunne ikke opdateres. Kontrollér Supabase-adgangspolitikkerne." }, { status: 502 });
+    const rows = await response.json();
+    if (!rows[0]) return NextResponse.json({ error: "Citatet blev ikke fundet." }, { status: 404 });
+    return NextResponse.json(rows[0], { headers: { "Cache-Control": "no-store" } });
+  } catch { return NextResponse.json({ error: "Redigeringen kunne ikke læses. Prøv igen." }, { status: 400 }); }
+}
+
+export async function DELETE(request: NextRequest) {
+  const supabase = config();
+  if (!supabase) return NextResponse.json({ error: "Citater er ikke sat op endnu." }, { status: 503 });
+  const id = request.nextUrl.searchParams.get("id") || "";
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return NextResponse.json({ error: "Citatets id er ugyldigt." }, { status: 400 });
+  try {
+    const url = new URL(`${supabase.url}/rest/v1/quotes`); url.searchParams.set("id", `eq.${id}`); url.searchParams.set("select", "id");
+    const response = await fetch(url, { method: "DELETE", headers: headers(supabase.key, "return=representation"), cache: "no-store" });
+    if (!response.ok) return NextResponse.json({ error: "Citatet kunne ikke slettes. Kontrollér Supabase-adgangspolitikkerne." }, { status: 502 });
+    const rows = await response.json();
+    if (!rows[0]) return NextResponse.json({ error: "Citatet blev ikke fundet." }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch { return NextResponse.json({ error: "Sletningen kunne ikke gennemføres. Prøv igen." }, { status: 502 }); }
+}
