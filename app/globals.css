@@ -229,3 +229,35 @@ button { font: inherit; }
 .quotes-empty button { display: block; margin-top: 8px; border: 0; padding: 0; background: none; color: var(--red); cursor: pointer; font: inherit; }
 @media (max-width: 1040px) { .quotes-layout { grid-template-columns: minmax(260px, .85fr) minmax(0, 1.15fr); gap: 28px; } }
 @media (max-width: 720px) { .quotes-layout { grid-template-columns: 1fr; gap: 28px; padding-top: 0; } .quotes-entry { padding: 18px; } .quotes-collection-top h2 { font-size: 23px; } .quote-card blockquote { font-size: 16px; } }
+
+
+/* Quote-first overview and public edit controls */
+.home-quote-heading { margin-top: 34px; }
+.home-quotes { padding: 0 0 8px; }
+.home-quotes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.home-quote-card { min-height: 205px; padding: 20px; border: 1px solid var(--line); background: var(--white); }
+.home-quote-card blockquote { margin: 16px 0 20px; color: var(--navy); font: 400 17px/1.5 "Funnel Display", sans-serif; }
+.home-quotes-empty { grid-column: 1 / -1; margin: 0; padding: 26px; border: 1px solid var(--line); color: #69738e; font-size: 13px; line-height: 1.6; }
+.home-quotes-link { margin-top: 14px; }
+.area-card-paused { background: var(--soft); color: #9298aa; cursor: default; }
+.area-card-paused h3, .area-card-paused p { color: #81889b; }
+.nav-link-disabled { color: #9b9fb0; cursor: default; }
+.nav-link-disabled .nav-icon { color: #b2b5c1; }
+.quote-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.quote-actions button { min-height: 31px; padding: 0 10px; border: 1px solid var(--line); background: var(--white); color: var(--navy); cursor: pointer; font: 500 10px "Funnel Sans", sans-serif; }
+.quote-actions button:hover { border-color: var(--red); color: var(--red); }
+.quote-actions button:disabled { opacity: .55; cursor: wait; }
+.quote-actions .quote-action-save { border-color: var(--red); background: var(--red); color: var(--white); }
+.quote-actions .quote-action-save:hover { background: #c92325; color: var(--white); }
+.quote-actions .quote-action-delete { color: #ae3838; }
+.quote-edit-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.wiki-paused-panel { max-width: 780px; padding: 85px 0 100px; }
+.wiki-paused-panel h1 { margin: 17px 0; color: var(--navy); font: 500 clamp(42px, 5vw, 62px)/1.04 "Funnel Display", sans-serif; letter-spacing: -.04em; }
+.wiki-paused-panel p { max-width: 610px; margin: 0; color: #66718d; font-size: 15px; line-height: 1.75; }
+@media (max-width: 720px) {
+  .home-quotes-grid { grid-template-columns: 1fr; gap: 9px; }
+  .home-quote-card { min-height: 0; padding: 18px; }
+  .home-quote-card blockquote { font-size: 16px; }
+  .quote-edit-form { grid-template-columns: 1fr; }
+  .wiki-paused-panel { padding: 58px 0 72px; }
+}
