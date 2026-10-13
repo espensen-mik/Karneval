@@ -38,7 +38,11 @@ create index if not exists quotes_status_created_at_idx
 
 alter table public.quotes enable row level security;
 
+revoke all on public.quotes from anon, authenticated;
 grant select, insert on public.quotes to anon, authenticated;
+
+drop policy if exists "Visitors can submit quotes for review" on public.quotes;
+drop policy if exists "Visitors can read approved quotes" on public.quotes;
 
 create policy "Visitors can submit quotes for review"
   on public.quotes
