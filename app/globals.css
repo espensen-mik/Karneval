@@ -762,3 +762,36 @@ a.discover-card:hover { border-color: #d9b5b4; transform: translateY(-2px); }
 
 /* Keep the search field aligned with both custom dropdowns. */
 .quote-search { margin: 0; }
+
+/* Scale featured quotes down as their copy grows. */
+.quote-image-content.quote-size-medium { width: min(940px, calc(100% - 140px)); }
+.quote-image-content.quote-size-medium blockquote { font-size: clamp(30px, 3.45vw, 50px); line-height: 1.2; }
+.quote-image-content.quote-size-long { width: min(960px, calc(100% - 130px)); }
+.quote-image-content.quote-size-long blockquote { font-size: clamp(27px, 3.05vw, 44px); line-height: 1.22; }
+.quote-image-content.quote-size-extra-long {
+  width: min(960px, calc(100% - 130px));
+  bottom: clamp(28px, 5vh, 54px);
+  max-height: calc(100% - 112px);
+  overflow-y: auto;
+  padding-right: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff70 transparent;
+}
+.quote-image-content.quote-size-extra-long blockquote { font-size: clamp(23px, 2.65vw, 38px); line-height: 1.24; }
+.quote-image-content.quote-size-extra-long::-webkit-scrollbar { width: 5px; }
+.quote-image-content.quote-size-extra-long::-webkit-scrollbar-thumb { border-radius: 5px; background: #ffffff70; }
+@media (max-width: 720px) {
+  .quote-image-content.quote-size-medium { width: calc(100% - 44px); }
+  .quote-image-content.quote-size-medium blockquote { font-size: clamp(27px, 7vw, 36px); line-height: 1.2; }
+  .quote-image-content.quote-size-long { width: calc(100% - 44px); }
+  .quote-image-content.quote-size-long blockquote { font-size: clamp(24px, 6.3vw, 32px); line-height: 1.22; }
+  .quote-image-content.quote-size-extra-long {
+    width: calc(100% - 44px);
+    bottom: 28px;
+    max-height: calc(100% - 92px);
+  }
+  .quote-image-content.quote-size-extra-long blockquote { font-size: clamp(21px, 5.6vw, 28px); line-height: 1.24; }
+}
+@media (max-height: 740px) and (min-width: 721px) {
+  .quote-image-content.quote-size-extra-long { max-height: calc(100% - 86px); bottom: 24px; }
+}
