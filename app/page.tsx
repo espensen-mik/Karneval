@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const areas = [
@@ -21,6 +22,27 @@ const areas = [
   },
 ];
 
+const moments = [
+  {
+    src: "/billeder/55273845778_8ebea9cb99_k.jpg",
+    alt: "Farverig performer folder et stort blåt kostume ud blandt publikum med paraplyer.",
+    caption: "Kostumer, bevægelse og mødet med publikum",
+    tag: "I GADEN",
+  },
+  {
+    src: "/billeder/55273948584_9aa30abbdd_k.jpg",
+    alt: "Børn vinker fra en dekoreret vogn under karnevalsoptoget.",
+    caption: "Karnevallet set fra optoget",
+    tag: "SAMMEN",
+  },
+  {
+    src: "/billeder/55272795752_cde3fef626_k.jpg",
+    alt: "Udklædte børn og voksne samles til en aktivitet indendørs.",
+    caption: "En fest, der også skaber plads til børnene",
+    tag: "FÆLLESSKAB",
+  },
+];
+
 export default function Home() {
   return (
     <div className="page-wrap">
@@ -39,17 +61,21 @@ export default function Home() {
           </p>
           <Link className="text-link" href="/wiki">Gå på opdagelse <span>↗</span></Link>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="sun-disc" />
-          <span className="art-star star-a">✳</span>
-          <span className="art-star star-b">✦</span>
-          <span className="art-dot dot-a" />
-          <span className="art-dot dot-b" />
-          <span className="art-caption">BYEN<br />SOM SCENE</span>
-        </div>
-        <div className="hero-index">AK / 01</div>
+        <figure className="hero-photo">
+          <Image
+            src="/billeder/55294814841_c655854eda_k.jpg"
+            alt="Karnevalist i rød fjerdragt og stort hovedpryd."
+            fill
+            priority
+            sizes="(max-width: 680px) 100vw, 48vw"
+            style={{ objectPosition: "42% center" }}
+          />
+          <figcaption>
+            <span>ET ØJEBLIK FRA KARNEVALLET</span>
+            <strong>Farver, frihed, fællesskab</strong>
+          </figcaption>
+          <span className="photo-index">01 / 09</span>
+        </figure>
       </section>
 
       <section className="stats-row" aria-label="Indhold i researchrummet">
@@ -57,6 +83,32 @@ export default function Home() {
         <div className="stat"><span className="stat-number">—</span><span>Registrerede kilder</span></div>
         <div className="stat"><span className="stat-number">—</span><span>Åbne spørgsmål</span></div>
         <p>Indhold tilføjes, efterhånden som researchen bliver samlet og gennemgået.</p>
+      </section>
+
+      <section className="visual-section">
+        <div className="section-heading visual-heading">
+          <div>
+            <div className="eyebrow muted">GLIMT AF KARNEVALET</div>
+            <h2>En by fuld af liv</h2>
+          </div>
+          <span className="section-index">BILLEDER / 01—03</span>
+        </div>
+        <div className="photo-grid">
+          {moments.map((moment, index) => (
+            <figure className="photo-card" key={moment.src}>
+              <div className="photo-frame">
+                <Image
+                  src={moment.src}
+                  alt={moment.alt}
+                  fill
+                  sizes="(max-width: 680px) 100vw, (max-width: 950px) 50vw, 33vw"
+                />
+                <span className="photo-tag">{moment.tag}</span>
+              </div>
+              <figcaption><span>0{index + 1}</span>{moment.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
 
       <section className="section-heading">
