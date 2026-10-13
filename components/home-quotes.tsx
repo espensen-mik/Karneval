@@ -34,7 +34,7 @@ export default function HomeQuotes() {
         {quotes.slice(0, 3).map((quote) => (
           <article className="home-quote-card" key={quote.id}>
             <span className="quote-category">{quote.category}</span>
-            <blockquote>“{quote.quote_text}”</blockquote>
+            <blockquote>{quote.quote_text}</blockquote>
             <div className="quote-attribution"><strong>{quote.person_name}</strong><span>{quote.person_title}{quote.organization ? " · " + quote.organization : ""}</span></div>
           </article>
         ))}
