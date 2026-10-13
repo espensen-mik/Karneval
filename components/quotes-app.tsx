@@ -57,8 +57,15 @@ export default function QuotesApp() {
     setSuccess("");
     const form = event.currentTarget;
     const data = new FormData(form);
-    const payload = Object.fromEntries(data.entries());
-    payload.publication_consent = data.get("publication_consent") === "on";
+    const payload = {
+      quote_text: String(data.get("quote_text") || ""),
+      person_name: String(data.get("person_name") || ""),
+      person_title: String(data.get("person_title") || ""),
+      organization: String(data.get("organization") || ""),
+      quote_source: String(data.get("quote_source") || ""),
+      category: String(data.get("category") || "Generel"),
+      publication_consent: data.get("publication_consent") === "on",
+    };
     try {
       const response = await fetch("/api/citater", {
         method: "POST",
