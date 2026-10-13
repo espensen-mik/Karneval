@@ -18,10 +18,8 @@ export default function Sidebar() {
         <span className="brand-mark">K</span>
         <span>
           <span className="brand-name">Sjælen af Karneval</span>
-          <small>AALBORG KARNEVAL</small>
         </span>
       </Link>
-      <div className="nav-label">RESEARCHRUM</div>
       <nav className="primary-nav" aria-label="Hovedmenu">
         {links.map((link) => {
           const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -37,11 +35,7 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <div className="sidebar-bottom">
-        <div className="sidebar-rule" />
-        <div className="sidebar-note">Et fælles arbejdsrum for viden, kilder og perspektiver.</div>
-        <div className="version-label">FØRSTE UDGAVE <span>0.2</span></div>
-      </div>
+
     </aside>
   );
 }
