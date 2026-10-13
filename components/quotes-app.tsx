@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const categories = ["Generel", "Parade", "Kildeparken", "Børnekarneval", "Gløden"] as const;
 type Quote = {
@@ -14,6 +14,70 @@ type Quote = {
   created_at: string;
 };
 type SortOrder = "newest" | "oldest" | "name-asc" | "name-desc";
+
+type FilterOption = { value: string; label: string };
+function FilterDropdown({ label, value, options, onChange }: {
+  label: string;
+  value: string;
+  options: FilterOption[];
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selected = options.find((option) => option.value === value)?.label ?? value;
+
+  useEffect(() => {
+    if (!open) return;
+    function closeOutside(event: PointerEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    }
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+
+  return (
+    <div className={`quote-select custom-filter ${open ? "is-open" : ""}`} ref={rootRef}>
+      <span className="filter-label">{label}</span>
+      <button
+        className="filter-trigger"
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`${label}: ${selected}`}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className="filter-trigger-value">{selected}</span>
+        <svg className="filter-trigger-chevron" aria-hidden="true" viewBox="0 0 16 16">
+          <path d="m4 6 4 4 4-4" />
+        </svg>
+      </button>
+      {open && (
+        <div className="filter-menu" role="listbox" aria-label={label}>
+          {options.map((option) => (
+            <button
+              className={`filter-option ${option.value === value ? "selected" : ""}`}
+              type="button"
+              role="option"
+              aria-selected={option.value === value}
+              key={option.value}
+              onClick={() => { onChange(option.value); setOpen(false); }}
+            >
+              <span>{option.label}</span>
+              {option.value === value && <span className="filter-option-check" aria-hidden="true">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function QuotesApp() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -193,23 +257,28 @@ export default function QuotesApp() {
           <span className="result-count">{filtered.length} {filtered.length === 1 ? "citat" : "citater"}</span>
         </div>
         <div className="quote-filter-bar">
-          <label className="quote-search">Søg i citater
+          <label className="quote-search">
+            <span className="filter-label">Søg i citater</span>
+            <span className="quote-search-icon" aria-hidden="true" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Søg efter citat, person, kilde…" />
           </label>
-          <label className="quote-select">Kategori
-            <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
-              <option>Alle kategorier</option>
-              {categories.map((category) => <option key={category}>{category}</option>)}
-            </select>
-          </label>
-          <label className="quote-select">Sortér
-            <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value as SortOrder)}>
-              <option value="newest">Nyeste først</option>
-              <option value="oldest">Ældste først</option>
-              <option value="name-asc">Navn A–Å</option>
-              <option value="name-desc">Navn Å–A</option>
-            </select>
-          </label>
+          <FilterDropdown
+            label="Kategori"
+            value={categoryFilter}
+            options={[{ value: "Alle kategorier", label: "Alle kategorier" }, ...categories.map((category) => ({ value: category, label: category }))]}
+            onChange={setCategoryFilter}
+          />
+          <FilterDropdown
+            label="Sortér"
+            value={sortOrder}
+            options={[
+              { value: "newest", label: "Nyeste først" },
+              { value: "oldest", label: "Ældste først" },
+              { value: "name-asc", label: "Navn A–Å" },
+              { value: "name-desc", label: "Navn Å–A" },
+            ]}
+            onChange={(value) => setSortOrder(value as SortOrder)}
+          />
         </div>
 
         {loading && <div className="quotes-empty">Henter citater…</div>}
