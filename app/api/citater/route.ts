@@ -6,8 +6,12 @@ const categories = ["Generel", "Parade", "Kildeparken", "Børnekarneval", "Glød
 const columns = "id,quote_text,person_name,person_title,organization,quote_source,category,created_at";
 
 function config() {
-  const url = process.env.SUPABASE_URL?.replace(/\/$/, "");
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const url = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)?.replace(/\/$/, "");
+  const key =
+    process.env.SUPABASE_PUBLISHABLE_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) return null;
   return { url, key };
 }
