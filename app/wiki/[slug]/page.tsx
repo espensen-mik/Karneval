@@ -2,12 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { articles, sources } from "@/lib/research-data";
+import WikiPaused from "@/components/wiki-paused";
+
+const WIKI_ENABLED = false;
 
 export function generateStaticParams() {
   return articles.map((article) => ({ slug: article.slug }));
 }
 
 export default async function WikiArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  if (!WIKI_ENABLED) return <WikiPaused />;
   const { slug } = await params;
   const article = articles.find((item) => item.slug === slug);
   if (!article) notFound();
