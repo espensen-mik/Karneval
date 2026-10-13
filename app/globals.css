@@ -759,3 +759,6 @@ a.discover-card:hover { border-color: #d9b5b4; transform: translateY(-2px); }
   .quote-filter-bar { grid-template-columns: 1fr; }
   .quote-search, .quote-select.custom-filter { grid-template-rows: 16px 47px; }
 }
+
+/* Keep the search field aligned with both custom dropdowns. */
+.quote-search { margin: 0; }
