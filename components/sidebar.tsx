@@ -7,6 +7,7 @@ const links = [
   { href: "/", label: "Overblik", icon: "⌂" },
   { href: "/wiki", label: "Wiki", icon: "▤" },
   { href: "/kilder", label: "Kilder", icon: "↗" },
+  { href: "/citater", label: "Citater", icon: "“" },
 ];
 
 export default function Sidebar() {
