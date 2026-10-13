@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/", label: "Overblik", icon: "⌂" },
-  { href: "/wiki", label: "Wiki (pause)", icon: "▤", disabled: true },
   { href: "/kilder", label: "Kilder", icon: "↗" },
   { href: "/citater", label: "Citater", icon: "“" },
 ];
@@ -24,9 +23,6 @@ export default function Sidebar() {
       <nav className="primary-nav" aria-label="Hovedmenu">
         {links.map((link) => {
           const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
-          if (link.disabled) {
-            return <span className="nav-link nav-link-disabled" aria-disabled="true" key={link.href}><span className="nav-icon" aria-hidden="true">{link.icon}</span><span>{link.label}</span></span>;
-          }
           return (
             <Link className={active ? "nav-link active" : "nav-link"} href={link.href} key={link.href}>
               <span className="nav-icon" aria-hidden="true">{link.icon}</span>
