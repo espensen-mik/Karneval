@@ -61,22 +61,6 @@ export default function Home() {
           </div>
         ))}
       </section>
-      <section className="section-heading">
-        <div><div className="eyebrow muted">INDHOLD</div><h2>Et sted at begynde</h2></div>
-        <span className="section-index">01 — 03</span>
-      </section>
-      <section className="area-grid">
-        {modules.map((module) => (
-          <Link className="area-card" href={module.href} key={module.number}>
-            <span className="area-icon" aria-hidden="true">{module.icon}</span>
-            <span className="area-number">{module.number}</span>
-            <h3>{module.title}</h3>
-            <p>{module.description}</p>
-            <span className="card-link">{module.label} <b>↗</b></span>
-          </Link>
-        ))}
-      </section>
-
       <section className="image-strip" aria-hidden="true">
         <Image src="/billeder/55272795752_cde3fef626_k.jpg" alt="" fill sizes="(max-width: 720px) 100vw, 900px" />
       </section>
