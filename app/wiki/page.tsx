@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { articles } from "@/lib/research-data";
+import WikiPaused from "@/components/wiki-paused";
+
+const WIKI_ENABLED = false;
 
 export default function WikiPage() {
+  if (!WIKI_ENABLED) return <WikiPaused />;
   return (
     <div className="page-wrap">
       <header className="topbar">
