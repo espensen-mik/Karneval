@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const links = [
@@ -35,7 +36,13 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
+      <Link className="sidebar-credit" href="/">
+        <Image src="/logo/kun_naut_blaa_outline.svg" alt="KARMANAUT" width={64} height={64} />
+        <span>
+          <strong>SjæleSystem</strong>
+          <small>leveret af KARMANAUT</small>
+        </span>
+      </Link>
     </aside>
   );
 }
