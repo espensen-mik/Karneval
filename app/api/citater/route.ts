@@ -31,7 +31,16 @@ export async function GET() {
     url.searchParams.set("order", "created_at.desc");
     url.searchParams.set("limit", "1000");
     const response = await fetch(url, { headers: headers(supabase.key), cache: "no-store" });
-    if (!response.ok) return NextResponse.json({ error: "Citaterne kunne ikke hentes." }, { status: 502 });
+    if (!response.ok) {
+      const status = response.status;
+      console.error(`Supabase quote GET failed with HTTP ${status}`);
+      const hint = status === 401 || status === 403
+        ? "Kontrollér Supabase URL, publishable key og adgangspolitikker."
+        : status === 400 || status === 404
+          ? "Kontrollér at citatmigrationerne er kørt, og at tabellen public.quotes findes."
+          : "Kontrollér Supabase-forbindelsen og Vercel-loggene.";
+      return NextResponse.json({ error: `Supabase svarede med HTTP ${status}. ${hint}` }, { status: 502 });
+    }
     return NextResponse.json(await response.json(), { headers: { "Cache-Control": "no-store" } });
   } catch {
     return NextResponse.json({ error: "Forbindelsen til citatarkivet fejlede." }, { status: 502 });
