@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Quote = {
@@ -9,16 +9,23 @@ type Quote = {
   person_name: string;
   person_title: string;
   organization: string | null;
-  quote_source: string | null;
   category: string;
 };
 
-function formatQuote(text: string) {
+const images = [
+  "/billeder/55294814841_c655854eda_k.jpg",
+  "/billeder/55273845778_8ebea9cb99_k.jpg",
+  "/billeder/55272795752_cde3fef626_k.jpg",
+];
+
+function cleanQuote(text: string) {
   return text.trim().replace(/^[“„"]+|[”"]+$/g, "").trim();
 }
+
 export default function HomeQuotes() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [selected, setSelected] = useState<Quote | null>(null);
+  const [imageIndex, setImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,52 +38,56 @@ export default function HomeQuotes() {
         const items = Array.isArray(result) ? result : [];
         setQuotes(items);
         if (items.length) setSelected(items[Math.floor(Math.random() * items.length)]);
+        setImageIndex(Math.floor(Math.random() * images.length));
       })
       .catch(() => setQuotes([]))
       .finally(() => setLoading(false));
   }, []);
 
-  function showAnotherQuote() {
-    if (quotes.length < 2) return;
-    const otherQuotes = quotes.filter((quote) => quote.id !== selected?.id);
-    setSelected(otherQuotes[Math.floor(Math.random() * otherQuotes.length)]);
+  function showAnotherPair() {
+    if (quotes.length === 0) return;
+    if (quotes.length > 1) {
+      const otherQuotes = quotes.filter((quote) => quote.id !== selected?.id);
+      setSelected(otherQuotes[Math.floor(Math.random() * otherQuotes.length)]);
+    }
+    setImageIndex((current) => (current + 1 + Math.floor(Math.random() * (images.length - 1))) % images.length);
   }
 
   return (
-    <div className="home-quotes">
-      <div className="quote-feature" aria-live="polite">
-        {loading ? (
-          <p className="quote-feature-message">Henter citater…</p>
-        ) : selected ? (
+    <section className="quote-image-stage" aria-label="Et citat fra Aalborg Karneval">
+      <Image
+        key={images[imageIndex]}
+        className="quote-image-photo"
+        src={images[imageIndex]}
+        alt=""
+        fill
+        priority
+        sizes="(max-width: 720px) 100vw, calc(100vw - 244px)"
+      />
+      <div className="quote-image-shade" />
+      <div className="quote-image-content" aria-live="polite">
+        {selected ? (
           <>
-            <span className="quote-feature-mark" aria-hidden="true">“</span>
-            <span className="quote-feature-category">{selected.category}</span>
-            <blockquote>{formatQuote(selected.quote_text)}</blockquote>
-            <div className="quote-feature-bottom">
-              <div className="quote-feature-attribution">
-                <strong>{selected.person_name}</strong>
-                <span>{selected.person_title}{selected.organization ? " · " + selected.organization : ""}</span>
-              </div>
-              {selected.quote_source && <span className="quote-feature-source">{selected.quote_source}</span>}
+            <blockquote>{cleanQuote(selected.quote_text)}</blockquote>
+            <div className="quote-image-attribution">
+              <strong>{selected.person_name}</strong>
+              <span>{selected.person_title}{selected.organization ? " · " + selected.organization : ""}</span>
             </div>
           </>
         ) : (
-          <p className="quote-feature-message">De første stemmer fra karneval bliver samlet her.</p>
+          <blockquote>{loading ? "…" : "Her er plads til den første stemme fra karneval."}</blockquote>
         )}
       </div>
-      <div className="quote-feature-actions">
-        <button
-          className="quote-refresh"
-          type="button"
-          onClick={showAnotherQuote}
-          disabled={loading || quotes.length < 2}
-          aria-label="Vis et nyt tilfældigt citat"
-        >
-          <span aria-hidden="true">↻</span>
-          <span>{quotes.length < 2 ? "Flere citater på vej" : "Et nyt citat"}</span>
-        </button>
-        <Link className="quote-all-link" href="/citater">Se alle citater <span>↗</span></Link>
-      </div>
-    </div>
+      <button
+        className="quote-image-refresh"
+        type="button"
+        onClick={showAnotherPair}
+        disabled={loading || quotes.length === 0}
+        aria-label="Vis et nyt citat og billede"
+        title="Vis et nyt citat og billede"
+      >
+        <span aria-hidden="true">↻</span>
+      </button>
+    </section>
   );
 }
