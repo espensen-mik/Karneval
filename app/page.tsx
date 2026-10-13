@@ -5,6 +5,7 @@ import { articles, sources } from "@/lib/research-data";
 const modules = [
   { number: "01", title: "Wiki", description: "Kildebaseret viden om historie, mennesker og organisation.", href: "/wiki", label: "Åbn wiki", icon: "↗" },
   { number: "02", title: "Kilder", description: "Rapporter, arkivfund og officielle dokumenter samlet ét sted.", href: "/kilder", label: "Se kilder", icon: "⌕" },
+  { number: "03", title: "Citater", description: "Udsagn, stemmer og perspektiver fra karneval.", href: "/citater", label: "Se citater", icon: "“" },
 ];
 
 export default function Home() {
@@ -38,7 +39,7 @@ export default function Home() {
 
       <section className="section-heading">
         <div><div className="eyebrow muted">INDHOLD</div><h2>Et sted at begynde</h2></div>
-        <span className="section-index">01 — 02</span>
+        <span className="section-index">01 — 03</span>
       </section>
       <section className="area-grid">
         {modules.map((module) => (
