@@ -23,6 +23,9 @@ export default function QuotesApp() {
   const [loadError, setLoadError] = useState("");
   const [formError, setFormError] = useState("");
   const [success, setSuccess] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState("");
+  const [actionSaving, setActionSaving] = useState(false);
 
   async function loadQuotes() {
     setLoading(true);
@@ -84,6 +87,28 @@ export default function QuotesApp() {
     }
   }
 
+  async function updateQuote(event: FormEvent<HTMLFormElement>, id: string) {
+    event.preventDefault(); setActionSaving(true); setActionError("");
+    const data = new FormData(event.currentTarget);
+    const payload = { quote_text: String(data.get("quote_text") || ""), person_name: String(data.get("person_name") || ""), person_title: String(data.get("person_title") || ""), organization: String(data.get("organization") || ""), quote_source: String(data.get("quote_source") || ""), category: String(data.get("category") || "Generel") };
+    try {
+      const response = await fetch("/api/citater", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, ...payload }) });
+      const result = await response.json(); if (!response.ok) throw new Error(result.error || "Citatet kunne ikke opdateres.");
+      setQuotes((current) => current.map((quote) => quote.id === id ? result : quote)); setEditingId(null);
+    } catch (error) { setActionError(error instanceof Error ? error.message : "Citatet kunne ikke opdateres."); }
+    finally { setActionSaving(false); }
+  }
+
+  async function deleteQuote(id: string) {
+    if (!window.confirm("Slet citatet permanent? Denne handling kan ikke fortrydes.")) return;
+    setActionSaving(true); setActionError("");
+    try {
+      const response = await fetch("/api/citater?id=" + encodeURIComponent(id), { method: "DELETE" });
+      const result = await response.json(); if (!response.ok) throw new Error(result.error || "Citatet kunne ikke slettes.");
+      setQuotes((current) => current.filter((quote) => quote.id !== id));
+    } catch (error) { setActionError(error instanceof Error ? error.message : "Citatet kunne ikke slettes."); }
+    finally { setActionSaving(false); }
+  }
   return (
     <div className="page-wrap">
       <header className="topbar">
@@ -148,11 +173,26 @@ export default function QuotesApp() {
             <div className="quote-list">
               {filtered.map((quote) => (
                 <article className="quote-card" key={quote.id}>
-                  <span className="quote-mark" aria-hidden="true">“</span>
-                  <span className="quote-category">{quote.category}</span>
-                  <blockquote>{quote.quote_text}</blockquote>
-                  <div className="quote-attribution"><strong>{quote.person_name}</strong><span>{quote.person_title}{quote.organization ? ` · ${quote.organization}` : ""}</span></div>
-                  {quote.quote_source && <div className="quote-source">Kilde · {quote.quote_source}</div>}
+                  {editingId === quote.id ? (
+                    <form className="quote-edit-form" onSubmit={(event) => void updateQuote(event, quote.id)}>
+                      <label className="form-field form-wide">Citat<textarea name="quote_text" rows={4} maxLength={3000} required defaultValue={quote.quote_text} /></label>
+                      <label className="form-field">Navn<input name="person_name" maxLength={160} required defaultValue={quote.person_name} /></label>
+                      <label className="form-field">Titel<input name="person_title" maxLength={200} required defaultValue={quote.person_title} /></label>
+                      <label className="form-field">Firma eller organisation<input name="organization" maxLength={200} defaultValue={quote.organization || ""} /></label>
+                      <label className="form-field">Kilde eller anledning<input name="quote_source" maxLength={500} defaultValue={quote.quote_source || ""} /></label>
+                      <label className="form-field form-wide">Kategori<select name="category" defaultValue={quote.category}>{categories.map((category) => <option key={category}>{category}</option>)}</select></label>
+                      {actionError && <p className="form-message error form-wide" role="alert">{actionError}</p>}
+                      <div className="quote-actions form-wide"><button className="quote-action-save" type="submit" disabled={actionSaving}>{actionSaving ? "Gemmer…" : "Gem ændringer"}</button><button className="quote-action-cancel" type="button" onClick={() => { setEditingId(null); setActionError(""); }}>Annuller</button></div>
+                    </form>
+                  ) : (
+                    <>
+                      <span className="quote-mark" aria-hidden="true">“</span><span className="quote-category">{quote.category}</span>
+                      <blockquote>{quote.quote_text}</blockquote>
+                      <div className="quote-attribution"><strong>{quote.person_name}</strong><span>{quote.person_title}{quote.organization ? " · " + quote.organization : ""}</span></div>
+                      {quote.quote_source && <div className="quote-source">Kilde · {quote.quote_source}</div>}
+                      <div className="quote-actions">{actionError && <span className="form-message error" role="alert">{actionError}</span>}<button className="quote-action-cancel" type="button" onClick={() => { setEditingId(quote.id); setActionError(""); }}>Redigér</button><button className="quote-action-delete" type="button" disabled={actionSaving} onClick={() => void deleteQuote(quote.id)}>Slet</button></div>
+                    </>
+                  )}
                 </article>
               ))}
             </div>
