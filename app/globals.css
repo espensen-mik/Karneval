@@ -506,3 +506,94 @@ a.discover-card:hover { border-color: #d9b5b4; transform: translateY(-2px); }
   .quote-modal-actions button { flex: 1; }
   .quote-edit-form { grid-template-columns: 1fr; }
 }
+
+/* Refined quote filters */
+.quote-filter-bar {
+  grid-template-columns: minmax(0, 1fr) minmax(168px, 220px) minmax(168px, 205px);
+  gap: 18px;
+  align-items: end;
+  padding: 19px 0 23px;
+}
+.quote-search, .quote-select {
+  position: relative;
+  min-width: 0;
+  gap: 9px;
+  color: #66718d;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .035em;
+  text-transform: none;
+}
+.quote-search::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 30px;
+  bottom: 17px;
+  width: 6px;
+  height: 1.5px;
+  background: #8790a5;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+.quote-search::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 15px;
+  bottom: 21px;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid #8790a5;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.quote-search input, .quote-select select {
+  width: 100%;
+  height: 51px;
+  min-height: 51px;
+  margin: 0;
+  padding: 0 16px;
+  border: 1px solid #eeecee;
+  border-bottom-color: #d8d5d9;
+  border-radius: 2px;
+  background: #faf9f9;
+  color: var(--navy);
+  font: 400 15px/1.2 "Funnel Sans", sans-serif;
+  letter-spacing: 0;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+.quote-search input { padding-left: 43px; }
+.quote-search input::placeholder { color: #8a91a3; opacity: 1; }
+.quote-select select {
+  appearance: none;
+  padding-right: 43px;
+  background-color: #faf9f9;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='m3 5 4 4 4-4' stroke='%2366718d' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+.quote-search input:hover, .quote-select select:hover {
+  border-color: #d7c9ca;
+  background-color: #fff;
+}
+.quote-search:focus-within::before { background: var(--red); }
+.quote-search:focus-within::after { border-color: var(--red); }
+.quote-search input:focus, .quote-select select:focus {
+  border-color: #d8d5d9;
+  border-bottom: 2px solid var(--red);
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 3px 10px #0c1e4508;
+}
+@media (max-width: 1040px) {
+  .quote-filter-bar { grid-template-columns: minmax(0, 1fr) minmax(150px, 190px) minmax(150px, 180px); gap: 13px; }
+}
+@media (max-width: 720px) {
+  .quote-filter-bar { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .quote-search, .quote-select { font-size: 11px; }
+  .quote-search input, .quote-select select { height: 47px; min-height: 47px; font-size: 14px; }
+  .quote-search::before { bottom: 16px; }
+  .quote-search::after { bottom: 20px; }
+}
