@@ -38,10 +38,10 @@ button { font: inherit; }
 .nav-icon { width: 18px; color: var(--red); font-size: 16px; text-align: center; }
 .nav-dot { width: 5px; height: 5px; margin-left: auto; border-radius: 50%; background: var(--red); }
 .sidebar-bottom { margin-top: auto; }
-.sidebar-credit { display: flex; flex-direction: column; align-items: flex-start; gap: 11px; margin-top: auto; padding: 24px 8px 0; }
-.sidebar-credit img { display: block; width: 64px; height: 64px; object-fit: contain; }
+.sidebar-credit { display: flex; flex-direction: column; align-items: center; gap: 11px; margin-top: auto; padding: 24px 8px 0; color: #1a323f; text-align: center; }
+.sidebar-credit img { display: block; width: 80px; height: 80px; object-fit: contain; }
 .sidebar-credit strong { display: block; font-size: 14px; }
-.sidebar-credit small { display: block; margin-top: 4px; color: var(--navy); font-size: 11px; }
+.sidebar-credit small { display: block; margin-top: 4px; font-size: 11px; }
 .sidebar-rule { height: 1px; margin: 0 8px 14px; background: #d9cecf; }
 .sidebar-note { padding: 0 9px; color: #626c88; font-size: 11px; line-height: 1.55; }
 .version-label { display: flex; justify-content: space-between; margin: 22px 9px 0; color: #85859a; font-size: 9px; letter-spacing: .12em; }

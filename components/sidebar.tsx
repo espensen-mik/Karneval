@@ -36,13 +36,13 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <Link className="sidebar-credit" href="/">
-        <Image src="/logo/kun_naut_blaa_outline.svg" alt="KARMANAUT" width={64} height={64} />
+      <a className="sidebar-credit" href="https://www.karmanaut.dk">
+        <Image src="/logo/kun_naut_blaa_outline.svg" alt="KARMANAUT" width={80} height={80} />
         <span>
           <strong>SjæleSystem</strong>
           <small>leveret af KARMANAUT</small>
         </span>
-      </Link>
+      </a>
     </aside>
   );
 }
