@@ -4,25 +4,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/", label: "Overblik", icon: "◫" },
+  { href: "/", label: "Overblik", icon: "⌂" },
   { href: "/wiki", label: "Wiki", icon: "▤" },
-  { href: "/kilder", label: "Kilderegister", icon: "⌕" },
+  { href: "/kilder", label: "Kilder", icon: "↗" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-
   return (
     <aside className="sidebar">
       <Link className="brand" href="/">
-        <span className="brand-mark">S</span>
+        <span className="brand-mark">K</span>
         <span>
-          <strong>Sjælen af Karneval</strong>
-          <small>RESEARCHRUM</small>
+          <span className="brand-name">Sjælen af Karneval</span>
+          <small>AALBORG KARNEVAL</small>
         </span>
       </Link>
-
-      <div className="nav-label">ARBEJDSRUM</div>
+      <div className="nav-label">RESEARCHRUM</div>
       <nav className="primary-nav" aria-label="Hovedmenu">
         {links.map((link) => {
           const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -35,13 +33,10 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
       <div className="sidebar-bottom">
-        <div className="sidebar-note">
-          <span className="note-spark">✳</span>
-          <p>En levende samling af fakta, stemmer og spor.</p>
-        </div>
-        <div className="version-label">FØRSTE UDGAVE <span>0.1</span></div>
+        <div className="sidebar-rule" />
+        <div className="sidebar-note">Et fælles arbejdsrum for viden, kilder og perspektiver.</div>
+        <div className="version-label">FØRSTE UDGAVE <span>0.2</span></div>
       </div>
     </aside>
   );
