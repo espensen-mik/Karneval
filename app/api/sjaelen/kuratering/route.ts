@@ -1,6 +1,8 @@
+import { requireResearchSession } from "@/lib/research-auth";
+import { sourceConfig, sourceHeaders } from "@/lib/server-db";
 import { NextRequest, NextResponse } from "next/server";
 import { normalizeTerm } from "@/lib/soul-analysis";
-import { sourceConfig, sourceHeaders } from "@/lib/source-register";
+
 import { SOUL_COLORS } from "@/lib/soul-types";
 import { soulRows, SOUL_TABLES } from "@/lib/soul-server";
 
@@ -9,6 +11,7 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const noStore = { "Cache-Control": "no-store" };
 
 export async function GET() {
+  const denied = await requireResearchSession(); if (denied) return denied;
   try {
     const [categories, synonyms, links] = await Promise.all(Object.values(SOUL_TABLES).map((table) => soulRows(table)));
     return NextResponse.json({ categories, synonyms, links }, { headers: noStore });
@@ -33,6 +36,7 @@ function terms(value: unknown, minimum = 0) {
 }
 
 async function mutate(request: NextRequest, method: "POST" | "PATCH" | "DELETE") {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const config = sourceConfig();
   if (!config) return NextResponse.json({ error: "Kuratering er ikke sat op endnu." }, { status: 503 });
   let body: Record<string, unknown>;

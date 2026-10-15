@@ -1,3 +1,5 @@
+import { requireResearchSession } from "@/lib/research-auth";
+import { sourceConfig as config, sourceHeaders as headers } from "@/lib/server-db";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -5,27 +7,8 @@ export const dynamic = "force-dynamic";
 const categories = ["Generel", "Parade", "Kildeparken", "Børnekarneval", "Gløden"] as const;
 const columns = "id,quote_text,person_name,person_title,organization,quote_source,category,created_at";
 
-function config() {
-  const url = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)?.replace(/\/$/, "");
-  const key =
-    process.env.SUPABASE_PUBLISHABLE_KEY ||
-    process.env.SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  return { url, key };
-}
-
-function headers(key: string, prefer?: string) {
-  return {
-    apikey: key,
-    Authorization: `Bearer ${key}`,
-    "Content-Type": "application/json",
-    ...(prefer ? { Prefer: prefer } : {}),
-  };
-}
-
 export async function GET() {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const supabase = config();
   if (!supabase) return NextResponse.json({ error: "Citater er ikke sat op endnu." }, { status: 503 });
 
@@ -52,6 +35,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const supabase = config();
   if (!supabase) return NextResponse.json({ error: "Citater er ikke sat op endnu." }, { status: 503 });
 
@@ -94,6 +78,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const supabase = config();
   if (!supabase) return NextResponse.json({ error: "Citater er ikke sat op endnu." }, { status: 503 });
   try {
@@ -121,6 +106,7 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const supabase = config();
   if (!supabase) return NextResponse.json({ error: "Citater er ikke sat op endnu." }, { status: 503 });
   const id = request.nextUrl.searchParams.get("id") || "";

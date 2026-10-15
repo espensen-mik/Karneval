@@ -1,4 +1,4 @@
-import { sourceConfig, sourceHeaders } from "./source-register";
+import { sourceConfig, sourceHeaders } from "./server-db";
 
 export const SOUL_TABLES = { categories: "soul_categories", synonyms: "soul_synonyms", links: "soul_links" } as const;
 

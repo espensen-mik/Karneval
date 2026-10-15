@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Sidebar from "@/components/sidebar";
+import ResearchShell from "@/components/research-shell";
 
 export const metadata: Metadata = {
   title: "Sjælen af Karneval",
@@ -11,10 +11,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="da">
       <body>
-        <div className="app-frame">
-          <Sidebar />
-          <main className="main-area">{children}</main>
-        </div>
+        <ResearchShell>{children}</ResearchShell>
       </body>
     </html>
   );

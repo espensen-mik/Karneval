@@ -1,9 +1,11 @@
+import { requireResearchSession } from "@/lib/research-auth";
 import { NextResponse } from "next/server";
 import { soulRows } from "@/lib/soul-server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const denied = await requireResearchSession(); if (denied) return denied;
   try {
     const rows = await soulRows("quotes", "id,quote_text,category,quote_source", { status: "eq.approved", publication_consent: "eq.true" });
     return NextResponse.json(rows.map((quote) => ({ id: quote.id, text: quote.quote_text, type: "quote", category: quote.category, source: quote.quote_source, contextHref: `/citater#citat-${quote.id}` })), { headers: { "Cache-Control": "no-store" } });

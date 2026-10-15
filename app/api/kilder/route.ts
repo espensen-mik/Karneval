@@ -1,9 +1,12 @@
+import { requireResearchSession } from "@/lib/research-auth";
+import { sourceConfig, sourceHeaders } from "@/lib/server-db";
 import { NextRequest, NextResponse } from "next/server";
-import { MAX_PDF_BYTES, PDF_BUCKET, SOURCE_COLUMNS, sourceConfig, sourceHeaders, validPdfPath, validSourceDate, validSourceUrl } from "@/lib/source-register";
+import { MAX_PDF_BYTES, PDF_BUCKET, SOURCE_COLUMNS, validPdfPath, validSourceDate, validSourceUrl } from "@/lib/source-register";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const config = sourceConfig();
   if (!config) return NextResponse.json({ error: "Kilderegisteret er ikke sat op endnu." }, { status: 503 });
   try {
@@ -14,6 +17,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const config = sourceConfig();
   if (!config) return NextResponse.json({ error: "Kilderegisteret er ikke sat op endnu." }, { status: 503 });
   let body;

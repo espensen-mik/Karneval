@@ -1,9 +1,12 @@
+import { requireResearchSession } from "@/lib/research-auth";
+import { sourceConfig, sourceHeaders } from "@/lib/server-db";
 import { NextResponse } from "next/server";
-import { PDF_BUCKET, sourceConfig, sourceHeaders } from "@/lib/source-register";
+import { PDF_BUCKET } from "@/lib/source-register";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) return NextResponse.json({ error: "Ugyldig kilde." }, { status: 400 });
   const config = sourceConfig();

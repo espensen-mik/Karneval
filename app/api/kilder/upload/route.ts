@@ -1,8 +1,11 @@
+import { requireResearchSession } from "@/lib/research-auth";
+import { sourceConfig, sourceHeaders } from "@/lib/server-db";
 import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { MAX_PDF_BYTES, PDF_BUCKET, sourceConfig, sourceHeaders } from "@/lib/source-register";
+import { MAX_PDF_BYTES, PDF_BUCKET } from "@/lib/source-register";
 
 export async function POST(request: NextRequest) {
+  const denied = await requireResearchSession(); if (denied) return denied;
   const config = sourceConfig();
   if (!config) return NextResponse.json({ error: "PDF-upload er ikke sat op endnu." }, { status: 503 });
   let body;

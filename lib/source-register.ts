@@ -13,16 +13,6 @@ export type RegisteredSource = {
   created_at: string;
 };
 
-export function sourceConfig() {
-  const url = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)?.replace(/\/$/, "");
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  return url && key ? { url, key } : null;
-}
-
-export function sourceHeaders(key: string, prefer?: string) {
-  return { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...(prefer ? { Prefer: prefer } : {}) };
-}
-
 export function validSourceUrl(value: string) {
   try {
     const url = new URL(value);
