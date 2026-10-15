@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 
 const links = [
@@ -25,11 +26,13 @@ export default function Sidebar() {
         {links.map((link) => {
           const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
           return (
-            <Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen" ? " nav-soul" : ""}`} href={link.href} key={link.href}>
+            <Fragment key={link.href}><Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen" ? " nav-soul" : ""}`} href={link.href}>
               <span className="nav-icon" aria-hidden="true">{link.icon}</span>
               <span>{link.label}</span>
               {active && <span className="nav-dot" />}
             </Link>
+            {link.href === "/sjaelen" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
+            </Fragment>
           );
         })}
       </nav>

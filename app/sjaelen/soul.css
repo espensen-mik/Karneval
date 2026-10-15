@@ -170,3 +170,42 @@
   .soul-footer { display: block; line-height: 2; } .soul-footer > span { display: block; }
 }
 @media (prefers-reduced-motion: reduce) { .soul-node-disc { transition: none; } }
+
+/* The network is the page. Editing and view controls live on /sjaelen/kuratering. */
+.soul-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.soul-stage-page { padding: 14px 24px 10px; }
+.soul-stage-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 30px; margin-bottom: 10px; font-size: 10px; color: #96908b; }
+.soul-stage-toolbar > a { color: #6e737e; font-size: 11px; }
+.soul-stage-toolbar > a:hover { color: var(--red); }
+.soul-stage-page .soul-exploration { min-height: 520px; height: calc(100svh - 106px); border: 0; background: #f4f0e9; }
+.soul-stage-page .soul-map-area { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.soul-stage-page .soul-network { flex: 1; height: auto; min-height: 440px; }
+.soul-stage-help { margin: 0; padding: 10px 16px 15px; text-align: center; color: #969088; font-size: 10px; line-height: 1.5; }
+.soul-stage-key { margin: 12px 0 0; color: #918a83; font-size: 10px; line-height: 1.6; text-align: center; }
+.soul-stage-key > span { padding-inline: 9px; color: #bab0a5; }
+.soul-stage-page .soul-detail { max-height: calc(100svh - 106px); }
+.soul-management-header { padding: 30px 0 25px; }
+.soul-management-header h1 { margin: 0 0 10px; font: 500 clamp(30px, 3.5vw, 48px)/1.1 "Funnel Display", sans-serif; letter-spacing: -.04em; }
+.soul-management-header h1 > span { color: var(--red); }
+.soul-management-header p { margin: 0; color: #7a7d88; font-size: 13px; line-height: 1.7; }
+.soul-view-apply { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--soul-rule); }
+.soul-view-apply p { margin: 0; font-size: 12px; color: #7a7d88; }
+@media (max-width: 1449px) {
+  .soul-stage-page .soul-exploration.has-detail { height: auto; }
+  .soul-stage-page .has-detail .soul-map-area { min-height: calc(100svh - 106px); }
+}
+@media (max-width: 720px) {
+  .soul-stage-page { padding: 10px 12px; }
+  .soul-stage-toolbar { gap: 12px; }
+  .soul-stage-toolbar > span { font-size: 9px; }
+  .soul-stage-toolbar > a { font-size: 10px; }
+  .soul-stage-page .soul-exploration { min-height: 450px; height: calc(100svh - 190px); }
+  .soul-stage-page .soul-network { min-height: 410px; }
+  .soul-stage-page .has-detail .soul-map-area { min-height: calc(100svh - 190px); }
+  .soul-stage-key { font-size: 9px; }
+  .soul-stage-key > span { padding-inline: 3px; }
+  .soul-view-apply { align-items: flex-start; flex-direction: column; }
+  .nav-soul-sub { white-space: nowrap; padding: 10px; }
+}
+
+.soul-view-actions { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }

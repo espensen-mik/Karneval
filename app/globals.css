@@ -41,6 +41,9 @@ button { font: inherit; }
 .nav-link.nav-soul:hover, .nav-link.nav-soul.active { background: #c92325; color: white; }
 .nav-soul .nav-icon, .nav-soul .nav-dot { color: white; }
 .nav-soul .nav-dot { background: white; }
+.nav-soul-sub { display: block; padding: 10px 10px 10px 34px; color: #777b86; font-size: 11px; }
+.nav-soul-sub:hover, .nav-soul-sub.active { color: var(--navy); }
+.nav-soul-sub.active { text-decoration: underline; text-underline-offset: 5px; }
 @media (max-width: 720px) { .nav-link.nav-soul { margin-top: 0; } }
 .quote-row:target { outline: 2px solid var(--red); outline-offset: 7px; scroll-margin-top: 100px; }
 .sidebar-bottom { margin-top: auto; }

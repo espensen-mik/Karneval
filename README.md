@@ -19,7 +19,7 @@ Kør migrationsfilerne i `supabase/migrations` i Supabase SQL Editor, i tidsstem
 
 ### SJÆLEN
 
-`/sjaelen` er et interaktivt SVG-ordnetværk med `d3-force`. Det læser kun offentligt godkendte citaters `quote_text` via `/api/sjaelen`; alle sider fra Supabase læses, så optællingen ikke stopper ved en standardgrænse. Metadata bruges kun til filtrering og kildehenvisninger. Hver citatpost er ét bidrag. Kilder, PDF’er, spørgeskemaer og workshopmateriale indgår ikke endnu; de vises som utilknyttede materialetyper.
+`/sjaelen` er et interaktivt SVG-ordnetværk med `d3-force`. Hovedsiden viser selve netværket. Kuratering, filtre, antal ord og linjeindstillinger ligger på `/sjaelen/kuratering`, som også er tilgængelig som underpunkt i menuen. Visningsvalgene følger med i URL’en, når netværket åbnes fra indstillingerne. Det læser kun offentligt godkendte citaters `quote_text` via `/api/sjaelen`; alle sider fra Supabase læses, så optællingen ikke stopper ved en standardgrænse. Metadata bruges kun til filtrering og kildehenvisninger. Hver citatpost er ét bidrag. Kilder, PDF’er, spørgeskemaer og workshopmateriale indgår ikke endnu; de vises som utilknyttede materialetyper.
 
 Analysen i `lib/soul-analysis.ts` normaliserer Unicode, store/små bogstaver og tegnsætning. `lib/soul-stopwords.ts` er den udvidelige danske stopordsliste. Enkeltord tælles højst én gang pr. bidrag. Vendinger på 2–4 sammenhængende ord kræver gentagelse i mindst to forskellige bidrag og krydser ikke tegnsætning. Som frasegrænser bruges indholdsord; “være” i begyndelsen og “selv” til sidst tillades også. Der foretages ingen automatisk bøjning, oversættelse, synonymafgørelse eller AI-analyse.
 
