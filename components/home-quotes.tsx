@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Quote = {
   id: string;
@@ -21,6 +21,9 @@ export default function HomeQuotes({ images }: { images: string[] }) {
   const [selected, setSelected] = useState<Quote | null>(null);
   const [imageIndex, setImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [cycle, setCycle] = useState(0);
 
   useEffect(() => {
     setImageIndex(Math.floor(Math.random() * images.length));
@@ -47,15 +50,33 @@ export default function HomeQuotes({ images }: { images: string[] }) {
         ? "quote-size-medium"
         : "";
 
-  function showAnotherPair() {
+  const showAnotherPair = useCallback(() => {
     if (quotes.length > 1) {
-      const otherQuotes = quotes.filter((quote) => quote.id !== selected?.id);
-      setSelected(otherQuotes[Math.floor(Math.random() * otherQuotes.length)]);
+      setSelected((current) => {
+        const otherQuotes = quotes.filter((quote) => quote.id !== current?.id);
+        return otherQuotes[Math.floor(Math.random() * otherQuotes.length)];
+      });
     }
     if (images.length > 1) {
       setImageIndex((current) => (current + 1 + Math.floor(Math.random() * (images.length - 1))) % images.length);
     }
-  }
+  }, [quotes, images.length]);
+
+  useEffect(() => {
+    if (!playing) return;
+    let started = performance.now();
+    const timer = window.setInterval(() => {
+      const now = performance.now();
+      if (now - started >= 10_000) {
+        showAnotherPair();
+        started = now;
+      }
+      setProgress((now - started) / 10_000);
+    }, 50);
+    return () => window.clearInterval(timer);
+  }, [playing, cycle, showAnotherPair]);
+
+  const cannotChange = loading || (quotes.length < 2 && images.length < 2);
 
   return (
     <section className="quote-image-stage" aria-label="Et citat fra Aalborg Karneval">
@@ -69,7 +90,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
         sizes="(max-width: 720px) 100vw, calc(100vw - 244px)"
       />}
       <div className="quote-image-shade" />
-      <div className={`quote-image-content ${quoteSizeClass}`} aria-live="polite">
+      <div className={`quote-image-content ${quoteSizeClass}`} aria-live={playing ? "off" : "polite"}>
         {selected ? (
           <>
             <blockquote>{cleanQuote(selected.quote_text)}</blockquote>
@@ -82,16 +103,34 @@ export default function HomeQuotes({ images }: { images: string[] }) {
           <blockquote>{loading ? "…" : "Her er plads til den første stemme fra karneval."}</blockquote>
         )}
       </div>
+      <div className="quote-image-controls">
+      <button
+        className="quote-image-play"
+        type="button"
+        disabled={cannotChange}
+        aria-label={playing ? "Stop automatisk rotation" : "Start automatisk rotation hvert 10. sekund"}
+        aria-pressed={playing}
+        title={playing ? "Stop rotation" : "Play · skift hvert 10. sekund"}
+        onClick={() => { setPlaying((current) => !current); setProgress(0); }}
+      >
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle className="quote-play-track" cx="24" cy="24" r="21" />
+          {playing && <circle className="quote-play-progress" cx="24" cy="24" r="21" pathLength="1" strokeDasharray="1" strokeDashoffset={progress} />}
+          {playing ? <rect x="18" y="18" width="12" height="12" rx="1" /> : <path d="M20 16 L32 24 L20 32 Z" />}
+        </svg>
+        <span>{playing ? "Stop" : "Play"}</span>
+      </button>
       <button
         className="quote-image-refresh"
         type="button"
-        onClick={showAnotherPair}
-        disabled={loading || (quotes.length < 2 && images.length < 2)}
+        onClick={() => { showAnotherPair(); setProgress(0); setCycle((current) => current + 1); }}
+        disabled={cannotChange}
         aria-label="Vis et nyt citat og billede"
         title="Vis et nyt citat og billede"
       >
         <span aria-hidden="true">↻</span>
       </button>
+      </div>
     </section>
   );
 }
