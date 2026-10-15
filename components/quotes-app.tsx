@@ -157,7 +157,6 @@ export default function QuotesApp() {
       organization: String(data.get("organization") || ""),
       quote_source: String(data.get("quote_source") || ""),
       category: String(data.get("category") || "Generel"),
-      publication_consent: data.get("publication_consent") === "on",
     };
     try {
       const response = await fetch("/api/citater", {
@@ -337,10 +336,6 @@ export default function QuotesApp() {
               <label className="form-field">Kilde eller anledning <span>(valgfrit)</span><input name="quote_source" maxLength={500} placeholder="Fx interview, workshop eller spørgeskema" /></label>
               <label className="form-field form-wide">Kategori
                 <select name="category" defaultValue="Generel">{categories.map((category) => <option key={category}>{category}</option>)}</select>
-              </label>
-              <label className="consent-field form-wide">
-                <input type="checkbox" name="publication_consent" required />
-                <span>Jeg har tilladelse til at dele citatet og vise personens navn og oplysninger i dette researchrum.</span>
               </label>
               {formError && <p className="form-message error form-wide" role="alert">{formError}</p>}
               <div className="quote-modal-actions form-wide">

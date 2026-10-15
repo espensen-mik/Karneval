@@ -63,14 +63,12 @@ export async function POST(request: NextRequest) {
     const organization = typeof body.organization === "string" ? body.organization.trim() : "";
     const quote_source = typeof body.quote_source === "string" ? body.quote_source.trim() : "";
     const category = typeof body.category === "string" ? body.category : "";
-    const publication_consent = body.publication_consent === true;
 
     if (quote_text.length < 1 || quote_text.length > 3000) return NextResponse.json({ error: "Citatet skal være mellem 1 og 3.000 tegn." }, { status: 400 });
     if (person_name.length < 1 || person_name.length > 160) return NextResponse.json({ error: "Navnet skal være mellem 1 og 160 tegn." }, { status: 400 });
     if (person_title.length < 1 || person_title.length > 200) return NextResponse.json({ error: "Titel skal være mellem 1 og 200 tegn." }, { status: 400 });
     if (organization.length > 200 || quote_source.length > 500) return NextResponse.json({ error: "Et af de valgfrie felter er for langt." }, { status: 400 });
     if (!categories.includes(category as (typeof categories)[number])) return NextResponse.json({ error: "Vælg en gyldig kategori." }, { status: 400 });
-    if (!publication_consent) return NextResponse.json({ error: "Bekræft, at citatet må vises i researchrummet." }, { status: 400 });
 
     const response = await fetch(`${supabase.url}/rest/v1/quotes?select=${columns}`, {
       method: "POST",
@@ -80,6 +78,8 @@ export async function POST(request: NextRequest) {
         organization: organization || null,
         quote_source: quote_source || null,
         category,
+        // Legacy publication flag required by the existing public-mode policies.
+        // Submissions are published directly; the form has no consent checkbox.
         publication_consent: true,
         status: "approved",
       }),
