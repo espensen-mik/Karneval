@@ -112,6 +112,12 @@ export default function QuotesApp() {
   useEffect(() => { void loadQuotes(); }, []);
 
   useEffect(() => {
+    if (loading || !window.location.hash.startsWith("#citat-")) return;
+    const id = window.location.hash.slice(1);
+    requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: "center" }));
+  }, [loading]);
+
+  useEffect(() => {
     if (!addModalOpen) return;
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === "Escape") setAddModalOpen(false);
@@ -288,7 +294,7 @@ export default function QuotesApp() {
         {!loading && !loadError && filtered.length > 0 && (
           <div className="quote-list">
             {filtered.map((quote) => (
-              <article className="quote-card quote-row" key={quote.id}>
+              <article className="quote-card quote-row" id={`citat-${quote.id}`} key={quote.id}>
                 {editingId === quote.id ? editForm(quote) : (
                   <>
                     <div className="quote-row-main">

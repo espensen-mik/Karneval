@@ -37,6 +37,12 @@ button { font: inherit; }
 .nav-link.active { color: var(--navy); background: var(--white); }
 .nav-icon { width: 18px; color: var(--red); font-size: 16px; text-align: center; }
 .nav-dot { width: 5px; height: 5px; margin-left: auto; border-radius: 50%; background: var(--red); }
+.nav-link.nav-soul { margin-top: 18px; background: var(--red); color: white; font-weight: 600; letter-spacing: .09em; }
+.nav-link.nav-soul:hover, .nav-link.nav-soul.active { background: #c92325; color: white; }
+.nav-soul .nav-icon, .nav-soul .nav-dot { color: white; }
+.nav-soul .nav-dot { background: white; }
+@media (max-width: 720px) { .nav-link.nav-soul { margin-top: 0; } }
+.quote-row:target { outline: 2px solid var(--red); outline-offset: 7px; scroll-margin-top: 100px; }
 .sidebar-bottom { margin-top: auto; }
 .sidebar-credit { display: flex; flex-direction: column; align-items: center; gap: 11px; margin-top: auto; padding: 24px 8px 0; color: #1a323f; text-align: center; }
 .sidebar-credit img { display: block; width: 80px; height: 80px; object-fit: contain; }

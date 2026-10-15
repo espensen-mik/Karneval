@@ -8,6 +8,7 @@ const links = [
   { href: "/", label: "Overblik", icon: "⌂" },
   { href: "/kilder", label: "Kilder", icon: "↗" },
   { href: "/citater", label: "Citater", icon: "“" },
+  { href: "/sjaelen", label: "SJÆLEN", icon: "✳" },
 ];
 
 export default function Sidebar() {
@@ -24,7 +25,7 @@ export default function Sidebar() {
         {links.map((link) => {
           const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
           return (
-            <Link className={active ? "nav-link active" : "nav-link"} href={link.href} key={link.href}>
+            <Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen" ? " nav-soul" : ""}`} href={link.href} key={link.href}>
               <span className="nav-icon" aria-hidden="true">{link.icon}</span>
               <span>{link.label}</span>
               {active && <span className="nav-dot" />}
