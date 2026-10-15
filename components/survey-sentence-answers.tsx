@@ -52,7 +52,7 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
     </div>
     {cheering && createPortal(<div className="sentence-celebration" key={celebration}>
       <div className="sentence-celebration-rays" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} style={{ "--ray-angle": `${index * 30}deg` } as CSSProperties}><span /></i>)}</div>
-      <div className="sentence-celebration-content"><UiIcon className="sentence-celebration-symbol" name="soul" /><p role="status" aria-live="polite">{CHEERS[(celebration - 1) % CHEERS.length]}</p></div>
+      <div className="sentence-celebration-content"><UiIcon className="sentence-celebration-symbol" name="heart" /><p role="status" aria-live="polite">{CHEERS[(celebration - 1) % CHEERS.length]}</p></div>
     </div>, document.body)}
     <button className="sentence-add" type="button" onClick={add} disabled={!items.at(-1)?.trim() || items.length >= 100}>
       <span className="sentence-add-icon" aria-hidden="true">+</span><span><strong>Tilføj endnu en sætning</strong><small>{count ? "Hvad er karneval også for dig?" : "Der er plads til mere end én tanke."}</small></span><UiIcon className="sentence-add-arrow" name="arrow" />
