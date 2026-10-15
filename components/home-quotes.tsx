@@ -78,6 +78,26 @@ export default function HomeQuotes({ images }: { images: string[] }) {
   }, [playing, cycle, showAnotherPair]);
 
   const cannotChange = loading || (quotes.length < 2 && images.length < 2);
+  const refresh = useCallback(() => {
+    showAnotherPair();
+    setProgress(0);
+    setCycle((current) => current + 1);
+  }, [showAnotherPair]);
+
+  useEffect(() => {
+    function handleKey(event: KeyboardEvent) {
+      if (cannotChange || event.defaultPrevented || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (event.code !== "Space" && event.key !== "ArrowRight") return;
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      if (target?.isContentEditable || target?.closest('input, textarea, select, [role="textbox"], [role="combobox"], [role="slider"]')) return;
+      // Space keeps its native action when a link or button has keyboard focus.
+      if (event.code === "Space" && target?.closest('button, a, summary, [role="button"]')) return;
+      event.preventDefault();
+      refresh();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [cannotChange, refresh]);
 
   return (
     <section className="quote-image-stage" aria-label="Et citat fra Aalborg Karneval">
@@ -124,7 +144,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
       <button
         className="quote-image-refresh"
         type="button"
-        onClick={() => { showAnotherPair(); setProgress(0); setCycle((current) => current + 1); }}
+        onClick={refresh}
         disabled={cannotChange}
         aria-label="Vis et nyt citat og billede"
         title="Vis et nyt citat og billede"
