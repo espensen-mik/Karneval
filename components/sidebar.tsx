@@ -41,8 +41,8 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <div className="sidebar-session"><button disabled={loggingOut} onClick={async () => { setLoggingOut(true); setLogoutError(""); try { const response = await fetch("/api/session", { method: "DELETE" }); if (!response.ok) throw new Error(); window.location.assign("/login"); } catch { setLogoutError("Prøv igen."); setLoggingOut(false); } }}>{loggingOut ? "Logger ud …" : "Log ud"}</button>{logoutError && <span role="alert">{logoutError}</span>}</div>
       <KarmanautCredit className="sidebar-credit" />
+      <div className="sidebar-session"><button disabled={loggingOut} onClick={async () => { setLoggingOut(true); setLogoutError(""); try { const response = await fetch("/api/session", { method: "DELETE" }); if (!response.ok) throw new Error(); window.location.assign("/login"); } catch { setLogoutError("Prøv igen."); setLoggingOut(false); } }}>{loggingOut ? "Logger ud …" : "Log ud"}</button>{logoutError && <span role="alert">{logoutError}</span>}</div>
     </aside>
   );
 }

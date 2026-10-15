@@ -908,9 +908,8 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 .login-card input { font-size: 17px; min-height: 50px; }
 .login-card .submit-quote { min-height: 50px; font-size: 15px; }
 .survey-public-link { color: var(--muted); font-size: 13px; }
-.sidebar-session { margin-top: auto; padding: 20px 8px 0; }
+.sidebar-session { display: grid; justify-items: center; margin-top: 0; padding: 12px 8px 0; text-align: center; }
 .sidebar-session button { border: 0; padding: 8px 0; color: #6d7483; background: none; font-size: 12px; cursor: pointer; }
-.sidebar-session + .sidebar-credit { margin-top: 0; }
 .survey-page { max-width: 1100px; margin: auto; padding: 0 36px; }
 .survey-header { display: flex; align-items: center; justify-content: space-between; padding: 30px 0; gap: 15px; }
 .survey-header > span { color: var(--muted); font-size: 12px; }
