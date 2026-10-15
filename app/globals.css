@@ -1108,3 +1108,24 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .sentence-celebration, .sentence-celebration-content, .sentence-celebration-content .sentence-celebration-symbol { animation: none; }
   .sentence-celebration-rays { display: none; }
 }
+
+/* A small invitation to the prize draw on the public welcome screen. */
+.survey-prize { float: right; position: relative; display: grid; place-items: center; width: 154px; height: 154px; margin: -12px -12px 20px 24px; padding: 24px 14px; border: 0; border-radius: 48% 52% 45% 55% / 54% 44% 56% 46%; background: var(--red); color: white; font: 400 16px/1.3 "Funnel Display", sans-serif; text-align: center; cursor: pointer; transform: rotate(8deg); transition: transform .2s ease; }
+.survey-prize strong { display: block; font-size: 23px; font-weight: 600; }
+.survey-prize-info { position: absolute; bottom: 13px; left: calc(50% - 9px); display: grid; place-items: center; width: 18px; height: 18px; border: 1px solid #ffffffb3; border-radius: 50%; font-size: 12px; }
+.survey-prize:hover { transform: rotate(3deg); }
+.survey-prize:focus-visible { outline: 3px solid var(--navy); outline-offset: 5px; }
+.survey-prize-dialog { width: min(540px, calc(100% - 36px)); max-height: calc(100dvh - 48px); padding: 0; border: 1px solid var(--line); background: #fffdfb; color: var(--navy); box-shadow: 0 25px 100px #08183233; }
+.survey-prize-dialog::backdrop { background: #0d2046a6; backdrop-filter: blur(6px); }
+.survey-prize-dialog-content { position: relative; padding: 52px 36px 30px; }
+.survey-prize-dialog .quote-modal-close { position: absolute; top: 14px; right: 14px; }
+.survey-prize-dialog h2 { margin: 18px 0 24px; font: 500 clamp(30px, 5vw, 40px)/1.1 "Funnel Display", sans-serif; letter-spacing: -.03em; }
+.survey-prize-dialog h2 span { color: var(--red); }
+.survey-prize-dialog p { color: #657087; font-size: 16px; line-height: 1.7; }
+@media (max-width: 600px) {
+  .survey-prize { width: 116px; height: 116px; margin: -6px 0 14px 14px; padding: 18px 10px; font-size: 13px; }
+  .survey-prize strong { font-size: 18px; }
+  .survey-prize-info { bottom: 7px; width: 16px; height: 16px; font-size: 11px; }
+  .survey-prize-dialog-content { padding: 56px 24px 24px; }
+}
+@media (prefers-reduced-motion: reduce) { .survey-prize { transition: none; } }
