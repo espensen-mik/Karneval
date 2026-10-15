@@ -49,7 +49,7 @@ Researchrummet kræver nu fælles password. Supabase-servernøglen ligger kun so
 
 ### Den digitale sjæl og fælles login
 
-`/spoergeskema` er den offentlige formular med ét trin ad gangen, gentagelige sætninger/ord, tilbage-navigation og gennemsyn før indsendelse. Ingen kladde eller personoplysninger gemmes i localStorage. Et stabilt tilfældigt indsendelses-ID gør genforsøg idempotente. Materialet blandes ikke ind i SJÆLEN eller Leg med ord.
+`/spoergeskema` er den offentlige formular med ét trin ad gangen, gentagelige sætninger, tilbage-navigation og gennemsyn før indsendelse. Ingen kladde eller personoplysninger gemmes i localStorage. Et stabilt tilfældigt indsendelses-ID gør genforsøg idempotente. Materialet blandes ikke ind i SJÆLEN eller Leg med ord.
 
 `/den-digitale-sjael` viser komplette besvarelser med fornavn og alder, navigation mellem personer og sideinddeling på 50 besvarelser. Mailadresse og fuldt navn gemmes særskilt i `survey_contacts`. Læse-API’et vælger eksplicit kolonner fra `survey_responses` og læser aldrig kontakttabellen. Spørgeskemaets egen gennemgang viser kun den aktuelle deltagers egne oplysninger fra formularens hukommelse.
 
@@ -64,3 +64,5 @@ Nye databasefunktioner bruger invoker-rettigheder og kan kun kaldes med servern�
 4. Kør `private_research_access`, som fjerner den gamle direkte anon/authenticated-adgang og Storage-testpolicies. Den må først aktiveres sammen med servernøglen og den nye app. Kontrollér derefter, at publishable/anon-nøglen ikke kan læse tabellerne direkte.
 
 Der installeres ingen nye app-pakker. De nye tests dækker sessionens signatur, udløb, passwordskift, sikre returadresser og servervalidering af spørgeskemasvar. Database-/browsertests bruger isolerede data eller transaktioner med rollback.
+
+Spørgeskemaversion 2 udelader det separate ordspørgsmål. Tidligere ordsvar bevares og vises fortsat i besvarelsesarkivet, når de findes. Nye gentagelige sætninger kvitteres med korte, skiftende beskeder og en rolig animation, som slås fra ved reduceret bevægelse.

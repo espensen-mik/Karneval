@@ -1,9 +1,10 @@
 "use client";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { emptySurvey, SURVEY_QUESTIONS, type SurveyDraft } from "@/lib/survey";
+import { emptySurvey, ACTIVE_SURVEY_QUESTIONS as SURVEY_QUESTIONS, type SurveyDraft } from "@/lib/survey";
 import UiIcon from "./ui-icon";
 import SurveySentenceAnswers from "./survey-sentence-answers";
-const LAST_STEP = 11;
+const CONTACT_STEP = 3 + SURVEY_QUESTIONS.length;
+const LAST_STEP = CONTACT_STEP + 1;
 
 export default function SurveyApp() {
   const [draft, setDraft] = useState<SurveyDraft>(emptySurvey);
@@ -15,7 +16,7 @@ export default function SurveyApp() {
   const responseId = useRef("");
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "instant" }); }, [step, done]);
-  const question = step >= 3 && step <= 9 ? SURVEY_QUESTIONS[step - 3] : null;
+  const question = step >= 3 && step < CONTACT_STEP ? SURVEY_QUESTIONS[step - 3] : null;
   const update = (key: keyof SurveyDraft, value: string | boolean) => setDraft(current => ({ ...current, [key]: value }));
   function setAnswers(id: (typeof SURVEY_QUESTIONS)[number]["id"], items: string[]) { setDraft(current => ({ ...current, answers: { ...current.answers, [id]: items } })); }
   async function next(event: FormEvent<HTMLFormElement>) {
@@ -43,22 +44,13 @@ export default function SurveyApp() {
       {question && <>
         <span className="eyebrow">{question.kind === "sentences" ? "FULDFØR SÆTNINGEN" : "DINE EGNE ORD"}</span>
         <h1 ref={heading} tabIndex={-1}>{question.kind === "sentences" ? "Karneval er…" : question.title}</h1>
-        <p>{question.kind === "sentences" ? "Skriv det første, der falder dig ind. Tilføj så en sætning mere — og en mere, hvis du har lyst." : question.help}</p>
+        <p>{question.help}</p>
         {question.kind === "text" ? <label className="form-field"><span className="survey-sr-only">Dit svar</span><textarea rows={6} maxLength={3000} placeholder="Skriv med dine egne ord …" value={draft.answers[question.id][0] || ""} onChange={event => setAnswers(question.id, [event.target.value])} /></label>
-          : question.kind === "sentences" ? <SurveySentenceAnswers answers={draft.answers[question.id]} onChange={items => setAnswers(question.id, items)} />
-          : <div className="survey-repeat-list">
-            {(draft.answers.words.length ? draft.answers.words : [""]).map((answer, index) => <div className="survey-repeat-row" key={index}>
-              <label className="form-field"><span>Ord eller vending {index + 1}</span><input maxLength={120} value={answer} placeholder="Et ord eller en kort vending" id={`repeat-${index}`}
-                onKeyDown={event => { if (event.key === "Enter") { event.preventDefault(); if (answer.trim() && draft.answers.words.length < 100) { setAnswers("words", [...draft.answers.words, ""]); requestAnimationFrame(() => document.getElementById(`repeat-${index + 1}`)?.focus()); } } }}
-                onChange={event => { const items = [...(draft.answers.words.length ? draft.answers.words : [""])]; items[index] = event.target.value; setAnswers("words", items); }} /></label>
-              {index > 0 && <button className="survey-remove" type="button" aria-label={`Fjern svar ${index + 1}`} onClick={() => setAnswers("words", draft.answers.words.filter((_, i) => i !== index))}><UiIcon name="close" /></button>}
-            </div>)}
-            <button className="survey-add" type="button" disabled={draft.answers.words.length >= 100 || !(draft.answers.words.at(-1) || "").trim()} onClick={() => setAnswers("words", [...draft.answers.words, ""])}>+ Tilføj et ord eller en vending</button>
-          </div>}
+          : <SurveySentenceAnswers answers={draft.answers[question.id]} onChange={items => setAnswers(question.id, items)} />}
         <p className="survey-small">Valgfrit · Du kan gå videre uden at besvare dette spørgsmål.</p>
       </>}
-      {step === 10 && <><span className="eyebrow">MÅ VI HØRE MERE?</span><h1 ref={heading} tabIndex={-1}>Må vi kontakte dig senere<span>?</span></h1><p>Hvis vi gerne vil høre mere uddybende om dine oplevelser.</p><fieldset className="survey-choice"><legend className="survey-sr-only">Tilladelse til senere kontakt</legend>{[["yes", "Ja, I må gerne kontakte mig"], ["no", "Nej tak"]].map(([value, label]) => <label key={value}><input type="radio" name="contact" required value={value} checked={draft.contact_permission === value} onChange={() => update("contact_permission", value)} /><span>{label}</span></label>)}</fieldset></>}
-      {step === LAST_STEP && <><span className="eyebrow">ET SIDSTE KIG</span><h1 ref={heading} tabIndex={-1}>Din del af fortællingen<span>.</span></h1><p>Se dine svar igennem, før du sender dem.</p><div className="survey-review"><section><h2>Dine oplysninger</h2><p>{draft.name} · {draft.age} år · {draft.postal_code}</p><p>{draft.email}</p><p>Deltaget cirka {draft.participations} gange</p><button type="button" onClick={() => setStep(1)}>Ret oplysninger</button></section>{SURVEY_QUESTIONS.map((q, index) => <section key={q.id}><h2>{q.title}</h2>{draft.answers[q.id].filter(a => a.trim()).length ? draft.answers[q.id].filter(a => a.trim()).map((answer, i) => <p key={i}>{q.kind === "sentences" ? "Karneval er… " : ""}{answer}</p>) : <p className="survey-small">Ikke besvaret</p>}<button type="button" onClick={() => setStep(index + 3)}>Ret svar</button></section>)}<section><h2>Senere kontakt</h2><p>{draft.contact_permission === "yes" ? "Ja, I må kontakte mig." : "Nej tak."}</p><button type="button" onClick={() => setStep(10)}>Ret valg</button></section></div><label className="survey-permission"><input type="checkbox" required checked={draft.publication_permission} onChange={event => update("publication_permission", event.target.checked)} /><span>Jeg accepterer, at Aalborg Karneval må bruge mine ord som citater i profilering af Aalborg Karneval med mit fornavn og min alder. Mine svar må indgå i arbejdet med grafisk identitet og kernefortælling.</span></label></>}
+      {step === CONTACT_STEP && <><span className="eyebrow">MÅ VI HØRE MERE?</span><h1 ref={heading} tabIndex={-1}>Må vi kontakte dig senere<span>?</span></h1><p>Hvis vi gerne vil høre mere uddybende om dine oplevelser.</p><fieldset className="survey-choice"><legend className="survey-sr-only">Tilladelse til senere kontakt</legend>{[["yes", "Ja, I må gerne kontakte mig"], ["no", "Nej tak"]].map(([value, label]) => <label key={value}><input type="radio" name="contact" required value={value} checked={draft.contact_permission === value} onChange={() => update("contact_permission", value)} /><span>{label}</span></label>)}</fieldset></>}
+      {step === LAST_STEP && <><span className="eyebrow">ET SIDSTE KIG</span><h1 ref={heading} tabIndex={-1}>Din del af fortællingen<span>.</span></h1><p>Se dine svar igennem, før du sender dem.</p><div className="survey-review"><section><h2>Dine oplysninger</h2><p>{draft.name} · {draft.age} år · {draft.postal_code}</p><p>{draft.email}</p><p>Deltaget cirka {draft.participations} gange</p><button type="button" onClick={() => setStep(1)}>Ret oplysninger</button></section>{SURVEY_QUESTIONS.map((q, index) => <section key={q.id}><h2>{q.title}</h2>{draft.answers[q.id].filter(a => a.trim()).length ? draft.answers[q.id].filter(a => a.trim()).map((answer, i) => <p key={i}>{q.kind === "sentences" ? "Karneval er… " : ""}{answer}</p>) : <p className="survey-small">Ikke besvaret</p>}<button type="button" onClick={() => setStep(index + 3)}>Ret svar</button></section>)}<section><h2>Senere kontakt</h2><p>{draft.contact_permission === "yes" ? "Ja, I må kontakte mig." : "Nej tak."}</p><button type="button" onClick={() => setStep(CONTACT_STEP)}>Ret valg</button></section></div><label className="survey-permission"><input type="checkbox" required checked={draft.publication_permission} onChange={event => update("publication_permission", event.target.checked)} /><span>Jeg accepterer, at Aalborg Karneval må bruge mine ord som citater i profilering af Aalborg Karneval med mit fornavn og min alder. Mine svar må indgå i arbejdet med grafisk identitet og kernefortælling.</span></label></>}
       {error && <p className="form-message error" role="alert">{error}</p>}
       <footer className="survey-actions">{step > 0 && <button className="quote-action-cancel" type="button" disabled={busy} onClick={() => { setError(""); setStep(current => current - 1); }}>Tilbage</button>}<button className="submit-quote" disabled={busy} type="submit">{busy ? "Sender …" : step === 0 ? "Del dit karneval" : step === LAST_STEP ? "Send min besvarelse" : "Næste"}<UiIcon name="arrow" /></button></footer>
     </form>}

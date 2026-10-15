@@ -1,13 +1,15 @@
-export const SURVEY_VERSION = 1;
+export const SURVEY_VERSION = 2;
 export const SURVEY_QUESTIONS = [
   { id: "invitation", title: "Du sidder overfor en person, som aldrig har hørt om Aalborg Karneval!", help: "Hvad fortæller du for at overbevise dem om, at de skal deltage næste år?", kind: "text" },
-  { id: "carnival_is", title: "Fuldfør sætningen: Karneval er…", help: "Skriv så mange sætninger, du har lyst til. Der er ikke ét rigtigt svar.", kind: "sentences" },
+  { id: "carnival_is", title: "Fuldfør sætningen: Karneval er…", help: "Skriv lige hvad der falder dig ind. Og tilføj så mange svar som muligt - jo flere du tilføjer, des klogere bliver vi.", kind: "sentences" },
   { id: "words", title: "Hvilke ord vil du bruge til at beskrive Aalborg Karneval?", help: "Jo flere jo bedre — vi samler på ord til et helt nyt sprog om vores karneval. Du må også skrive korte vendinger.", kind: "words" },
   { id: "difference", title: "Hvad adskiller Aalborg Karneval fra andre fester, koncerter og festivaler?", help: "Hvad gør karnevallet til noget særligt for dig?", kind: "text" },
   { id: "traditions", title: "Har du nogen traditioner omkring Aalborg Karneval?", help: "Hvis ja — hvilke?", kind: "text" },
   { id: "memory", title: "Hvad er din allerbedste oplevelse til Aalborg Karneval?", help: "Vær gerne konkret: et særligt godt karnevalsår, en koncert eller en sjov episode.", kind: "text" },
   { id: "community", title: "Hvordan vil du beskrive fællesskabet til Aalborg Karneval?", help: "Fortæl med dine egne ord.", kind: "text" },
 ] as const;
+// Keep the retired word question for validation and reading older responses.
+export const ACTIVE_SURVEY_QUESTIONS = SURVEY_QUESTIONS.filter(question => question.kind !== "words");
 export type SurveyAnswers = Record<(typeof SURVEY_QUESTIONS)[number]["id"], string[]>;
 export type SurveyDraft = { name: string; email: string; age: string; postal_code: string; participations: string; answers: SurveyAnswers; publication_permission: boolean; contact_permission: "" | "yes" | "no" };
 export function emptySurvey(): SurveyDraft { return { name: "", email: "", age: "", postal_code: "", participations: "", answers: Object.fromEntries(SURVEY_QUESTIONS.map(q => [q.id, [] as string[]])) as SurveyAnswers, publication_permission: false, contact_permission: "" }; }
@@ -27,7 +29,7 @@ export function validateSurvey(value: unknown) {
   if (!body.answers || typeof body.answers !== "object" || Array.isArray(body.answers)) throw new Error("Svarene kunne ikke læses.");
   const input = body.answers as Record<string, unknown>;
   const answers = Object.fromEntries(SURVEY_QUESTIONS.map(q => {
-    const items = input[q.id];
+    const items = q.kind === "words" ? (input[q.id] ?? []) : input[q.id];
     if (!Array.isArray(items) || items.length > (q.kind === "text" ? 1 : 100)) throw new Error("Der er for mange svar i et spørgsmål.");
     return [q.id, items.map(item => text(item, q.kind === "words" ? 120 : 3000)).filter(Boolean)];
   })) as SurveyAnswers;

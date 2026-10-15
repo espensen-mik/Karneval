@@ -1087,3 +1087,11 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .survey-page .survey-brand { font-size: 19px; }
   .survey-page .survey-screen { min-height: 0; }
 }
+
+/* A small acknowledgement for every additional sentence. */
+.sentence-cheer { min-height: 26px; margin: 10px 0 -6px; }
+.sentence-cheer-message { display: inline-flex; align-items: center; gap: 8px; color: #ba5147; font-size: 13px; font-weight: 500; animation: sentence-cheer-in .3s ease-out both; }
+.sentence-cheer-message > .ui-icon { width: 19px; height: 19px; animation: sentence-cheer-spark .5s ease-out both; }
+@keyframes sentence-cheer-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sentence-cheer-spark { from { transform: scale(.6) rotate(-30deg); } 60% { transform: scale(1.2) rotate(8deg); } to { transform: scale(1) rotate(0); } }
+@media (prefers-reduced-motion: reduce) { .sentence-cheer-message, .sentence-cheer-message > .ui-icon { animation: none; } }
