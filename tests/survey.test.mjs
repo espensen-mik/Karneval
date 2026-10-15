@@ -36,3 +36,12 @@ test('every active question requires a non-blank answer; additional empty senten
   const response = valid(); response.answers.carnival_is.push('');
   assert.deepEqual(validateSurvey(response).answers.carnival_is, ['en fest', 'et minde']);
 });
+
+test('traditions accepts a no answer or a description while rejecting an empty yes follow-up', () => {
+  for (const answer of ['Nej', 'Vi mødes til morgenmad før paraden.']) {
+    const response = valid(); response.answers.traditions = [answer];
+    assert.deepEqual(validateSurvey(response).answers.traditions, [answer]);
+  }
+  const response = valid(); response.answers.traditions = [''];
+  assert.throws(() => validateSurvey(response), /Besvar alle spørgsmål/);
+});

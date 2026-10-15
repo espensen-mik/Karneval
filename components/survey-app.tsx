@@ -14,6 +14,8 @@ export default function SurveyApp() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   const [website, setWebsite] = useState("");
+  const [traditionsChoice, setTraditionsChoice] = useState<"" | "yes" | "no">("");
+  const [traditionsText, setTraditionsText] = useState("");
   const responseId = useRef("");
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "instant" }); }, [step, done]);
@@ -46,8 +48,11 @@ export default function SurveyApp() {
       {question && <>
         <span className="eyebrow">{question.kind === "sentences" ? "FULDFØR SÆTNINGEN" : "DINE EGNE ORD"}</span>
         <h1 ref={heading} tabIndex={-1}>{question.kind === "sentences" ? "Aalborg Karneval er…" : question.title}</h1>
-        <p>{question.help}</p>
-        {question.kind === "text" ? <label className="form-field"><span className="survey-sr-only">Dit svar</span><textarea rows={6} maxLength={3000} placeholder="Skriv med dine egne ord …" value={draft.answers[question.id][0] || ""} onChange={event => setAnswers(question.id, [event.target.value])} /></label>
+        <p>{question.id === "traditions" ? "Vælg ja eller nej. Hvis ja, vil vi gerne høre om dine traditioner." : question.help}</p>
+        {question.id === "traditions" ? <>
+          <fieldset className="survey-choice"><legend className="survey-sr-only">Har du traditioner omkring Aalborg Karneval?</legend>{([["yes", "Ja"], ["no", "Nej"]] as const).map(([value, label]) => <label key={value}><input type="radio" name="traditions" required value={value} checked={traditionsChoice === value} onChange={() => { setTraditionsChoice(value); setError(""); setAnswers("traditions", [value === "no" ? "Nej" : traditionsText]); }} /><span>{label}</span></label>)}</fieldset>
+          {traditionsChoice === "yes" && <label className="form-field">Hvilke traditioner har du?<textarea required rows={5} maxLength={3000} placeholder="Fortæl om dine traditioner …" value={traditionsText} onChange={event => { setTraditionsText(event.target.value); setAnswers("traditions", [event.target.value]); }} /></label>}
+        </> : question.kind === "text" ? <label className="form-field"><span className="survey-sr-only">Dit svar</span><textarea rows={6} maxLength={3000} placeholder="Skriv med dine egne ord …" value={draft.answers[question.id][0] || ""} onChange={event => setAnswers(question.id, [event.target.value])} /></label>
           : <SurveySentenceAnswers answers={draft.answers[question.id]} onChange={items => setAnswers(question.id, items)} />}
       </>}
       {step === CONTACT_STEP && <><span className="eyebrow">MÅ VI HØRE MERE?</span><h1 ref={heading} tabIndex={-1}>Må vi kontakte dig senere<span>?</span></h1><p>Hvis vi gerne vil høre mere uddybende om dine oplevelser.</p><fieldset className="survey-choice"><legend className="survey-sr-only">Tilladelse til senere kontakt</legend>{[["yes", "Ja, I må gerne kontakte mig"], ["no", "Nej tak"]].map(([value, label]) => <label key={value}><input type="radio" name="contact" required value={value} checked={draft.contact_permission === value} onChange={() => update("contact_permission", value)} /><span>{label}</span></label>)}</fieldset></>}
