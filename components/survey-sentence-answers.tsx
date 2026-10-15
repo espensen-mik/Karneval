@@ -42,9 +42,9 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
     <div className="sentence-answers">
       {items.map((answer, index) => <div className="sentence-answer" key={index}>
         <span className="sentence-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-        <label className="sentence-field"><span className="survey-sr-only">Karneval er… svar {index + 1}</span><textarea
+        <label className="sentence-field"><span className="survey-sr-only">Aalborg Karneval er… svar {index + 1}</span><textarea
           ref={element => { if (element) fields.current.set(index, element); else fields.current.delete(index); }}
-          rows={1} maxLength={3000} value={answer} placeholder={index === 0 ? "Skriv din første tanke …" : "Og hvad er karneval også?"}
+          rows={1} maxLength={3000} value={answer} placeholder={index === 0 ? "Skriv din første tanke …" : "Og hvad er Aalborg Karneval også?"}
           onChange={event => { const next = [...items]; next[index] = event.target.value; onChange(next); }}
         /></label>
         {items.length > 1 && <button type="button" className="sentence-remove" aria-label={`Fjern sætning ${index + 1}`} onClick={() => onChange(items.filter((_, i) => i !== index))}><UiIcon name="close" /></button>}
@@ -55,7 +55,7 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
       <div className="sentence-celebration-content"><UiIcon className="sentence-celebration-symbol" name="heart" /><p role="status" aria-live="polite">{CHEERS[(celebration - 1) % CHEERS.length]}</p></div>
     </div>, document.body)}
     <button className="sentence-add" type="button" onClick={add} disabled={!items.at(-1)?.trim() || items.length >= 100}>
-      <span className="sentence-add-icon" aria-hidden="true">+</span><span><strong>Tilføj endnu en sætning</strong><small>{count ? "Hvad er karneval også for dig?" : "Der er plads til mere end én tanke."}</small></span><UiIcon className="sentence-add-arrow" name="arrow" />
+      <span className="sentence-add-icon" aria-hidden="true">+</span><span><strong>Tilføj endnu en sætning</strong><small>{count ? "Hvad er Aalborg Karneval også for dig?" : "Der er plads til mere end én tanke."}</small></span><UiIcon className="sentence-add-arrow" name="arrow" />
     </button>
     <p className="sentence-count" aria-live="polite">{count > 0 ? `${count} ${count === 1 ? "sætning" : "sætninger"} — tilføj gerne flere, hvis du har lyst.` : "Du må skrive lige så mange sætninger, du har lyst til."}</p>
   </div>;
