@@ -14,7 +14,7 @@ export default function SurveyApp() {
   const [website, setWebsite] = useState("");
   const responseId = useRef("");
   const heading = useRef<HTMLHeadingElement>(null);
-  useEffect(() => { heading.current?.focus(); }, [step, done]);
+  useEffect(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "instant" }); }, [step, done]);
   const question = step >= 3 && step <= 9 ? SURVEY_QUESTIONS[step - 3] : null;
   const update = (key: keyof SurveyDraft, value: string | boolean) => setDraft(current => ({ ...current, [key]: value }));
   function setAnswers(id: (typeof SURVEY_QUESTIONS)[number]["id"], items: string[]) { setDraft(current => ({ ...current, answers: { ...current.answers, [id]: items } })); }
@@ -32,8 +32,8 @@ export default function SurveyApp() {
     } catch (failure) { setError(failure instanceof Error ? failure.message : "Svaret kunne ikke gemmes."); }
     finally { setBusy(false); }
   }
-  return <div className="survey-page">
-    <header className="survey-header"><a className="survey-brand" href="/spoergeskema"><span className="brand-mark">K</span>Sjælen af Karneval</a>{step > 0 && !done && <span aria-live="polite">{step} / {LAST_STEP}</span>}</header>
+  return <div className={`survey-page${done ? " is-complete" : ""}`}>
+    <header className="survey-header"><a className="survey-brand" href="/spoergeskema">Sjælen af Karneval</a>{step > 0 && !done && <span aria-live="polite">{step} / {LAST_STEP}</span>}</header>
     {!done && <div className="survey-progress" role="progressbar" aria-label="Din fremdrift" aria-valuemin={0} aria-valuemax={LAST_STEP} aria-valuenow={step}><span style={{ width: `${step / LAST_STEP * 100}%` }} /></div>}
     {done ? <section className="survey-screen survey-thanks"><span className="eyebrow">DIN STEMME ER MED</span><h1 ref={heading} tabIndex={-1}>Tak for din del af sjælen<span>.</span></h1><p>Din besvarelse er gemt. Tak, fordi du deler dine ord, minder og oplevelser med Aalborg Karneval.</p><p className="survey-small">Du kan nu lukke siden.</p></section> : <form className={`survey-screen${question?.kind === "sentences" ? " survey-sentences" : ""}`} onSubmit={next} key={step}>
       <div className="survey-honeypot" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" value={website} onChange={event => setWebsite(event.target.value)} /></label></div>
@@ -62,6 +62,5 @@ export default function SurveyApp() {
       {error && <p className="form-message error" role="alert">{error}</p>}
       <footer className="survey-actions">{step > 0 && <button className="quote-action-cancel" type="button" disabled={busy} onClick={() => { setError(""); setStep(current => current - 1); }}>Tilbage</button>}<button className="submit-quote" disabled={busy} type="submit">{busy ? "Sender …" : step === 0 ? "Del dit karneval" : step === LAST_STEP ? "Send min besvarelse" : "Næste"}<UiIcon name="arrow" /></button></footer>
     </form>}
-    <footer className="survey-footer">AALBORG KARNEVAL · DEN DIGITALE SJÆL</footer>
   </div>;
 }
