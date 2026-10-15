@@ -31,6 +31,10 @@ Ved senere tilknytning af andre materialer skal ét fritekstsvar eller en selvst
 
 Kontrol (Node.js 22+): `npm test`, `npm run typecheck`, `npm run build`. Projektet har ikke en separat lint-kommando. Analyse-testene bruger isolerede, små teststrenge og seedes aldrig i appen eller databasen.
 
+### Leg med ord
+
+`/sjaelen/leg-med-ord` er en separat legeflade uden forbindelseslinjer. Den bruger enkeltord fra de samme citattekster. Træk bobler sammen, navngiv samlingen, del den igen, eller fjern ord med minus. Samlede boblers areal følger antallet af unikke citater, der indeholder mindst ét af ordene; samme citat tæller aldrig dobbelt. Skalaen holdes fast ved sammenlægning. Samlinger og fravalg gemmes kun i browserens localStorage og ændrer hverken citater eller fælles kuratering. Fortryd husker de seneste 30 handlinger i sessionen; Nulstil genskaber alle ord. Der kræves ingen migrationer eller nye pakker.
+
 ### Kilderegister
 
 `/kilder` er et manuelt register med titel, dato og forfatter/kilde samt enten en URL eller en PDF. Det starter tomt; de tidligere indbyggede kilder er fjernet. Wiki vises ikke længere i menuen.

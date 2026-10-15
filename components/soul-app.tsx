@@ -107,7 +107,7 @@ export default function SoulApp({ manage = false, initialView = DEFAULT_SOUL_VIE
       <section className="soul-management-header"><h1>Kuratering & visning<span>.</span></h1><p>Indstil netværkets udsnit og organisér jeres foreløbige fortolkninger.</p></section>
     </> : <>
       <h1 className="soul-visually-hidden">SJÆLEN · Ordnetværk</h1>
-      <div className="soul-stage-toolbar"><span aria-live="polite">{loading ? "Henter materiale …" : dataError ? "Materialet kunne ikke læses" : `${analysis.contributions.length} bidrag · ${shownTerms.length} ord og vendinger`}</span><Link href={soulViewHref(view, true)}>Kuratering & visning ↗</Link></div>
+      <div className="soul-stage-toolbar"><span aria-live="polite">{loading ? "Henter materiale …" : dataError ? "Materialet kunne ikke læses" : `${analysis.contributions.length} bidrag · ${shownTerms.length} ord og vendinger`}</span><div className="soul-stage-links"><Link href="/sjaelen/leg-med-ord">Leg med ord ↗</Link><Link href={soulViewHref(view, true)}>Kuratering & visning ↗</Link></div></div>
     </>}
     {manage && <div className="soul-material-bar"><span className="soul-material-chip">● Citater</span><strong aria-live="polite">{loading ? "Henter materiale …" : dataError ? "Materialet kunne ikke læses" : `${analysis.contributions.length} bidrag i denne visning`}</strong><span>Kun selve citatteksten analyseres</span><button className="soul-text-button" onClick={() => { setSelected(null); void loadMaterial(); }} disabled={loading}>Opdatér materiale ↻</button></div>}
     {curationError && !curationAvailable && <p className="soul-message error" role="alert">{curationError} <button className="soul-text-button" onClick={() => void loadCuration()}>Prøv igen</button></p>}
