@@ -1,5 +1,6 @@
 "use client";
 
+import UiIcon from "./ui-icon";
 import type { Contribution, SoulEdge, SoulTerm } from "@/lib/soul-types";
 
 export function ContributionExample({ contribution }: { contribution: Contribution }) {
@@ -7,8 +8,8 @@ export function ContributionExample({ contribution }: { contribution: Contributi
   return <article className="soul-evidence">
     <span className="soul-kicker">Citat · {contribution.category}</span>
     <p>{contribution.text}</p>
-    {contribution.source && <small>{link ? <a href={link} target="_blank" rel="noopener noreferrer">Kildehenvisning ↗</a> : contribution.source}</small>}
-    <a href={contribution.contextHref}>Åbn citatet i sin sammenhæng ↗</a>
+    {contribution.source && <small>{link ? <a href={link} target="_blank" rel="noopener noreferrer">Kildehenvisning <UiIcon name="arrow" /></a> : contribution.source}</small>}
+    <a href={contribution.contextHref}>Åbn citatet i sin sammenhæng <UiIcon name="arrow" /></a>
   </article>;
 }
 
@@ -18,7 +19,7 @@ export default function SoulDetail({ term, edge, contributions, onClose }: { ter
   const editorialExample = edge?.exampleId ? contributions.find((c) => c.id === edge.exampleId) : undefined;
   const categories = [...new Set(examples.map((c) => c.category))].map((category) => ({ category, count: examples.filter((c) => c.category === category).length }));
   return <aside className="soul-detail" aria-label="Detaljer og dokumentation" tabIndex={-1}>
-    <button className="soul-close" onClick={onClose} aria-label="Luk detaljer">×</button>
+    <button className="soul-close" onClick={onClose} aria-label="Luk detaljer"><UiIcon name="close" /></button>
     <div className="soul-kicker">{term ? term.kind === "phrase" ? "VENDING" : term.kind === "group" ? "MANUEL VARIANTGRUPPE" : "ORD" : edge?.kind === "editorial" ? "REDAKTIONEL FORBINDELSE" : "DOKUMENTERET FORBINDELSE"}</div>
     <h2>{term?.label || <>{edge?.source}<span className="soul-detail-connector">↔</span>{edge?.target}</>}</h2>
     {edge?.kind === "editorial" ? <>

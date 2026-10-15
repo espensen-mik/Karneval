@@ -1,15 +1,16 @@
 "use client";
 
+import UiIcon, { type IconName } from "./ui-icon";
 import Link from "next/link";
 import Image from "next/image";
 import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/", label: "Overblik", icon: "⌂" },
-  { href: "/kilder", label: "Kilder", icon: "↗" },
-  { href: "/citater", label: "Citater", icon: "“" },
-  { href: "/sjaelen", label: "SJÆLEN", icon: "✳" },
+  { href: "/", label: "Overblik", icon: "home" },
+  { href: "/kilder", label: "Kilder", icon: "arrow" },
+  { href: "/citater", label: "Citater", icon: "quote" },
+  { href: "/sjaelen", label: "SJÆLEN", icon: "soul" },
 ];
 
 export default function Sidebar() {
@@ -27,7 +28,7 @@ export default function Sidebar() {
           const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
           return (
             <Fragment key={link.href}><Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen" ? " nav-soul" : ""}`} href={link.href}>
-              <span className="nav-icon" aria-hidden="true">{link.icon}</span>
+              <span className="nav-icon" aria-hidden="true"><UiIcon name={link.icon as IconName} /></span>
               <span>{link.label}</span>
               {active && <span className="nav-dot" />}
             </Link>

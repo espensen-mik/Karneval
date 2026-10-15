@@ -271,3 +271,16 @@
   .word-play-options { grid-template-columns: 1fr; }
   .soul-stage-links { gap: 10px; font-size: 10px; }
 }
+
+/* Keep controls legible and easy to use on smaller touch screens. */
+.soul-page select { min-height: 42px; }
+.soul-page .soul-close .ui-icon { width: 18px; height: 18px; }
+.soul-page .soul-text-button .ui-icon, .word-play-actions .ui-icon { margin-left: 3px; }
+@media (max-width: 720px) {
+  .soul-page .form-field input, .soul-page .form-field select, .soul-page .form-field textarea,
+  .soul-controls input, .soul-controls select, .soul-line-controls select { font-size: 16px; }
+  .soul-curation-tabs { flex-wrap: wrap; gap: 8px 18px; }
+  .soul-form-actions { flex-wrap: wrap; }
+  .soul-form-actions > *, .word-play-group-tools { min-width: 0; }
+  .word-play-actions button, .word-play-actions a { min-height: 36px; display: inline-flex; align-items: center; gap: 3px; }
+}

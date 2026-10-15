@@ -1,5 +1,6 @@
 "use client";
 
+import UiIcon from "./ui-icon";
 import { FormEvent, useMemo, useState } from "react";
 import { normalizeTerm } from "@/lib/soul-analysis";
 import { SOUL_COLORS } from "@/lib/soul-types";
@@ -90,7 +91,7 @@ export default function SoulCuration({ curation, terms, contributions, save, bus
   const link = curation.links.find((l) => l.id === editing);
   const formKey = `${tab}:${editing || "new"}:${category?.updated_at || synonym?.updated_at || link?.updated_at || curation[tab].length}`;
   return <section className="soul-curation" aria-labelledby="soul-curation-title">
-    <div className="soul-curation-heading"><div><span className="soul-kicker">VORES FORELØBIGE LÆSNING</span><h2 id="soul-curation-title">Kuratering</h2><p>Organisér fortolkningerne. Materialet og de dokumenterede optællinger bevares.</p></div><button className="soul-text-button" disabled={busy} onClick={onReload}>Genindlæs kuratering ↻</button></div>
+    <div className="soul-curation-heading"><div><span className="soul-kicker">VORES FORELØBIGE LÆSNING</span><h2 id="soul-curation-title">Kuratering</h2><p>Organisér fortolkningerne. Materialet og de dokumenterede optællinger bevares.</p></div><button className="soul-text-button" disabled={busy} onClick={onReload}>Genindlæs kuratering <UiIcon name="refresh" /></button></div>
     <div className="soul-curation-tabs" role="group" aria-label="Kurateringstype">{([ ["categories", "Kategorier"], ["links", "Fortolkede forbindelser"], ["synonyms", "Varianter & synonymer"] ] as const).map(([key, label]) => <button key={key} aria-pressed={tab === key} onClick={() => { setTab(key); setEditing(null); }}>{label}</button>)}</div>
     {error && <p className="soul-message error" role="alert">{error}</p>}
     <div className="soul-curation-layout">

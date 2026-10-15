@@ -1,5 +1,6 @@
 "use client";
 
+import UiIcon from "./ui-icon";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
@@ -128,7 +129,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
         aria-label="Vis et nyt citat og billede"
         title="Vis et nyt citat og billede"
       >
-        <span aria-hidden="true">↻</span>
+        <span aria-hidden="true"><UiIcon name="refresh" /></span>
       </button>
       </div>
     </section>

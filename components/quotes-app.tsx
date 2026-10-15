@@ -1,5 +1,6 @@
 "use client";
 
+import UiIcon from "./ui-icon";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const categories = ["Generel", "Parade", "Kildeparken", "Børnekarneval", "Gløden"] as const;
@@ -70,7 +71,7 @@ function FilterDropdown({ label, value, options, onChange }: {
               onClick={() => { onChange(option.value); setOpen(false); }}
             >
               <span>{option.label}</span>
-              {option.value === value && <span className="filter-option-check" aria-hidden="true">✓</span>}
+              {option.value === value && <span className="filter-option-check" aria-hidden="true"><UiIcon name="check" /></span>}
             </button>
           ))}
         </div>
@@ -324,7 +325,7 @@ export default function QuotesApp() {
           <section className="quote-modal" role="dialog" aria-modal="true" aria-labelledby="add-quote-title">
             <header className="quote-modal-header">
               <div><div className="eyebrow muted">NYT BIDRAG</div><h2 id="add-quote-title">Tilføj et citat</h2><p>Giv citatet en stemme og en sammenhæng.</p></div>
-              <button className="quote-modal-close" type="button" aria-label="Luk" onClick={() => setAddModalOpen(false)}>×</button>
+              <button className="quote-modal-close" type="button" aria-label="Luk" onClick={() => setAddModalOpen(false)}><UiIcon name="close" /></button>
             </header>
             <form className="quotes-form" onSubmit={submit}>
               <label className="form-field form-wide">Citat
@@ -340,7 +341,7 @@ export default function QuotesApp() {
               {formError && <p className="form-message error form-wide" role="alert">{formError}</p>}
               <div className="quote-modal-actions form-wide">
                 <button className="quote-action-cancel" type="button" onClick={() => setAddModalOpen(false)}>Annuller</button>
-                <button className="submit-quote" type="submit" disabled={saving}>{saving ? "Gemmer…" : "Gem citat"} <span aria-hidden="true">↗</span></button>
+                <button className="submit-quote" type="submit" disabled={saving}>{saving ? "Gemmer…" : "Gem citat"} <span aria-hidden="true"><UiIcon name="arrow" /></span></button>
               </div>
             </form>
           </section>

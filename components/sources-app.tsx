@@ -1,5 +1,6 @@
 "use client";
 
+import UiIcon from "./ui-icon";
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { MAX_PDF_BYTES, RegisteredSource } from "@/lib/source-register";
@@ -84,7 +85,7 @@ export default function SourcesApp() {
                 <label><input type="radio" name="source_kind" checked={kind === "pdf"} onChange={() => { setKind("pdf"); setFormError(""); }} />PDF</label>
               </fieldset>
               {kind === "url" ? <label className="form-field">Link<input key="url" name="url" type="url" required maxLength={2000} placeholder="https://…" /></label> : <label className="form-field">PDF-fil<input key="pdf" ref={fileRef} type="file" accept=".pdf,application/pdf" required={!file} onChange={(event) => { setFile(event.target.files?.[0] ?? null); setUploaded(null); setFormError(""); }} /><span>{file ? file.name : "Vælg en PDF på højst 20 MB."}</span></label>}
-              <button className="submit-quote" type="submit">{saving ? stage : "Tilføj kilde"}<span aria-hidden="true">↗</span></button>
+              <button className="submit-quote" type="submit">{saving ? stage : "Tilføj kilde"}<span aria-hidden="true"><UiIcon name="arrow" /></span></button>
             </fieldset>
             {formError && <p className="form-message error" role="alert">{formError}</p>}
             {success && <p className="form-message success" role="status">{success}</p>}
@@ -98,7 +99,7 @@ export default function SourcesApp() {
               <h3>{source.title}</h3>
               <p className="source-creator">{source.creator} · <time dateTime={source.source_date}>{new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(source.source_date))}</time></p>
               {source.file_name && <p className="source-file-name">{source.file_name}</p>}
-              <a href={source.url || `/api/kilder/${source.id}/pdf`} target="_blank" rel="noopener noreferrer">{source.file_path ? "Åbn PDF" : "Åbn kilde"}<span aria-hidden="true"> ↗</span></a>
+              <a href={source.url || `/api/kilder/${source.id}/pdf`} target="_blank" rel="noopener noreferrer">{source.file_path ? "Åbn PDF" : "Åbn kilde"}<span aria-hidden="true"> <UiIcon name="arrow" /></span></a>
             </article>
           ))}
         </section>

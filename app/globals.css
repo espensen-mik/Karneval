@@ -840,3 +840,57 @@ a.discover-card:hover { border-color: #d9b5b4; transform: translateY(-2px); }
 .registered-source a { display: inline-block; margin-top: 12px; color: var(--red); font-size: 14px; }
 .registered-source .source-file-name { font-size: 12px; }
 @media (max-width: 1000px) { .sources-layout { grid-template-columns: 1fr; gap: 32px; } }
+
+/* Shared controls: consistent rendering in Safari and across form surfaces. */
+button, input, textarea, select { font-family: inherit; -webkit-tap-highlight-color: transparent; }
+button, input:not([type="checkbox"]):not([type="radio"]), textarea, select { -webkit-appearance: none; appearance: none; }
+button { color: inherit; border-radius: 2px; touch-action: manipulation; }
+button:disabled { cursor: default; }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+.ui-icon { display: inline-block; width: 1em; height: 1em; vertical-align: -.14em; flex: 0 0 auto; }
+.nav-icon .ui-icon { width: 19px; height: 19px; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='m5 8 5 5 5-5' stroke='%230c1e45' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-size: 18px 18px !important;
+  background-repeat: no-repeat !important;
+  background-position: right 13px center !important;
+  padding-right: 42px !important;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+.form-field, .quote-select, .quote-search { min-width: 0; }
+input[type="date"] { min-height: 46px; text-align: left; }
+input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+input::placeholder, textarea::placeholder { color: #8a91a3; opacity: 1; }
+.form-field input:disabled, .form-field select:disabled { opacity: .6; cursor: default; }
+input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px; border: 1px solid #dfe0e6; border-radius: 2px; background: var(--soft); color: var(--navy); font: inherit; cursor: pointer; }
+.quote-action-cancel { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 20px; border: 1px solid #dfe0e6; background: #fff; color: var(--navy); font-size: 14px; cursor: pointer; transition: border-color .18s, background .18s; }
+.quote-action-cancel:hover { border-color: #b9bdc8; background: var(--soft); }
+.quote-modal-close { flex: 0 0 40px; border-radius: 50%; font-size: 19px; }
+.quote-modal-close:hover { background: var(--soft); border-color: #c6c9d2; }
+.quote-modal-actions .submit-quote { min-height: 46px; font-size: 14px; gap: 20px; }
+.quote-image-refresh .ui-icon { width: 21px; height: 21px; }
+.quote-image-refresh:hover { transform: none; }
+.quote-image-play { color: white; border-radius: 40px; }
+.quote-image-refresh { color: white; border-radius: 50%; }
+@media (max-width: 720px) {
+  .form-field input, .form-field textarea, .form-field select, .quote-modal .form-field input, .quote-modal .form-field textarea, .quote-modal .form-field select,
+  .quote-search input, .quote-select select { font-size: 16px; }
+  .quote-modal { padding-bottom: max(25px, env(safe-area-inset-bottom)); overscroll-behavior: contain; }
+  .quote-modal-header { gap: 12px; }
+  .quote-modal-close { min-width: 40px; }
+  .quote-modal-actions { flex-wrap: wrap; }
+  .quote-modal-actions .submit-quote { min-width: 0; }
+  .quote-image-refresh .ui-icon { width: 19px; height: 19px; }
+}
+@media (max-width: 720px) {
+  .primary-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 5px; }
+  .primary-nav .nav-link { min-width: 0; min-height: 54px; padding: 7px 3px; display: flex; flex-direction: column; justify-content: center; gap: 4px; font-size: 11px; line-height: 1.2; }
+  .primary-nav .nav-link.nav-soul { letter-spacing: .04em; }
+  .primary-nav .nav-icon { display: grid; place-items: center; width: 18px; height: 18px; }
+  .primary-nav .nav-icon .ui-icon { width: 17px; height: 17px; }
+  .primary-nav .nav-dot { display: none; }
+  .primary-nav .nav-soul-sub { grid-column: span 2; text-align: center; padding: 9px 4px; font-size: 11px; white-space: normal; }
+  .overview-page { height: calc(100vh - 111px); height: calc(100dvh - 111px); }
+}
