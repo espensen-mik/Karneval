@@ -1006,3 +1006,29 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .digital-answer p { font-size: 21px; }
 }
 @media (prefers-reduced-motion: reduce) { .survey-progress > span { transition: none; } }
+
+/* A photographic entrance to the research room. */
+.research-login { position: relative; isolation: isolate; display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center; gap: 32px; width: 100%; min-height: 100svh; margin: 0; padding: clamp(28px, 5vh, 56px) 24px 24px; background: var(--navy); }
+.login-background { z-index: -2; object-fit: cover; object-position: center 40%; }
+.login-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #0c1e4535, #08152c8c); }
+.research-login .login-card { width: min(530px, 100%); margin: 20px 0 0; padding: clamp(28px, 4vw, 48px); background: #faf8f5f5; border: 1px solid #ffffff80; box-shadow: 0 20px 80px #08152c26; backdrop-filter: blur(12px); }
+.research-login .login-card h1 { margin: 0 0 18px; font: 500 clamp(38px, 4.5vw, 55px)/1.04 "Funnel Display", sans-serif; letter-spacing: -.045em; text-wrap: balance; }
+.research-login .login-card > p { margin: 0; color: #70768a; font-size: 15px; line-height: 1.65; }
+.research-login .login-card form { gap: 14px; margin-top: 30px; }
+.research-login .login-card input { min-height: 52px; background: #fff; border-color: #dcd9d7; border-radius: 2px; }
+.research-login .login-card .submit-quote { min-height: 50px; padding-inline: 17px; }
+.research-login .login-card .form-message.error { color: #b42224; font-size: 13px; }
+.login-footer { display: flex; justify-content: center; width: 100%; }
+.login-credit { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 22px; background: #faf8f5ed; color: #1a323f; text-align: center; backdrop-filter: blur(8px); }
+.login-credit img { display: block; width: 58px; height: 58px; object-fit: contain; }
+.login-credit strong { display: block; font-size: 13px; font-weight: 600; }
+.login-credit small { display: block; margin-top: 4px; font-size: 10px; }
+.login-credit:focus-visible { outline-color: white; }
+@media (max-width: 720px) {
+  .research-login { padding: 25px 20px 20px; gap: 28px; }
+  .research-login .login-card { margin-top: 0; padding: 28px 24px; }
+  .research-login .login-card h1 { font-size: clamp(35px, 9vw, 46px); }
+  .research-login .login-card > p { font-size: 14px; }
+  .login-credit { padding: 12px 20px; }
+  .login-credit img { width: 52px; height: 52px; }
+}

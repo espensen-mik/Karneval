@@ -2,7 +2,7 @@
 
 import UiIcon, { type IconName } from "./ui-icon";
 import Link from "next/link";
-import Image from "next/image";
+import KarmanautCredit from "./karmanaut-credit";
 import { Fragment, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -42,13 +42,7 @@ export default function Sidebar() {
         })}
       </nav>
       <div className="sidebar-session"><button disabled={loggingOut} onClick={async () => { setLoggingOut(true); setLogoutError(""); try { const response = await fetch("/api/session", { method: "DELETE" }); if (!response.ok) throw new Error(); window.location.assign("/login"); } catch { setLogoutError("Prøv igen."); setLoggingOut(false); } }}>{loggingOut ? "Logger ud …" : "Log ud"}</button>{logoutError && <span role="alert">{logoutError}</span>}</div>
-      <a className="sidebar-credit" href="https://www.karmanaut.dk">
-        <Image src="/logo/kun_naut_blaa_outline.svg" alt="KARMANAUT" width={80} height={80} />
-        <span>
-          <strong>SjæleSystem</strong>
-          <small>leveret af KARMANAUT</small>
-        </span>
-      </a>
+      <KarmanautCredit className="sidebar-credit" />
     </aside>
   );
 }
