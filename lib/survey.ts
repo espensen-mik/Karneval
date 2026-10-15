@@ -33,7 +33,7 @@ export function validateSurvey(value: unknown) {
     if (!Array.isArray(items) || items.length > (q.kind === "text" ? 1 : 100)) throw new Error("Der er for mange svar i et spørgsmål.");
     return [q.id, items.map(item => text(item, q.kind === "words" ? 120 : 3000)).filter(Boolean)];
   })) as SurveyAnswers;
-  if (!Object.values(answers).some(items => items.length)) throw new Error("Skriv mindst ét svar med dine egne ord.");
+  if (ACTIVE_SURVEY_QUESTIONS.some(question => !answers[question.id].length)) throw new Error("Besvar alle spørgsmål, før du sender.");
   if (JSON.stringify(answers).length > 40_000) throw new Error("Besvarelsen er for lang. Forkort nogle af dine svar.");
   return { id: body.id, name, email, first_name: name.split(/\s+/u)[0], age, postal_code, participations, answers, publication_permission: true, contact_permission: body.contact_permission === "yes", questionnaire_version: SURVEY_VERSION };
 }

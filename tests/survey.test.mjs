@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ACTIVE_SURVEY_QUESTIONS, emptySurvey, validateSurvey } from '../lib/survey.ts';
-const valid = () => ({ ...emptySurvey(), id: '11111111-1111-4111-8111-111111111111', name: 'Testperson Efternavn', email: 'isolated@example.test', age: '32', postal_code: '9000', participations: '5', publication_permission: true, contact_permission: 'no', answers: { ...emptySurvey().answers, carnival_is: ['en fest', 'et minde'], words: ['glæde', 'god stemning'] } });
+const valid = () => ({ ...emptySurvey(), id: '11111111-1111-4111-8111-111111111111', name: 'Testperson Efternavn', email: 'isolated@example.test', age: '32', postal_code: '9000', participations: '5', publication_permission: true, contact_permission: 'no', answers: { ...Object.fromEntries(ACTIVE_SURVEY_QUESTIONS.map(question => [question.id, ['Mit svar']])), carnival_is: ['en fest', 'et minde'], words: ['glæde', 'god stemning'] } });
 test('the current survey omits the word question and accepts responses without that retired field', () => {
   assert.equal(ACTIVE_SURVEY_QUESTIONS.some(question => question.id === 'words'), false);
   const response = valid(); delete response.answers.words;
@@ -24,4 +24,15 @@ test('survey rejects missing permission, invalid contact details, age and malfor
 test('survey never accepts an empty response or an excessive repeated list', () => {
   assert.throws(() => validateSurvey({ ...valid(), answers: emptySurvey().answers }));
   assert.throws(() => validateSurvey({ ...valid(), answers: { ...valid().answers, words: Array(101).fill('test') } }));
+});
+
+test('every active question requires a non-blank answer; additional empty sentence fields are allowed', () => {
+  for (const question of ACTIVE_SURVEY_QUESTIONS) {
+    for (const missing of [[], ['   ']]) {
+      const response = valid(); response.answers[question.id] = missing;
+      assert.throws(() => validateSurvey(response), /Besvar alle spørgsmål/);
+    }
+  }
+  const response = valid(); response.answers.carnival_is.push('');
+  assert.deepEqual(validateSurvey(response).answers.carnival_is, ['en fest', 'et minde']);
 });
