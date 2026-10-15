@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import UiIcon from "./ui-icon";
 
 const CHEERS = ["Du er go!", "Ja tak — bliv ved!", "Du gør os klogere!", "Tak for endnu en tanke!", "Der er plads til en til!"];
@@ -8,10 +9,14 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
   const [celebration, setCelebration] = useState(0);
   const [cheering, setCheering] = useState(false);
   useEffect(() => {
-    if (!celebration) return;
-    const timer = window.setTimeout(() => setCheering(false), 3000);
-    return () => window.clearTimeout(timer);
-  }, [celebration]);
+    if (!celebration || !cheering) return;
+    const dismiss = () => setCheering(false);
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape" || event.key.length === 1 || event.key === "Backspace" || event.key === "Enter") dismiss(); };
+    const timer = window.setTimeout(dismiss, 1800);
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", dismiss);
+    return () => { window.clearTimeout(timer); window.removeEventListener("keydown", onKey); window.removeEventListener("pointerdown", dismiss); };
+  }, [celebration, cheering]);
   const fields = useRef(new Map<number, HTMLTextAreaElement>());
   const focusNext = useRef<number | null>(null);
   const items = answers.length ? answers : [""];
@@ -45,7 +50,10 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
         {items.length > 1 && <button type="button" className="sentence-remove" aria-label={`Fjern sætning ${index + 1}`} onClick={() => onChange(items.filter((_, i) => i !== index))}><UiIcon name="close" /></button>}
       </div>)}
     </div>
-    <div className="sentence-cheer" role="status" aria-live="polite">{cheering && <span className="sentence-cheer-message" key={celebration}><UiIcon name="soul" /><span>{CHEERS[(celebration - 1) % CHEERS.length]}</span></span>}</div>
+    {cheering && createPortal(<div className="sentence-celebration" key={celebration}>
+      <div className="sentence-celebration-rays" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} style={{ "--ray-angle": `${index * 30}deg` } as CSSProperties}><span /></i>)}</div>
+      <div className="sentence-celebration-content"><UiIcon className="sentence-celebration-symbol" name="soul" /><p role="status" aria-live="polite">{CHEERS[(celebration - 1) % CHEERS.length]}</p></div>
+    </div>, document.body)}
     <button className="sentence-add" type="button" onClick={add} disabled={!items.at(-1)?.trim() || items.length >= 100}>
       <span className="sentence-add-icon" aria-hidden="true">+</span><span><strong>Tilføj endnu en sætning</strong><small>{count ? "Hvad er karneval også for dig?" : "Der er plads til mere end én tanke."}</small></span><UiIcon className="sentence-add-arrow" name="arrow" />
     </button>

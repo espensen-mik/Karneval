@@ -1088,10 +1088,24 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .survey-page .survey-screen { min-height: 0; }
 }
 
-/* A small acknowledgement for every additional sentence. */
-.sentence-cheer { min-height: 26px; margin: 10px 0 -6px; }
-.sentence-cheer-message { display: inline-flex; align-items: center; gap: 8px; color: #ba5147; font-size: 13px; font-weight: 500; animation: sentence-cheer-in .3s ease-out both; }
-.sentence-cheer-message > .ui-icon { width: 19px; height: 19px; animation: sentence-cheer-spark .5s ease-out both; }
-@keyframes sentence-cheer-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes sentence-cheer-spark { from { transform: scale(.6) rotate(-30deg); } 60% { transform: scale(1.2) rotate(8deg); } to { transform: scale(1) rotate(0); } }
-@media (prefers-reduced-motion: reduce) { .sentence-cheer-message, .sentence-cheer-message > .ui-icon { animation: none; } }
+/* A brief full-screen celebration; writing can continue immediately. */
+.sentence-celebration { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 30px; pointer-events: none; color: white; background: #09172bbd; backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); animation: sentence-celebration-layer 1.8s ease both; }
+.sentence-celebration-content { position: relative; z-index: 1; display: grid; justify-items: center; gap: 26px; width: min(850px, 100%); text-align: center; animation: sentence-celebration-text .45s cubic-bezier(.2,.8,.2,1) both; }
+.sentence-celebration-content p { margin: 0; font: 500 clamp(42px, 7vw, 92px)/1.05 "Funnel Display", sans-serif; letter-spacing: -.04em; text-wrap: balance; }
+.sentence-celebration-content .sentence-celebration-symbol { width: 80px; height: 80px; color: #f3a39b; stroke-width: 1.2; animation: sentence-celebration-symbol .8s cubic-bezier(.2,.8,.2,1) both; }
+.sentence-celebration-rays { position: absolute; top: 50%; left: 50%; width: 0; height: 0; opacity: .8; }
+.sentence-celebration-rays i { position: absolute; transform: rotate(var(--ray-angle)); }
+.sentence-celebration-rays span { display: block; width: 5px; height: 15px; border-radius: 4px; background: #eaa098; animation: sentence-celebration-ray 1.25s ease-out both; }
+.sentence-celebration-rays i:nth-child(even) span { background: #fff6e6; height: 7px; width: 7px; }
+@keyframes sentence-celebration-layer { 0%, 100% { opacity: 0; } 12%, 75% { opacity: 1; } }
+@keyframes sentence-celebration-text { from { opacity: 0; transform: translateY(15px) scale(.93); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes sentence-celebration-symbol { from { transform: rotate(-45deg) scale(.6); } to { transform: rotate(0) scale(1); } }
+@keyframes sentence-celebration-ray { 0% { opacity: 0; transform: translateY(-80px) scale(.4); } 25% { opacity: .9; } 100% { opacity: 0; transform: translateY(clamp(-290px, -26vw, -150px)) scale(.8); } }
+@media (max-width: 720px) {
+  .sentence-celebration-content { gap: 20px; }
+  .sentence-celebration-content .sentence-celebration-symbol { width: 64px; height: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sentence-celebration, .sentence-celebration-content, .sentence-celebration-content .sentence-celebration-symbol { animation: none; }
+  .sentence-celebration-rays { display: none; }
+}
