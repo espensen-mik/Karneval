@@ -1,6 +1,6 @@
 import "server-only";
 export function sourceConfig() {
-  const url = process.env.SUPABASE_URL?.replace(/\/$/, "");
+  const url = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)?.replace(/\/$/, "");
   const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   return url && key ? { url, key } : null;
 }
