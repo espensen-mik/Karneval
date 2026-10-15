@@ -1008,29 +1008,30 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 @media (prefers-reduced-motion: reduce) { .survey-progress > span { transition: none; } }
 
 /* A photographic entrance to the research room. */
-.research-login { position: relative; isolation: isolate; display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center; gap: 48px; width: 100%; min-height: 100svh; margin: 0; padding: clamp(40px, 7vh, 80px) 28px 28px; background: var(--navy); color: white; }
+.research-login { position: relative; isolation: isolate; display: grid; grid-template-rows: 1fr auto 1fr; justify-items: center; align-items: center; gap: 28px; width: 100%; min-height: 100svh; margin: 0; padding: 28px; background: var(--navy); color: white; }
 .login-background { z-index: -2; object-fit: cover; object-position: center 40%; }
 .login-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #07132680 0%, #071326a8 55%, #071326d4 100%); }
-.research-login .login-card { width: min(780px, 100%); margin: 16px 0 0; padding: 0; background: none; border: 0; box-shadow: none; text-align: center; }
+.research-login .login-card { grid-row: 2; width: min(780px, 100%); margin: 0; padding: 0; background: none; border: 0; box-shadow: none; text-align: center; }
 .research-login .login-card h1 { margin: 0 0 22px; color: white; font: 500 clamp(44px, 6vw, 76px)/1.02 "Funnel Display", sans-serif; letter-spacing: -.045em; text-wrap: balance; }
 .research-login .login-card > p { max-width: 470px; margin: 0 auto; color: #ffffffc9; font-size: 16px; line-height: 1.7; text-wrap: pretty; }
-.research-login .login-card form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 20px; align-items: center; max-width: 440px; margin: 42px auto 0; }
-.research-login .login-card input { min-height: 52px; padding: 12px 0; background: transparent; border: 0; border-bottom: 1px solid #ffffff70; border-radius: 0; color: white; font-size: 17px; box-shadow: none; transition: border-color .2s; }
+.research-login .login-card form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: center; width: min(360px, 100%); margin: 32px auto 0; }
+.research-login .login-card input { min-height: 54px; padding: 13px 17px; background: #ffffff0c; border: 1px solid #ffffff66; border-radius: 4px; color: white; font-size: 16px; box-shadow: none; backdrop-filter: blur(6px); transition: border-color .2s, background .2s; }
 .research-login .login-card input::placeholder { color: #ffffff9c; }
-.research-login .login-card input:focus { border-bottom-color: white; outline: none; box-shadow: 0 1px 0 white; }
+.research-login .login-card input:focus { border-color: white; outline: none; background: #ffffff14; box-shadow: 0 0 0 2px #ffffff20; }
 .research-login .login-card input:-webkit-autofill { -webkit-text-fill-color: white; -webkit-background-clip: text; background-clip: text; caret-color: white; }
-.research-login .login-card .submit-quote { grid-column: 2; grid-row: 1; min-height: 52px; padding: 0; gap: 16px; background: transparent; border: 0; border-radius: 0; color: white; font-size: 15px; }
-.research-login .login-card .submit-quote:hover { color: #ffffffb0; background: transparent; }
+.research-login .login-card .submit-quote { position: relative; grid-column: 1; min-height: 54px; justify-content: center; padding: 13px 42px; gap: 16px; background: #ffffff18; border: 1px solid #ffffff80; border-radius: 4px; color: white; font-size: 15px; backdrop-filter: blur(6px); transition: background .2s, border-color .2s; }
+.research-login .login-card .submit-quote:hover { color: white; background: #ffffff2a; border-color: white; }
+.research-login .login-card .submit-quote .ui-icon { position: absolute; right: 17px; }
 .research-login .login-card .submit-quote:focus-visible { outline-color: white; }
 .research-login .login-card .form-message.error { grid-column: 1 / -1; color: #ffdcda; font-size: 13px; text-align: left; }
-.login-footer { display: flex; justify-content: center; width: 100%; }
+.login-footer { grid-row: 3; align-self: end; display: flex; justify-content: center; width: 100%; }
 .login-credit { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0; background: none; color: white; text-align: center; }
 .login-credit img { display: block; width: 58px; height: 58px; object-fit: contain; }
 .login-credit strong { display: block; font-size: 13px; font-weight: 500; }
 .login-credit small { display: block; margin-top: 4px; color: #ffffffa6; font-size: 10px; }
 .login-credit:focus-visible { outline-color: white; }
 @media (max-width: 720px) {
-  .research-login { padding: 40px 26px 24px; gap: 38px; }
+  .research-login { padding: 24px 26px; gap: 24px; }
   .research-login .login-card { margin-top: 0; }
   .research-login .login-card h1 { font-size: clamp(42px, 11vw, 62px); }
   .research-login .login-card > p { max-width: 330px; font-size: 14px; }
