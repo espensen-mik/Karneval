@@ -1,6 +1,7 @@
 import type { SVGProps } from "react";
 
 const paths = {
+  expand: "M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5",
   arrow: "M5 19 19 5M5 5h14v14",
   refresh: "M20 7v5h-5M19 12a7 7 0 1 0-2 5M20 7l-3-3",
   close: "m6 6 12 12M6 18 18 6",

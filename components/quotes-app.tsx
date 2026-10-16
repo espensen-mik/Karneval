@@ -1,6 +1,7 @@
 "use client";
 
 import UiIcon from "./ui-icon";
+import QuotePreview from "./quote-preview";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const categories = ["Generel", "Parade", "Kildeparken", "Børnekarneval", "Gløden"] as const;
@@ -80,7 +81,8 @@ function FilterDropdown({ label, value, options, onChange }: {
   );
 }
 
-export default function QuotesApp() {
+export default function QuotesApp({ images }: { images: string[] }) {
+  const [previewQuote, setPreviewQuote] = useState<Quote | null>(null);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("Alle kategorier");
@@ -306,6 +308,7 @@ export default function QuotesApp() {
                       <div className="quote-attribution"><strong>{quote.person_name}</strong><span>{quote.person_title}{quote.organization ? " · " + quote.organization : ""}</span></div>
                       <div className="quote-actions">
                         {actionError?.id === quote.id && <span className="form-message error" role="alert">{actionError.message}</span>}
+                        <button className="quote-action-cancel quote-preview-trigger" type="button" aria-haspopup="dialog" aria-label={`Vis citat fra ${quote.person_name} i fuld skærm`} onClick={() => setPreviewQuote(quote)}><UiIcon name="expand" /> Vis citat</button>
                         <button className="quote-action-cancel" type="button" onClick={() => { setEditingId(quote.id); setActionError(null); }}>Redigér</button>
                         <button className="quote-action-delete" type="button" disabled={actionSaving} onClick={() => void deleteQuote(quote.id)}>Slet</button>
                       </div>
@@ -319,6 +322,8 @@ export default function QuotesApp() {
       </section>
 
       <footer className="page-footer quotes-page-footer"><span>SJÆLEN AF KARNEVAL <i>·</i> CITATSAMLING</span><span>ALLE INDSENDTE CITATER SYNLIGE</span></footer>
+
+      {previewQuote && <QuotePreview quote={previewQuote} images={images} onClose={() => setPreviewQuote(null)} />}
 
       {addModalOpen && (
         <div className="quote-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAddModalOpen(false); }}>

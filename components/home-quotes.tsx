@@ -1,6 +1,7 @@
 "use client";
 
 import UiIcon from "./ui-icon";
+import QuoteImageContent from "./quote-image-content";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
@@ -12,10 +13,6 @@ type Quote = {
   organization: string | null;
   category: string;
 };
-
-function cleanQuote(text: string) {
-  return text.trim().replace(/^[“„"]+|[”"]+$/g, "").trim();
-}
 
 export default function HomeQuotes({ images }: { images: string[] }) {
   const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -41,15 +38,6 @@ export default function HomeQuotes({ images }: { images: string[] }) {
       .catch(() => setQuotes([]))
       .finally(() => setLoading(false));
   }, [images.length]);
-
-  const quoteLength = selected?.quote_text.length ?? 0;
-  const quoteSizeClass = quoteLength > 480
-    ? "quote-size-extra-long"
-    : quoteLength > 300
-      ? "quote-size-long"
-      : quoteLength > 170
-        ? "quote-size-medium"
-        : "";
 
   const showAnotherPair = useCallback(() => {
     if (quotes.length > 1) {
@@ -111,19 +99,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
         sizes="(max-width: 720px) 100vw, calc(100vw - 244px)"
       />}
       <div className="quote-image-shade" />
-      <div className={`quote-image-content ${quoteSizeClass}`} aria-live={playing ? "off" : "polite"}>
-        {selected ? (
-          <>
-            <blockquote>{cleanQuote(selected.quote_text)}</blockquote>
-            <div className="quote-image-attribution">
-              <strong>{selected.person_name}</strong>
-              <span>{selected.person_title}{selected.organization ? " · " + selected.organization : ""}</span>
-            </div>
-          </>
-        ) : (
-          <blockquote>{loading ? "…" : "Her er plads til den første stemme fra karneval."}</blockquote>
-        )}
-      </div>
+      {selected ? <QuoteImageContent quote={selected} live={playing ? "off" : "polite"} /> : <div className="quote-image-content" aria-live="polite"><blockquote>{loading ? "…" : "Her er plads til den første stemme fra karneval."}</blockquote></div>}
       <div className="quote-image-controls">
       <button
         className="quote-image-play"

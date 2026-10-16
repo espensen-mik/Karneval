@@ -1179,3 +1179,6 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .digital-soul-status { gap: 12px; }
   .digital-soul-status > button { font-size: 11px; }
 }
+
+.quote-actions .quote-preview-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.quote-preview-trigger .ui-icon { width: 16px; height: 16px; }
