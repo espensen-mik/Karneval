@@ -1,4 +1,7 @@
 .dialog { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: var(--navy); color: white; overflow: hidden; }
-.close { position: absolute; z-index: 4; top: max(20px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #ffffff80; border-radius: 50%; color: white; background: #0c1e4566; backdrop-filter: blur(8px); cursor: pointer; }
+.controls { position: absolute; z-index: 4; top: max(20px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); display: flex; gap: 8px; }
+.close { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #ffffff80; border-radius: 50%; color: white; background: #0c1e4566; backdrop-filter: blur(8px); cursor: pointer; }
 .close:hover { background: #0c1e45b3; border-color: white; }
 .close:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+
+.close:disabled { opacity: .4; cursor: default; }
