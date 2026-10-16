@@ -40,6 +40,9 @@
 .table tbody td, .table tbody th { padding: 18px 16px; font-size: 17px; font-weight: 400; line-height: 1.5; font-variant-numeric: tabular-nums; }
 .table tbody th { width: 28%; overflow-wrap: anywhere; }
 .table td:last-child { text-align: right; }
+.table .readButton { min-height: 40px; padding: 6px 0; border: 0; border-radius: 0; background: transparent; color: #b82226; gap: 8px; font-size: 15px; }
+.table .readButton:hover { background: transparent; color: var(--navy); text-decoration: underline; text-underline-offset: 5px; }
+.table .readButton :global(.ui-icon) { width: 16px; height: 16px; }
 .nameButton { background: transparent; border: 0; padding: 6px 0; color: var(--navy); font-weight: 600 !important; text-align: left; cursor: pointer; font-size: 18px !important; }
 .table time { white-space: nowrap; }
 .pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 0; font-size: 15px; color: #53617b; }
@@ -107,7 +110,7 @@
   .table td:nth-child(3) { grid-row: 2; }
   .table td:nth-child(4) { grid-row: 2; text-align: right; }
   .table td:last-child { grid-column: 1 / -1; }
-  .table .readButton { width: 100%; }
+  .table .readButton { width: auto; min-height: 44px; }
   .pagination { align-items: flex-start; flex-direction: column; }
   .pagination > div { width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .pagination .outlineButton { padding: 10px 12px; }
