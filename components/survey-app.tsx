@@ -68,11 +68,7 @@ export default function SurveyApp({ testMode = false }: { testMode?: boolean }) 
       {error && <p className="form-message error" role="alert">{error}</p>}
       <footer className="survey-actions">{step > 0 && <button className="quote-action-cancel" type="button" disabled={busy} onClick={() => { setError(""); setStep(current => current - 1); }}>Tilbage</button>}<button className="submit-quote" disabled={busy} type="submit">{busy ? "Sender …" : step === 0 ? "Deltag nu" : step === LAST_STEP ? "Indsend dine svar" : "Næste"}<UiIcon name="arrow" /></button></footer>
       {step === 1 && <section className="survey-email-note" aria-labelledby="survey-email-heading">
-          <h2 id="survey-email-heading">Hvorfor spørger vi om din e-mailadresse?</h2>
-          <p>Aalborg Karneval bruger din e-mailadresse til at kontakte dig, hvis du vinder konkurrencen, eller hvis vi har spørgsmål til din besvarelse.</p>
-          <p>Vi opbevarer kun din e-mailadresse, så længe det er nødvendigt for at afslutte konkurrencen og følge op på eventuelle spørgsmål. Derefter sletter vi den.</p>
-          <p>Du kan læse mere om, hvordan Aalborg Karneval behandler personoplysninger, i vores <a href="https://aalborgkarneval.dk/privatlivspolitik-2/" target="_blank" rel="noopener noreferrer">privatlivspolitik</a>.</p>
-          <p>Har du spørgsmål til behandlingen af dine personoplysninger, kan du skrive til <a href="mailto:info@aalborgkarneval.dk">info@aalborgkarneval.dk</a>.</p>
+          <p><strong id="survey-email-heading">Hvorfor spørger vi om din e-mailadresse?</strong> Aalborg Karneval bruger din e-mailadresse til at kontakte dig, hvis du vinder konkurrencen, eller hvis vi har spørgsmål til din besvarelse. Vi opbevarer kun din e-mailadresse, så længe det er nødvendigt for at afslutte konkurrencen og følge op på eventuelle spørgsmål. Derefter sletter vi den. Du kan læse mere om, hvordan Aalborg Karneval behandler personoplysninger, i vores <a href="https://aalborgkarneval.dk/privatlivspolitik-2/" target="_blank" rel="noopener noreferrer">privatlivspolitik</a>. Har du spørgsmål til behandlingen af dine personoplysninger, kan du skrive til <a href="mailto:info@aalborgkarneval.dk">info@aalborgkarneval.dk</a>.</p>
         </section>}
     </form>}
   </div>;
