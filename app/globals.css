@@ -1190,3 +1190,5 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 .survey-email-note p:last-child { margin-bottom: 0; }
 .survey-email-note a { color: #b82226; text-decoration: underline; text-underline-offset: 3px; }
 .survey-email-note a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+.survey-screen > .survey-next-intro { margin: 28px 0 0; padding: 20px 24px; border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; background: #e52e2d08; color: #ad252b; font-size: 16px; font-weight: 600; line-height: 1.6; }
