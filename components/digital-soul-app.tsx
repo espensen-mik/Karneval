@@ -20,6 +20,12 @@ export default function DigitalSoulApp() {
   const [age, setAge] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteText, setDeleteText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const [notice, setNotice] = useState("");
+  const deleteInput = useRef<HTMLInputElement>(null);
   const [reload, setReload] = useState(0);
   const pendingSelection = useRef<number | null>(null);
   const scrollToCollection = useRef(false);
@@ -66,9 +72,27 @@ export default function DigitalSoulApp() {
       scrollToCollection.current = false;
     }
   }, [loading]);
+  useEffect(() => { setConfirmDelete(false); setDeleteText(""); setDeleteError(""); }, [selected]);
+  useEffect(() => { if (confirmDelete) deleteInput.current?.focus(); }, [confirmDelete]);
   const current = selected === null ? null : rows[selected];
   const pending = loading || searchPending;
   const filtered = Boolean(search || age !== "all");
+  async function deleteResponse() {
+    if (!current || deleteText !== "SLET" || deleting) return;
+    const target = current;
+    setDeleting(true); setDeleteError("");
+    try {
+      const response = await fetch("/api/den-digitale-sjael", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: target.id, confirmation: deleteText }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Besvarelsen kunne ikke slettes.");
+      dialog.current?.close(); setSelected(null); pendingSelection.current = null;
+      setNotice(`Besvarelsen fra ${target.first_name} er slettet.`);
+      if (rows.length === 1 && page > 0) setPage(value => value - 1);
+      else setReload(value => value + 1);
+      collectionHeading.current?.focus({ preventScroll: true });
+    } catch (failure) { setDeleteError(failure instanceof Error ? failure.message : "Besvarelsen kunne ikke slettes."); }
+    finally { setDeleting(false); }
+  }
   function changePage(direction: number) { scrollToCollection.current = true; setPage(value => value + direction); }
   function reset() { setSearch(""); setQuery(""); setAge("all"); setPage(0); }
   function move(direction: number) {
@@ -92,7 +116,8 @@ export default function DigitalSoulApp() {
     </section>
 
     <section className={styles.collection} aria-labelledby="archive-title">
-      <div className={styles.collectionHeading}><h2 id="archive-title" ref={collectionHeading}>Alle stemmer<span aria-live="polite">{pending ? "Henter …" : error ? "" : `${matched} ${filtered ? "fundet" : "besvarelser"}`}</span></h2>{filtered && <button className={styles.textButton} onClick={reset}>Nulstil filtre <UiIcon name="close" /></button>}</div>
+      <div className={styles.collectionHeading}><h2 id="archive-title" ref={collectionHeading} tabIndex={-1}>Alle stemmer<span aria-live="polite">{pending ? "Henter …" : error ? "" : `${matched} ${filtered ? "fundet" : "besvarelser"}`}</span></h2>{filtered && <button className={styles.textButton} onClick={reset}>Nulstil filtre <UiIcon name="close" /></button>}</div>
+      {notice && <p className={styles.notice} role="status">{notice}</p>}
       <div className={styles.filters}>
         <label>Søg efter fornavn<div className={styles.search}><input type="search" value={search} maxLength={80} placeholder="Hvem leder du efter?" onChange={event => setSearch(event.target.value)} /></div></label>
         <label>Alder<select value={age} onChange={event => { setAge(event.target.value); setPage(0); }}>{Object.entries(ARCHIVE_AGES).map(([value, item]) => <option key={value} value={value}>{item.label}</option>)}</select></label>
@@ -109,10 +134,21 @@ export default function DigitalSoulApp() {
 
     <dialog className={styles.reader} ref={dialog} aria-labelledby="response-title" onClose={() => { if (!dialog.current?.open) setSelected(null); }} onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
       {current && <div className={styles.readerContent} ref={readerTop}>
-        <div className={styles.readerBar}><span>Besvarelse {page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1} af {matched}</span><button className={styles.closeButton} onClick={() => dialog.current?.close()} aria-label="Luk besvarelse"><UiIcon name="close" /></button></div>
+        <div className={styles.readerBar}><span>Besvarelse {page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1} af {matched}</span><button className={styles.closeButton} disabled={deleting} onClick={() => dialog.current?.close()} aria-label="Luk besvarelse"><UiIcon name="close" /></button></div>
         <header className={styles.person}><span className={styles.eyebrow}>ET MENNESKES KARNEVAL</span><h2 id="response-title" ref={readerTitle} tabIndex={-1}>{current.first_name}<span>{current.age} år</span></h2><dl><div><dt>Modtaget</dt><dd>{date(current.created_at)}</dd></div><div><dt>Postnummer</dt><dd>{current.postal_code}</dd></div><div><dt>Deltaget</dt><dd>Cirka {current.participations} gange</dd></div></dl></header>
         <article className={styles.answers}>{SURVEY_QUESTIONS.filter(question => question.id !== "words" || current.answers.words?.length).map((question, index) => <section key={question.id}><h3><span>{String(index + 1).padStart(2, "0")}</span>{question.title}</h3><div>{current.answers[question.id]?.length ? current.answers[question.id].map((answer, i) => <p key={i}>{question.kind === "sentences" ? "Aalborg Karneval er… " : ""}{answer}</p>) : <p className={styles.unanswered}>Ikke besvaret</p>}</div></section>)}</article>
-        <footer className={styles.readerFooter}><p>{current.publication_permission ? "Må citeres med fornavn og alder." : "Må ikke citeres offentligt."}<br />{current.contact_permission ? "Har sagt ja til senere kontakt." : "Ønsker ikke senere kontakt."}</p><div><button className={styles.outlineButton} disabled={page === 0 && selected === 0} onClick={() => move(-1)}>← Forrige svar</button><button className={styles.readButton} disabled={page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1 >= matched} onClick={() => move(1)}>Næste svar →</button></div><button className={styles.textButton} onClick={() => dialog.current?.close()}>Tilbage til overblikket</button></footer>
+        <footer className={styles.readerFooter}><p>{current.publication_permission ? "Må citeres med fornavn og alder." : "Må ikke citeres offentligt."}<br />{current.contact_permission ? "Har sagt ja til senere kontakt." : "Ønsker ikke senere kontakt."}</p><div><button className={styles.outlineButton} disabled={deleting || (page === 0 && selected === 0)} onClick={() => move(-1)}>← Forrige svar</button><button className={styles.readButton} disabled={deleting || page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1 >= matched} onClick={() => move(1)}>Næste svar →</button></div><button className={styles.textButton} disabled={deleting} onClick={() => dialog.current?.close()}>Tilbage til overblikket</button>
+          <section className={styles.deleteArea} aria-label="Slet besvarelse">
+            {confirmDelete ? <>
+              <h3>Slet besvarelsen fra {current.first_name}, {current.age} år?</h3>
+              <p>Alle svar og tilknyttede kontaktoplysninger slettes permanent. Det kan ikke fortrydes.</p>
+              <label htmlFor="delete-survey-confirmation">Skriv <strong>SLET</strong> for at bekræfte</label>
+              <input id="delete-survey-confirmation" ref={deleteInput} value={deleteText} disabled={deleting} onChange={event => setDeleteText(event.target.value)} autoComplete="off" autoCapitalize="characters" spellCheck={false} />
+              {deleteError && <p role="alert">{deleteError}</p>}
+              <div><button className={styles.outlineButton} disabled={deleting} onClick={() => { setConfirmDelete(false); setDeleteText(""); setDeleteError(""); }}>Annuller</button><button className={styles.readButton} disabled={deleting || deleteText !== "SLET"} onClick={() => void deleteResponse()}>{deleting ? "Sletter …" : "Slet permanent"}</button></div>
+            </> : <button className={styles.deleteTrigger} disabled={deleting} onClick={() => setConfirmDelete(true)}>Slet besvarelse</button>}
+          </section>
+        </footer>
       </div>}
     </dialog>
   </div>;
