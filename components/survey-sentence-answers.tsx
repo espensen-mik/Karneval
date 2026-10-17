@@ -55,8 +55,11 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
       <div className="sentence-celebration-content"><UiIcon className="sentence-celebration-symbol" name="heart" /><p role="status" aria-live="polite">{CHEERS[(celebration - 1) % CHEERS.length]}</p></div>
     </div>, document.body)}
     <button className="sentence-add" type="button" onClick={add} disabled={!items.at(-1)?.trim() || items.length >= 100}>
-      <span className="sentence-add-icon" aria-hidden="true">+</span><span><strong>Tilføj endnu en sætning</strong><small>{count ? "Hvad er Aalborg Karneval også for dig?" : "Der er plads til mere end én tanke."}</small></span><UiIcon className="sentence-add-arrow" name="arrow" />
+      <span className="sentence-add-icon" aria-hidden="true">+</span><span><strong>Tilføj endnu en sætning eller ord</strong><small>{items.length >= 100 ? "Du har nået 100 svar. Tak for alle dine tanker!" : !items.at(-1)?.trim() ? "Skriv i feltet ovenfor — så kan du tilføje en til." : "Har du en tanke mere? Giv den plads her."}</small></span><UiIcon className="sentence-add-arrow" name="arrow" />
     </button>
-    <p className="sentence-count" aria-live="polite">{count > 0 ? `${count} ${count === 1 ? "sætning" : "sætninger"} — tilføj gerne flere, hvis du har lyst.` : "Du må skrive lige så mange sætninger, du har lyst til."}</p>
+    <div className="sentence-count" role="status" aria-live="polite" aria-atomic="true">
+      <span className="sentence-score" key={count} aria-hidden="true">{count}</span>
+      <div><strong>{count} {count >= 100 ? "svar — tak for alle dine tanker!" : count === 1 ? "svar — og plads til flere!" : "svar — hver tanke tæller!"}</strong><span>{count ? "Du gør os klogere. Hvad er Aalborg Karneval også?" : "Både enkelte ord og hele sætninger tæller."}</span></div>
+    </div>
   </div>;
 }

@@ -1207,3 +1207,23 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .survey-screen > p { font-size: 17px; }
   .survey-screen > .survey-question-help { font-size: 20px; }
 }
+
+/* A clear invitation to add another thought, with an honest count of filled answers. */
+.survey-page .sentence-add { border: 1px solid #c92325; background: #d9232b; color: white; box-shadow: 0 3px 10px #b8222614; }
+.survey-page .sentence-add:hover:not(:disabled) { background: #bd2027; border-color: #bd2027; }
+.survey-page .sentence-add:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; }
+.survey-page .sentence-add-icon { background: #ffffff24; color: white; }
+.survey-page .sentence-add strong { font-size: 17px; font-weight: 600; line-height: 1.4; }
+.survey-page .sentence-add small { color: #fff; font-size: 14px; line-height: 1.5; }
+.survey-page .sentence-add-arrow { color: white; }
+.survey-page .sentence-add:disabled { background: #f3e5e1; border-color: #c88981; box-shadow: none; }
+.survey-page .sentence-add:disabled strong, .survey-page .sentence-add:disabled small { color: #853b36; }
+.survey-page .sentence-add:disabled .sentence-add-icon { background: #dfc4bc; color: #853b36; }
+.survey-page .sentence-add:disabled .sentence-add-arrow { color: #853b36; }
+.survey-page .sentence-count { display: flex; align-items: center; gap: 14px; margin: 22px 0 0; color: var(--navy); }
+.sentence-score { display: grid; place-items: center; flex: 0 0 52px; height: 52px; border: 2px solid #d9232b; border-radius: 50%; background: #f9eae5; color: #b82226; font: 600 25px/1 "Funnel Display", sans-serif; font-variant-numeric: tabular-nums; animation: sentence-score-in .24s ease-out; }
+.sentence-count strong { display: block; font-size: 16px; font-weight: 600; line-height: 1.4; }
+.sentence-count div > span { display: block; margin-top: 4px; color: #53617b; font-size: 14px; line-height: 1.5; }
+@keyframes sentence-score-in { from { transform: scale(.9); } to { transform: scale(1); } }
+@media (max-width: 720px) { .survey-page .sentence-add strong { font-size: 16px; } .sentence-score { flex-basis: 48px; height: 48px; font-size: 23px; } }
+@media (prefers-reduced-motion: reduce) { .sentence-score { animation: none; } }
