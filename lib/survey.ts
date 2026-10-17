@@ -6,7 +6,7 @@ export const SURVEY_QUESTIONS = [
   { id: "difference", title: "Hvad gør Aalborg Karneval til noget særligt for dig?", help: "", kind: "text" },
   { id: "traditions", title: "Har du nogen traditioner omkring Aalborg Karneval?", help: "Hvis ja — hvilke?", kind: "text" },
   { id: "memory", title: "Hvad er din allerbedste oplevelse til Aalborg Karneval?", help: "Vær gerne konkret: Et særligt møde, en koncert eller en sjov episode.", kind: "text" },
-  { id: "community", title: "Hvordan vil du beskrive fællesskabet til Aalborg Karneval?", help: "Fortæl med dine egne ord.", kind: "text" },
+  { id: "community", title: "Hvordan vil du beskrive fællesskabet til Aalborg Karneval?", help: "Hvordan er man sammen til Aalborg Karneval? Hvad er dine tanker om fællesskab og Karneval?", kind: "text" },
 ] as const;
 // Keep the retired word question for validation and reading older responses.
 export const ACTIVE_SURVEY_QUESTIONS = SURVEY_QUESTIONS.filter(question => question.kind !== "words");
