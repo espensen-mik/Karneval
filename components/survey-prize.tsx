@@ -7,7 +7,7 @@ export default function SurveyPrize() {
   const dialog = useRef<HTMLDialogElement>(null);
   return <>
     <button type="button" className="survey-prize" aria-haspopup="dialog" onClick={() => dialog.current?.showModal()}>
-      <span>Deltag og<br /><strong>Vind billetter</strong></span>
+      <span className="survey-prize-copy"><span>Deltag og</span><strong>Vind<br />billetter</strong></span>
       <span className="survey-prize-info">læs mere her</span>
     </button>
     <dialog ref={dialog} className="survey-prize-dialog" aria-labelledby="survey-prize-title" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
