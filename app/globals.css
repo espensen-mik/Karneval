@@ -1112,7 +1112,7 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 /* A small invitation to the prize draw on the public welcome screen. */
 .survey-prize { float: right; position: relative; display: grid; place-items: center; width: 154px; height: 154px; margin: -12px -12px 20px 24px; padding: 24px 14px; border: 0; border-radius: 48% 52% 45% 55% / 54% 44% 56% 46%; background: var(--red); color: white; font: 400 16px/1.3 "Funnel Display", sans-serif; text-align: center; cursor: pointer; transform: rotate(8deg); transition: transform .2s ease; }
 .survey-prize strong { display: block; font-size: 23px; font-weight: 600; }
-.survey-prize-info { position: absolute; bottom: 13px; left: calc(50% - 9px); display: grid; place-items: center; width: 18px; height: 18px; border: 1px solid #ffffffb3; border-radius: 50%; font-size: 12px; }
+.survey-prize-info { position: absolute; bottom: 15px; left: 0; width: 100%; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
 .survey-prize:hover { transform: rotate(3deg); }
 .survey-prize:focus-visible { outline: 3px solid var(--navy); outline-offset: 5px; }
 .survey-prize-dialog { width: min(540px, calc(100% - 36px)); max-height: calc(100dvh - 48px); padding: 0; border: 1px solid var(--line); background: #fffdfb; color: var(--navy); box-shadow: 0 25px 100px #08183233; }
@@ -1125,7 +1125,7 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 @media (max-width: 600px) {
   .survey-prize { width: 116px; height: 116px; margin: -6px 0 14px 14px; padding: 18px 10px; font-size: 13px; }
   .survey-prize strong { font-size: 18px; }
-  .survey-prize-info { bottom: 7px; width: 16px; height: 16px; font-size: 11px; }
+  .survey-prize-info { bottom: 10px; font-size: 10px; }
   .survey-prize-dialog-content { padding: 56px 24px 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .survey-prize { transition: none; } }
@@ -1182,3 +1182,10 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 
 .quote-actions .quote-preview-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .quote-preview-trigger .ui-icon { width: 16px; height: 16px; }
+
+.survey-email-note { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e7dfd8; color: #53617b; font-size: 15px; line-height: 1.65; }
+.survey-email-note h2 { margin: 0 0 12px; color: var(--navy); font: 600 16px/1.5 "Funnel Sans", sans-serif; }
+.survey-email-note p { margin: 0 0 12px; }
+.survey-email-note p:last-child { margin-bottom: 0; }
+.survey-email-note a { color: #b82226; text-decoration: underline; text-underline-offset: 3px; }
+.survey-email-note a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }

@@ -8,8 +8,7 @@ export default function SurveyPrize() {
   return <>
     <button type="button" className="survey-prize" aria-haspopup="dialog" onClick={() => dialog.current?.showModal()}>
       <span>Deltag og<br /><strong>Vind billetter</strong></span>
-      <span className="survey-prize-info" aria-hidden="true">i</span>
-      <span className="survey-sr-only">Læs om lodtrækningen</span>
+      <span className="survey-prize-info">læs mere her</span>
     </button>
     <dialog ref={dialog} className="survey-prize-dialog" aria-labelledby="survey-prize-title" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
       <div className="survey-prize-dialog-content">
