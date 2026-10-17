@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   if (isApi && !["GET", "HEAD", "OPTIONS"].includes(request.method) && request.headers.get("origin") !== origin) {
     return NextResponse.json({ error: "Ugyldig forespørgsel." }, { status: 403 });
   }
-  const publicPath = path.startsWith("/billeder/") || path.startsWith("/logo/") || path === "/login" || path === "/spoergeskema" || path === "/api/session" || (path === "/api/spoergeskema" && request.method === "POST");
+  const publicPath = path.startsWith("/billeder/") || path.startsWith("/logo/") || path === "/login" || path === "/spoergeskema" || path === "/sjaelen" || path === "/api/session" || (path === "/api/spoergeskema" && request.method === "POST");
   if (!publicPath && !await validSession(request.cookies.get(SESSION_COOKIE)?.value)) {
     if (isApi) return NextResponse.json({ error: "Log ind for at fortsætte." }, { status: 401, headers: { "Cache-Control": "private, no-store" } });
     const login = new URL("/login", origin);

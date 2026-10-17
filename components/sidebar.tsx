@@ -11,7 +11,7 @@ const links = [
   { href: "/kilder", label: "Kilder", icon: "arrow" },
   { href: "/citater", label: "Citater", icon: "quote" },
   { href: "/den-digitale-sjael", label: "Den digitale sjæl", icon: "digital" },
-  { href: "/sjaelen", label: "SJÆLEN", icon: "soul" },
+  { href: "/sjaelen/ordnetvaerk", label: "SJÆLEN", icon: "soul" },
 ];
 
 export default function Sidebar() {
@@ -28,15 +28,15 @@ export default function Sidebar() {
       </Link>
       <nav className="primary-nav" aria-label="Hovedmenu">
         {links.map((link) => {
-          const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+          const active = link.href === "/" ? pathname === "/" : link.href === "/sjaelen/ordnetvaerk" ? pathname.startsWith("/sjaelen/") : pathname.startsWith(link.href);
           return (
-            <Fragment key={link.href}><Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen" ? " nav-soul" : ""}`} href={link.href}>
+            <Fragment key={link.href}><Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen/ordnetvaerk" ? " nav-soul" : ""}`} href={link.href}>
               <span className="nav-icon" aria-hidden="true"><UiIcon name={link.icon as IconName} /></span>
               <span>{link.label}</span>
               {active && <span className="nav-dot" />}
             </Link>
-            {link.href === "/sjaelen" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
-            {link.href === "/sjaelen" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/leg-med-ord" ? " active" : ""}`} href="/sjaelen/leg-med-ord" aria-current={pathname === "/sjaelen/leg-med-ord" ? "page" : undefined}>Leg med ord</Link>}
+            {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
+            {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/leg-med-ord" ? " active" : ""}`} href="/sjaelen/leg-med-ord" aria-current={pathname === "/sjaelen/leg-med-ord" ? "page" : undefined}>Leg med ord</Link>}
             </Fragment>
           );
         })}

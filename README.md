@@ -20,7 +20,7 @@ Kør migrationsfilerne i `supabase/migrations` i Supabase SQL Editor, i tidsstem
 
 ### SJÆLEN
 
-`/sjaelen` er et interaktivt SVG-ordnetværk med `d3-force`. Hovedsiden viser selve netværket. Kuratering, filtre, antal ord og linjeindstillinger ligger på `/sjaelen/kuratering`, som også er tilgængelig som underpunkt i menuen. Visningsvalgene følger med i URL’en, når netværket åbnes fra indstillingerne. Det læser kun offentligt godkendte citaters `quote_text` via `/api/sjaelen`; alle sider fra Supabase læses, så optællingen ikke stopper ved en standardgrænse. Metadata bruges kun til filtrering og kildehenvisninger. Hver citatpost er ét bidrag. Kilder, PDF’er, spørgeskemaer og workshopmateriale indgår ikke endnu; de vises som utilknyttede materialetyper.
+`/sjaelen/ordnetvaerk` er et interaktivt SVG-ordnetværk med `d3-force`. Hovedsiden viser selve netværket. Kuratering, filtre, antal ord og linjeindstillinger ligger på `/sjaelen/kuratering`, som også er tilgængelig som underpunkt i menuen. Visningsvalgene følger med i URL’en, når netværket åbnes fra indstillingerne. Det læser kun offentligt godkendte citaters `quote_text` via `/api/sjaelen`; alle sider fra Supabase læses, så optællingen ikke stopper ved en standardgrænse. Metadata bruges kun til filtrering og kildehenvisninger. Hver citatpost er ét bidrag. Kilder, PDF’er, spørgeskemaer og workshopmateriale indgår ikke endnu; de vises som utilknyttede materialetyper.
 
 Analysen i `lib/soul-analysis.ts` normaliserer Unicode, store/små bogstaver og tegnsætning. `lib/soul-stopwords.ts` er den udvidelige danske stopordsliste. Enkeltord tælles højst én gang pr. bidrag. Vendinger på 2–4 sammenhængende ord kræver gentagelse i mindst to forskellige bidrag og krydser ikke tegnsætning. Som frasegrænser bruges indholdsord; “være” i begyndelsen og “selv” til sidst tillades også. Der foretages ingen automatisk bøjning, oversættelse, synonymafgørelse eller AI-analyse.
 
@@ -49,7 +49,7 @@ Researchrummet kræver nu fælles password. Supabase-servernøglen ligger kun so
 
 ### Den digitale sjæl og fælles login
 
-`/spoergeskema` er den offentlige formular med ét trin ad gangen, gentagelige sætninger, tilbage-navigation og gennemsyn før indsendelse. Ingen kladde eller personoplysninger gemmes i localStorage. Et stabilt tilfældigt indsendelses-ID gør genforsøg idempotente. Materialet blandes ikke ind i SJÆLEN eller Leg med ord.
+`/sjaelen` er den offentlige formular med ét trin ad gangen, gentagelige sætninger, tilbage-navigation og gennemsyn før indsendelse. Ingen kladde eller personoplysninger gemmes i localStorage. Et stabilt tilfældigt indsendelses-ID gør genforsøg idempotente. Materialet blandes ikke ind i SJÆLEN eller Leg med ord.
 
 `/den-digitale-sjael` viser komplette besvarelser med fornavn og alder, navigation mellem personer og sideinddeling på 50 besvarelser. Mailadresse og fuldt navn gemmes særskilt i `survey_contacts`. Læse-API’et vælger eksplicit kolonner fra `survey_responses` og læser aldrig kontakttabellen. Spørgeskemaets egen gennemgang viser kun den aktuelle deltagers egne oplysninger fra formularens hukommelse.
 
@@ -66,3 +66,5 @@ Nye databasefunktioner bruger invoker-rettigheder og kan kun kaldes med servern�
 Der installeres ingen nye app-pakker. De nye tests dækker sessionens signatur, udløb, passwordskift, sikre returadresser og servervalidering af spørgeskemasvar. Database-/browsertests bruger isolerede data eller transaktioner med rollback.
 
 Spørgeskemaversion 2 udelader det separate ordspørgsmål. Tidligere ordsvar bevares og vises fortsat i besvarelsesarkivet, når de findes. Nye gentagelige sætninger kvitteres med korte, skiftende beskeder og en rolig animation, som slås fra ved reduceret bevægelse.
+
+Den tidligere formularadresse `/spoergeskema` viderestiller til `/sjaelen` og bevarer query-parametre. Midlertidig layouttest åbnes med `/sjaelen?test=1`; den sender aldrig svar. Kun den præcise formularsti er offentlig. `/sjaelen/ordnetvaerk`, `/sjaelen/kuratering`, `/sjaelen/leg-med-ord` og research-API’er kræver stadig login.

@@ -1,5 +1,6 @@
 "use client";
 
+import { SURVEY_PRIZE, SURVEY_DRAW_NOTICE } from "@/lib/survey-prize";
 import { useRef } from "react";
 import UiIcon from "./ui-icon";
 
@@ -15,8 +16,8 @@ export default function SurveyPrize() {
         <button type="button" className="quote-modal-close" aria-label="Luk" onClick={() => dialog.current?.close()}><UiIcon name="close" /></button>
         <span className="eyebrow">TAK FOR DINE ORD</span>
         <h2 id="survey-prize-title">Deltag og vind billetter<span>.</span></h2>
-        <p>Tak fordi du vil bidrage til Sjælen af Aalborg Karneval. Når du har indsendt dine svar, deltager du automatisk i lodtrækningen om 2 stk. billetter til Kildeparken til enten Børnekarneval eller selve Aalborg Karneval.</p>
-        <p>Vi trækker lod den 1. december, og du får direkte besked på email, hvis du har vundet!</p>
+        <p>Tak fordi du vil bidrage til Sjælen af Aalborg Karneval. Når du har indsendt dine svar, deltager du automatisk i lodtrækningen om {SURVEY_PRIZE}</p>
+        <p>{SURVEY_DRAW_NOTICE}</p>
       </div>
     </dialog>
   </>;

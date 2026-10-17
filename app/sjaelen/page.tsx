@@ -1,10 +1,8 @@
-import SoulApp from "@/components/soul-app";
-import "./soul.css";
-import { parseSoulView } from "@/lib/soul-view";
-
-export const metadata = { title: "SJÆLEN · Sjælen af Karneval" };
-
-export default async function SoulPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const view = parseSoulView(await searchParams);
-  return <SoulApp key={JSON.stringify(view)} initialView={view} />;
+import SurveyApp from "@/components/survey-app";
+export const metadata = { title: "Del dit karneval · Den digitale sjæl", description: "Del dine ord, minder og oplevelser fra Aalborg Karneval." };
+// Temporary layout preview: remove this flag when questionnaire design is approved.
+const LAYOUT_TEST_ENABLED = true;
+export default async function SurveyPage({ searchParams }: { searchParams: Promise<{ test?: string }> }) {
+  const testMode = LAYOUT_TEST_ENABLED && (await searchParams).test === "1";
+  return <SurveyApp testMode={testMode} />;
 }

@@ -23,5 +23,5 @@ export function soulViewHref(view: SoulView, manage = false) {
     if (view[key] !== DEFAULT_SOUL_VIEW[key]) params.set(key, String(view[key]));
   }
   const query = params.toString();
-  return `/sjaelen${manage ? "/kuratering" : ""}${query ? `?${query}` : ""}`;
+  return `/sjaelen${manage ? "/kuratering" : "/ordnetvaerk"}${query ? `?${query}` : ""}`;
 }
