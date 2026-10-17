@@ -1,0 +1,84 @@
+/* Questionnaire-only mobile layout. Desktop rules remain unchanged. */
+@media (max-width: 720px) {
+  .survey-page { padding: 0 20px; }
+  .survey-page .survey-header { padding: 19px 0 17px; gap: 8px 12px; flex-wrap: wrap; }
+  .survey-page .survey-brand { font-size: 18px; line-height: 1.25; }
+  .survey-page .survey-header > span { font-size: 12px; white-space: nowrap; }
+  .survey-page .survey-screen { margin: 28px auto 36px; width: 100%; min-height: 0; }
+  .survey-page .survey-screen > .eyebrow { font-size: 11px; line-height: 1.5; letter-spacing: .13em; }
+  .survey-page .survey-screen h1 { font-size: clamp(28px, 7.8vw, 34px); line-height: 1.15; letter-spacing: -.025em; margin: 12px 0 20px; overflow-wrap: break-word; }
+  .survey-page .survey-screen h1.survey-context-title { font-size: clamp(25px, 6.8vw, 29px); line-height: 1.22; margin-bottom: 16px; }
+  .survey-page .survey-screen > p { font-size: 16px; line-height: 1.65; margin: 0 0 18px; }
+  .survey-page .survey-screen > .survey-question-help { font-size: 18px; font-weight: 500; line-height: 1.5; margin-bottom: 22px; }
+  .survey-page .survey-screen > p strong { font-weight: 600; }
+
+  /* A horizontal invitation leaves the full width available for the welcome title. */
+  .survey-page .survey-prize { float: none; display: flex; flex-direction: row; justify-content: space-between; gap: 12px; width: 100%; height: auto; min-height: 66px; margin: 0 0 24px; background: #d9232b; padding: 14px 16px; border-radius: 8px; transform: none; transition: background .18s; text-align: left; }
+  .survey-page .survey-prize:hover { transform: none; background: #c92325; }
+  .survey-page .survey-prize-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .survey-page .survey-prize-copy > span { font-size: 12px; line-height: 1.2; }
+  .survey-page .survey-prize strong { font-size: 18px; line-height: 1.2; }
+  .survey-page .survey-prize strong br { display: none; }
+  .survey-page .survey-prize-info { flex: 0 0 auto; font-size: 12px; line-height: 1.4; text-underline-offset: 4px; }
+  .survey-prize-dialog { width: calc(100% - 32px); max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; border-radius: 8px; }
+  .survey-prize-dialog .survey-prize-dialog-content { padding: 54px 22px 24px; }
+  .survey-prize-dialog h2 { font-size: 29px; line-height: 1.15; margin: 14px 0 20px; }
+  .survey-prize-dialog .quote-modal-close { width: 44px; min-width: 44px; height: 44px; }
+  .survey-prize-dialog p { font-size: 16px; line-height: 1.65; }
+
+  .survey-page .survey-personal { grid-template-columns: 1fr; gap: 17px; margin-top: 24px; }
+  .survey-page .form-field { font-size: 14px; gap: 8px; min-width: 0; }
+  .survey-page .form-field input { min-height: 50px; padding: 12px 14px; font-size: 16px; border-radius: 5px; }
+  .survey-page .form-field > textarea { height: clamp(160px, 24svh, 210px); min-height: 160px; padding: 13px 14px; font-size: 16px; line-height: 1.6; border-radius: 5px; }
+  .survey-page .form-field > textarea::placeholder { font-size: 16px; }
+  .survey-page .form-field input::placeholder, .survey-page .form-field > textarea::placeholder, .survey-page .sentence-field textarea::placeholder { color: #6f7786; }
+  .survey-page .survey-count { width: min(180px, 100%); margin: 24px 0; }
+  .survey-page .survey-screen > .survey-next-intro { margin: 24px 0 0; padding: 16px; font-size: 15px; line-height: 1.6; }
+  .survey-page .survey-choice { margin: 24px 0; gap: 10px; }
+  .survey-page .survey-choice label { min-height: 56px; padding: 15px; border-radius: 6px; gap: 12px; font-size: 16px; line-height: 1.45; }
+  .survey-page .survey-choice input { width: 20px; height: 20px; flex-basis: 20px; margin: 0; }
+
+  .survey-page .sentence-workspace { margin: 24px 0 12px; }
+  .survey-page .sentence-answers { gap: 12px; }
+  .survey-page .sentence-answer { padding: 13px 10px 5px; gap: 8px; border-radius: 7px; }
+  .survey-page .sentence-number { flex-basis: 24px; height: 24px; margin-top: 2px; font-size: 11px; }
+  .survey-page .sentence-field textarea { min-height: 64px; padding: 1px 0 10px; font-size: 18px; line-height: 1.5; }
+  .survey-page .sentence-field textarea::placeholder { font-size: 17px; }
+  .survey-page .sentence-remove { flex-basis: 44px; min-height: 44px; margin-top: -7px; }
+  .survey-page .sentence-add { padding: 16px 14px; gap: 12px; border-radius: 7px; }
+  .survey-page .sentence-add > span:nth-child(2) { min-width: 0; }
+  .survey-page .sentence-add-icon { flex-basis: 32px; height: 32px; font-size: 25px; }
+  .survey-page .sentence-add strong { font-size: 15px; line-height: 1.4; }
+  .survey-page .sentence-add small { font-size: 13px; line-height: 1.5; margin-top: 5px; }
+  .survey-page .sentence-count { align-items: flex-start; gap: 12px; margin-top: 18px; }
+  .survey-page .sentence-score { min-height: 36px; padding: 8px 12px; font-size: 15px; }
+  .survey-page .sentence-count strong { font-size: 15px; line-height: 1.4; }
+  .survey-page .sentence-count div > span { font-size: 13px; line-height: 1.5; }
+  .survey-page .sentence-thanks { top: -8px; right: 10px; width: 38px; height: 38px; }
+  .survey-page .sentence-thanks .ui-icon { width: 21px; height: 21px; }
+
+  .survey-page .survey-actions { display: grid; grid-template-columns: minmax(80px, .7fr) minmax(0, 1.6fr); gap: 10px; margin-top: 28px; }
+  .survey-page .survey-actions button { min-height: 50px; min-width: 0; border-radius: 5px; font-size: 16px; }
+  .survey-page .survey-actions .submit-quote { padding: 0 14px; gap: 10px; }
+  .survey-page .survey-actions .quote-action-cancel { padding: 0 12px; }
+  .survey-page .survey-actions > .submit-quote:first-child { grid-column: 1 / -1; }
+  .survey-page .survey-actions .ui-icon { flex: 0 0 18px; width: 18px; height: 18px; }
+  .survey-page .survey-email-note { margin-top: 26px; padding-top: 18px; font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+  .survey-page .survey-review { margin: 24px 0; }
+  .survey-page .survey-review section { padding: 20px 0; }
+  .survey-page .survey-review h2 { margin: 0 0 10px; font-size: 16px; line-height: 1.5; }
+  .survey-page .survey-review p { margin: 8px 0; font-size: 16px; line-height: 1.65; }
+  .survey-page .survey-review button { min-height: 44px; font-size: 14px; }
+  .survey-page .survey-permission { gap: 12px; font-size: 14px; line-height: 1.6; }
+  .survey-page .survey-permission input { width: 20px; height: 20px; flex-basis: 20px; }
+  .survey-page .survey-screen .survey-small { font-size: 13px; line-height: 1.6; }
+  .survey-page .survey-thanks .quote-action-cancel { min-height: 48px; font-size: 15px; padding: 0 16px; border-radius: 5px; }
+}
+@media (max-width: 359px) {
+  .survey-page { padding-inline: 16px; }
+  .survey-page .survey-brand { font-size: 17px; }
+  .survey-page .survey-header > span { font-size: 11px; }
+  .survey-page .survey-actions button { font-size: 15px; }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) { .survey-page .survey-prize { transition: none; } }
