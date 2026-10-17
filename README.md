@@ -68,3 +68,7 @@ Der installeres ingen nye app-pakker. De nye tests dækker sessionens signatur, 
 Spørgeskemaversion 2 udelader det separate ordspørgsmål. Tidligere ordsvar bevares og vises fortsat i besvarelsesarkivet, når de findes. Nye gentagelige sætninger kvitteres med korte, skiftende beskeder og en rolig animation, som slås fra ved reduceret bevægelse.
 
 Den tidligere formularadresse `/spoergeskema` viderestiller til `/sjaelen` og bevarer query-parametre. Midlertidig layouttest åbnes med `/sjaelen?test=1`; den sender aldrig svar. Kun den præcise formularsti er offentlig. `/sjaelen/ordnetvaerk`, `/sjaelen/kuratering`, `/sjaelen/leg-med-ord` og research-API’er kræver stadig login.
+
+### Analyse af spørgeskemaet
+
+`/den-digitale-sjael/analyse` viser aldersfordeling, deltagelser og en separat ordanalyse af `answers.carnival_is`. Den passwordbeskyttede API henter kun ID, alder, deltagelser og dette ene svarfelt, på tværs af alle databasesider. Den sender fordelinger, optællinger og op til fem teksteksempler pr. vist term til browseren; kontaktoplysninger indgår ikke. Et ord tæller som standard højst én gang pr. besvarelse, og visningen kan skiftes til optælling pr. enkeltstående svar. Vendinger på 2–4 ord kræver mindst to besvarelser. Den eksisterende danske stopordsliste genbruges, den faste indledning fjernes i starten af et svar, og der anvendes ingen AI, automatisk synonymgruppering eller sammenblanding med citatnetværket. Ingen nye tabeller, migrationer eller pakker er nødvendige.

@@ -35,6 +35,7 @@ export default function Sidebar() {
               <span>{link.label}</span>
               {active && <span className="nav-dot" />}
             </Link>
+            {link.href === "/den-digitale-sjael" && pathname.startsWith("/den-digitale-sjael") && <Link className={`nav-soul-sub nav-digital-sub${pathname === "/den-digitale-sjael/analyse" ? " active" : ""}`} href="/den-digitale-sjael/analyse" aria-current={pathname === "/den-digitale-sjael/analyse" ? "page" : undefined}>Analyse</Link>}
             {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
             {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/leg-med-ord" ? " active" : ""}`} href="/sjaelen/leg-med-ord" aria-current={pathname === "/sjaelen/leg-med-ord" ? "page" : undefined}>Leg med ord</Link>}
             </Fragment>

@@ -1209,3 +1209,6 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 .sentence-add-wrap { position: relative; }
 .sentence-thanks { position: absolute; z-index: 2; top: -10px; right: 14px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #eed3cd; border-radius: 50%; background: #fffdfb; color: #b82226; box-shadow: 0 3px 12px #0c1e4514; pointer-events: none; }
 .sentence-thanks .ui-icon { width: 24px; height: 24px; }
+
+.nav-digital-sub { font-size: 13px; }
+@media (max-width: 720px) { .primary-nav .nav-digital-sub { display: none; } }
