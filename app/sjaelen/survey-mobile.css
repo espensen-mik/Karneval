@@ -13,8 +13,8 @@
   .survey-page .survey-screen > p strong { font-weight: 600; }
 
   /* A horizontal invitation leaves the full width available for the welcome title. */
-  .survey-page .survey-prize { float: none; display: flex; flex-direction: row; justify-content: space-between; gap: 12px; width: 100%; height: auto; min-height: 66px; margin: 0 0 24px; background: #d9232b; padding: 14px 16px; border-radius: 8px; transform: none; transition: background .18s; text-align: left; }
-  .survey-page .survey-prize:hover { transform: none; background: #c92325; }
+  .survey-page .survey-prize { float: none; display: flex; flex-direction: row; justify-content: space-between; gap: 12px; width: 100%; height: auto; min-height: 66px; margin: 0 0 24px; background: transparent; color: #b82226; border: 1px solid #dfbbb5; padding: 14px 16px; border-radius: 8px; transform: none; transition: background .18s; text-align: left; }
+  .survey-page .survey-prize:hover { transform: none; background: #e52e2d06; border-color: #c88981; }
   .survey-page .survey-prize-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
   .survey-page .survey-prize-copy > span { font-size: 12px; line-height: 1.2; }
   .survey-page .survey-prize strong { font-size: 18px; line-height: 1.2; }
