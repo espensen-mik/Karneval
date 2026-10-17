@@ -1087,28 +1087,6 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .survey-page .survey-screen { min-height: 0; }
 }
 
-/* A brief full-screen celebration; writing can continue immediately. */
-.sentence-celebration { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 30px; pointer-events: none; color: white; background: #09172bbd; backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); animation: sentence-celebration-layer 1.8s ease both; }
-.sentence-celebration-content { position: relative; z-index: 1; display: grid; justify-items: center; gap: 26px; width: min(850px, 100%); text-align: center; animation: sentence-celebration-text .45s cubic-bezier(.2,.8,.2,1) both; }
-.sentence-celebration-content p { margin: 0; font: 500 clamp(42px, 7vw, 92px)/1.05 "Funnel Display", sans-serif; letter-spacing: -.04em; text-wrap: balance; }
-.sentence-celebration-content .sentence-celebration-symbol { width: 80px; height: 80px; color: #f3a39b; stroke-width: 1.2; animation: sentence-celebration-symbol .8s cubic-bezier(.2,.8,.2,1) both; }
-.sentence-celebration-rays { position: absolute; top: 50%; left: 50%; width: 0; height: 0; opacity: .8; }
-.sentence-celebration-rays i { position: absolute; transform: rotate(var(--ray-angle)); }
-.sentence-celebration-rays span { display: block; width: 5px; height: 15px; border-radius: 4px; background: #eaa098; animation: sentence-celebration-ray 1.25s ease-out both; }
-.sentence-celebration-rays i:nth-child(even) span { background: #fff6e6; height: 7px; width: 7px; }
-@keyframes sentence-celebration-layer { 0%, 100% { opacity: 0; } 12%, 75% { opacity: 1; } }
-@keyframes sentence-celebration-text { from { opacity: 0; transform: translateY(15px) scale(.93); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes sentence-celebration-symbol { from { transform: rotate(-45deg) scale(.6); } to { transform: rotate(0) scale(1); } }
-@keyframes sentence-celebration-ray { 0% { opacity: 0; transform: translateY(-80px) scale(.4); } 25% { opacity: .9; } 100% { opacity: 0; transform: translateY(clamp(-290px, -26vw, -150px)) scale(.8); } }
-@media (max-width: 720px) {
-  .sentence-celebration-content { gap: 20px; }
-  .sentence-celebration-content .sentence-celebration-symbol { width: 64px; height: 64px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sentence-celebration, .sentence-celebration-content, .sentence-celebration-content .sentence-celebration-symbol { animation: none; }
-  .sentence-celebration-rays { display: none; }
-}
-
 /* A small invitation to the prize draw on the public welcome screen. */
 .survey-prize { float: right; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; width: 154px; height: 154px; margin: -12px -12px 20px 24px; padding: 20px 16px; border: 0; border-radius: 48% 52% 45% 55% / 54% 44% 56% 46%; background: var(--red); color: white; font: 400 16px/1.1 "Funnel Display", sans-serif; text-align: center; cursor: pointer; transform: rotate(8deg); transition: transform .2s ease; }
 .survey-prize-copy { display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -1227,3 +1205,7 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 @keyframes sentence-score-in { from { transform: scale(.9); } to { transform: scale(1); } }
 @media (max-width: 720px) { .survey-page .sentence-add strong { font-size: 16px; } .sentence-score { min-height: 40px; padding: 9px 13px; font-size: 16px; } }
 @media (prefers-reduced-motion: reduce) { .sentence-score { animation: none; } }
+
+.sentence-add-wrap { position: relative; }
+.sentence-thanks { position: absolute; z-index: 2; top: -10px; right: 14px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #eed3cd; border-radius: 50%; background: #fffdfb; color: #b82226; box-shadow: 0 3px 12px #0c1e4514; pointer-events: none; }
+.sentence-thanks .ui-icon { width: 24px; height: 24px; }
