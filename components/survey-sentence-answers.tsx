@@ -44,7 +44,7 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
         <span className="sentence-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
         <label className="sentence-field"><span className="survey-sr-only">Aalborg Karneval er… svar {index + 1}</span><textarea
           ref={element => { if (element) fields.current.set(index, element); else fields.current.delete(index); }}
-          rows={1} maxLength={3000} value={answer} placeholder={index === 0 ? "Skriv din første tanke …" : "Og hvad er Aalborg Karneval også?"}
+          rows={1} maxLength={3000} value={answer} placeholder="Aalborg Karneval er..."
           onChange={event => { const next = [...items]; next[index] = event.target.value; onChange(next); }}
         /></label>
         {items.length > 1 && <button type="button" className="sentence-remove" aria-label={`Fjern sætning ${index + 1}`} onClick={() => onChange(items.filter((_, i) => i !== index))}><UiIcon name="close" /></button>}
