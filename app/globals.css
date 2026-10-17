@@ -1184,9 +1184,9 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 .quote-actions .quote-preview-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .quote-preview-trigger .ui-icon { width: 16px; height: 16px; }
 
-.survey-email-note { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e7dfd8; color: #53617b; font-size: 15px; line-height: 1.65; }
-.survey-email-note h2 { margin: 0 0 12px; color: var(--navy); font: 600 16px/1.5 "Funnel Sans", sans-serif; }
-.survey-email-note p { margin: 0 0 12px; }
+.survey-email-note { margin-top: 28px; padding-top: 20px; border-top: 1px solid #e7dfd8; color: #657087; font-size: 12px; line-height: 1.6; }
+.survey-email-note h2 { margin: 0 0 8px; color: #53617b; font: 600 13px/1.5 "Funnel Sans", sans-serif; }
+.survey-email-note p { margin: 0 0 8px; }
 .survey-email-note p:last-child { margin-bottom: 0; }
 .survey-email-note a { color: #b82226; text-decoration: underline; text-underline-offset: 3px; }
 .survey-email-note a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
