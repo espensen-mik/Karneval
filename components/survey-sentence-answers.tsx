@@ -58,8 +58,8 @@ export default function SurveySentenceAnswers({ answers, onChange }: { answers: 
       <span className="sentence-add-icon" aria-hidden="true">+</span><span><strong>Tilføj endnu en sætning eller ord</strong><small>{items.length >= 100 ? "Du har nået 100 svar. Tak for alle dine tanker!" : !items.at(-1)?.trim() ? "Skriv i feltet ovenfor — så kan du tilføje en til." : "Har du en tanke mere? Giv den plads her."}</small></span><UiIcon className="sentence-add-arrow" name="arrow" />
     </button>
     <div className="sentence-count" role="status" aria-live="polite" aria-atomic="true">
-      <span className="sentence-score" key={count} aria-hidden="true">{count}</span>
-      <div><strong>{count} {count >= 100 ? "svar — tak for alle dine tanker!" : count === 1 ? "svar — og plads til flere!" : "svar — hver tanke tæller!"}</strong><span>{count ? "Du gør os klogere. Hvad er Aalborg Karneval også?" : "Både enkelte ord og hele sætninger tæller."}</span></div>
+      <span className="sentence-score" key={count}>{count} svar</span>
+      <div><strong>{count >= 100 ? "Tak for alle dine tanker!" : count === 1 ? "Der er plads til flere!" : "Hver tanke tæller!"}</strong><span>{count ? "Du gør os klogere. Hvad er Aalborg Karneval også?" : "Både enkelte ord og hele sætninger tæller."}</span></div>
     </div>
   </div>;
 }
