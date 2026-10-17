@@ -3,7 +3,7 @@ export const SURVEY_QUESTIONS = [
   { id: "invitation", title: "Du sidder overfor en person, som aldrig har hørt om Aalborg Karneval!", help: "Hvad fortæller du for at overbevise dem om, at de skal deltage næste år?", kind: "text" },
   { id: "carnival_is", title: "Fuldfør sætningen: Aalborg Karneval er…", help: "Skriv lige hvad der falder dig ind - både enkelte ord og hele sætninger. Og tilføj så mange svar som muligt - jo flere du tilføjer, des klogere bliver vi.", kind: "sentences" },
   { id: "words", title: "Hvilke ord vil du bruge til at beskrive Aalborg Karneval?", help: "Jo flere jo bedre — vi samler på ord til et helt nyt sprog om vores karneval. Du må også skrive korte vendinger.", kind: "words" },
-  { id: "difference", title: "Hvad adskiller Aalborg Karneval fra andre fester, koncerter og festivaler?", help: "Hvad gør karnevallet til noget særligt for dig?", kind: "text" },
+  { id: "difference", title: "Hvad gør Aalborg Karneval til noget særligt for dig?", help: "", kind: "text" },
   { id: "traditions", title: "Har du nogen traditioner omkring Aalborg Karneval?", help: "Hvis ja — hvilke?", kind: "text" },
   { id: "memory", title: "Hvad er din allerbedste oplevelse til Aalborg Karneval?", help: "Vær gerne konkret: et særligt godt karnevalsår, en koncert eller en sjov episode.", kind: "text" },
   { id: "community", title: "Hvordan vil du beskrive fællesskabet til Aalborg Karneval?", help: "Fortæl med dine egne ord.", kind: "text" },

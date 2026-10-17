@@ -55,7 +55,7 @@ export default function SurveyApp({ testMode = false }: { testMode?: boolean }) 
       {question && <>
         <span className="eyebrow">{question.kind === "sentences" ? "FULDFØR SÆTNINGEN" : "DINE EGNE ORD"}</span>
         <h1 ref={heading} tabIndex={-1} className={question.id === "invitation" ? "survey-context-title" : undefined}>{question.kind === "sentences" ? "Aalborg Karneval er…" : question.title}</h1>
-        <p id="survey-question-help" className={question.id === "invitation" ? "survey-question-help" : undefined}>{question.id === "traditions" ? "Vælg ja eller nej. Hvis ja, vil vi gerne høre om dine traditioner." : question.help}</p>
+        {question.help && <p id="survey-question-help" className={question.id === "invitation" ? "survey-question-help" : undefined}>{question.id === "traditions" ? "Vælg ja eller nej. Hvis ja, vil vi gerne høre om dine traditioner." : question.help}</p>}
         {question.id === "traditions" ? <>
           <fieldset className="survey-choice"><legend className="survey-sr-only">Har du traditioner omkring Aalborg Karneval?</legend>{([["yes", "Ja"], ["no", "Nej"]] as const).map(([value, label]) => <label key={value}><input type="radio" name="traditions" required value={value} checked={traditionsChoice === value} onChange={() => { setTraditionsChoice(value); setError(""); setAnswers("traditions", [value === "no" ? "Nej" : traditionsText]); }} /><span>{label}</span></label>)}</fieldset>
           {traditionsChoice === "yes" && <label className="form-field">Hvilke traditioner har du?<textarea required rows={5} maxLength={3000} placeholder="Fortæl om dine traditioner …" value={traditionsText} onChange={event => { setTraditionsText(event.target.value); setAnswers("traditions", [event.target.value]); }} /></label>}
