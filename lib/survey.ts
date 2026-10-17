@@ -1,7 +1,7 @@
 export const SURVEY_VERSION = 2;
 export const SURVEY_QUESTIONS = [
   { id: "invitation", title: "Du sidder overfor en person, som aldrig har hørt om Aalborg Karneval!", help: "Hvad fortæller du for at overbevise dem om, at de skal deltage næste år?", kind: "text" },
-  { id: "carnival_is", title: "Fuldfør sætningen: Aalborg Karneval er…", help: "Skriv lige hvad der falder dig ind. Og tilføj så mange svar som muligt - jo flere du tilføjer, des klogere bliver vi.", kind: "sentences" },
+  { id: "carnival_is", title: "Fuldfør sætningen: Aalborg Karneval er…", help: "Skriv lige hvad der falder dig ind - både enkelte ord og hele sætninger. Og tilføj så mange svar som muligt - jo flere du tilføjer, des klogere bliver vi.", kind: "sentences" },
   { id: "words", title: "Hvilke ord vil du bruge til at beskrive Aalborg Karneval?", help: "Jo flere jo bedre — vi samler på ord til et helt nyt sprog om vores karneval. Du må også skrive korte vendinger.", kind: "words" },
   { id: "difference", title: "Hvad adskiller Aalborg Karneval fra andre fester, koncerter og festivaler?", help: "Hvad gør karnevallet til noget særligt for dig?", kind: "text" },
   { id: "traditions", title: "Har du nogen traditioner omkring Aalborg Karneval?", help: "Hvis ja — hvilke?", kind: "text" },
