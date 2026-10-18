@@ -37,7 +37,7 @@ export function analyzeContributions(input: Contribution[], synonyms: SynonymGro
   const contributions = [...new Map(input.filter((c) => c.text.trim()).map((c) => [c.id, c])).values()];
   const raw = new Map<string, Set<string>>();
   for (const contribution of contributions) {
-    for (const term of termsInText(contribution.text)) {
+    for (const term of termsInText(contribution.analysisText ?? contribution.text)) {
       if (!raw.has(term)) raw.set(term, new Set());
       raw.get(term)!.add(contribution.id);
     }

@@ -1,4 +1,5 @@
 import { termsInText } from './soul-analysis.ts';
+export function sentenceContent(text: string) { return text.replace(/^\s*(?:aalborg\s+)?karneval\s+er\b[\s.…:–-]*/iu, '').trim(); }
 export type AnalysisResponse = { id: string; age: number; participations: number; carnival_is: string[] | null };
 const AGE_BINS = [['Under 18', 0, 17], ['18–24 år', 18, 24], ['25–34 år', 25, 34], ['35–44 år', 35, 44], ['45–54 år', 45, 54], ['55–64 år', 55, 64], ['65 år +', 65, 120]] as const;
 const VISIT_BINS = [['0 gange', 0, 0], ['1 gang', 1, 1], ['2–4 gange', 2, 4], ['5–9 gange', 5, 9], ['10–19 gange', 10, 19], ['20 gange +', 20, 300]] as const;
@@ -12,7 +13,7 @@ export function analyzeSurvey(input: AnalysisResponse[]) {
     for (const original of answers) {
       statements++;
       // The fixed sentence opening is a prompt, rather than respondent content.
-      const text = original.replace(/^\s*(?:aalborg\s+)?karneval\s+er\b[\s.…:–-]*/iu, '');
+      const text = sentenceContent(original);
       for (const term of termsInText(text)) {
         if (!terms.has(term)) terms.set(term, { people: new Set(), answers: 0, examples: new Set() });
         const item = terms.get(term)!;

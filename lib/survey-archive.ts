@@ -22,5 +22,7 @@ export function archiveQuery(params: URLSearchParams) {
   // Keep PostgREST filter operators and wildcard characters out of the search term.
   const search = (params.get("q") || "").slice(0, 80).replace(/[^\p{L}\p{N}\s'’-]/gu, " ").replace(/\s+/g, " ").trim();
   const page = Math.max(0, Math.min(100000, Math.floor(Number(params.get("page")) || 0)));
-  return { page, filters: `${ageFilter}${search ? `&first_name=ilike.${encodeURIComponent(`*${search}*`)}` : ""}`, order };
+  const responseId = params.get("response") || "";
+  const responseFilter = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(responseId) ? `&id=eq.${responseId}` : "";
+  return { page, filters: `${responseFilter}${ageFilter}${search ? `&first_name=ilike.${encodeURIComponent(`*${search}*`)}` : ""}`, order };
 }

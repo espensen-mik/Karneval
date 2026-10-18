@@ -140,7 +140,7 @@ export default function SoulNetwork({ terms, edges, highlighted, selectedId, onT
   const maxEdge = Math.max(1, ...edges.map((edge) => edge.count));
   return <div className="soul-network" ref={root}>
     <svg ref={svg} viewBox={`0 0 ${size.width} ${size.height}`} aria-label="Interaktivt ordnetværk" role="group" aria-describedby="soul-network-help">
-      <title>Ord og dokumenterede forbindelser i citaterne</title>
+      <title>Ord og dokumenterede forbindelser i citater og spørgeskemasvar</title>
       {edges.map((edge, edgeIndex) => {
         const a = positions.get(edge.source), b = positions.get(edge.target);
         if (!a || !b) return null;

@@ -6,10 +6,10 @@ import type { Contribution, SoulEdge, SoulTerm } from "@/lib/soul-types";
 export function ContributionExample({ contribution }: { contribution: Contribution }) {
   const link = contribution.source && /^https?:\/\//i.test(contribution.source) ? contribution.source : null;
   return <article className="soul-evidence">
-    <span className="soul-kicker">Citat · {contribution.category}</span>
+    <span className="soul-kicker">{contribution.type === "survey" ? "Spørgeskemasvar" : "Citat"} · {contribution.category}</span>
     <p>{contribution.text}</p>
     {contribution.source && <small>{link ? <a href={link} target="_blank" rel="noopener noreferrer">Kildehenvisning <UiIcon name="arrow" /></a> : contribution.source}</small>}
-    <a href={contribution.contextHref}>Åbn citatet i sin sammenhæng <UiIcon name="arrow" /></a>
+    <a href={contribution.contextHref}>{contribution.type === "survey" ? "Åbn besvarelsen" : "Åbn citatet i sin sammenhæng"} <UiIcon name="arrow" /></a>
   </article>;
 }
 
@@ -28,9 +28,9 @@ export default function SoulDetail({ term, edge, contributions, onClose }: { ter
       {editorialExample ? <><h3>Tilknyttet kildeeksempel</h3><ContributionExample contribution={editorialExample} /></> : <p className="soul-small">Intet tilgængeligt kildeeksempel er tilknyttet.</p>}
     </> : <>
       <p className="soul-detail-count"><strong>{ids.length}</strong> af {contributions.length} bidrag <span>· {contributions.length ? Math.round(ids.length / contributions.length * 100) : 0} %</span></p>
-      <p className="soul-small">{term ? "Hvert citat tæller højst én gang, også når ordet gentages." : "Begge ord findes i hvert af disse citater. Ét citat tæller højst én gang."}</p>
+      <p className="soul-small">{term ? "Hvert citat eller enkelt svar tæller højst én gang, også når ordet gentages." : "Begge ord findes i hvert af disse bidrag. Forskellige svarfelter forbindes ikke automatisk, selv om de er fra samme besvarelse."}</p>
       {term?.kind === "group" && <p className="soul-small">Manuelt samlet fra: {term.variants.join(", ")}. Bidrag med flere varianter tæller stadig kun én gang.</p>}
-      <h3>Materiale</h3><div className="soul-breakdown"><span>Citater</span><strong>{ids.length}</strong></div>
+      <h3>Materiale</h3>{(["quote", "survey"] as const).map(type => <div key={type} className="soul-breakdown"><span>{type === "quote" ? "Citater" : "Spørgeskemasvar"}</span><strong>{examples.filter(c => c.type === type).length}</strong></div>)}
       <h3>Materialets kategorier</h3>
       {categories.map(({ category, count }) => <div key={category} className="soul-breakdown"><span>{category}</span><strong>{count}</strong></div>)}
       <h3>Bidragene bag</h3>

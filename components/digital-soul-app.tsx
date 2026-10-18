@@ -7,7 +7,9 @@ import UiIcon from "./ui-icon";
 import styles from "./digital-soul-app.module.css";
 
 const date = (value: string) => new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Copenhagen" }).format(new Date(value));
-export default function DigitalSoulApp() {
+export default function DigitalSoulApp({ initialResponseId = "" }: { initialResponseId?: string }) {
+  const [responseId, setResponseId] = useState(initialResponseId);
+  const openLinkedResponse = useRef(Boolean(initialResponseId));
   const [rows, setRows] = useState<SurveyResponse[]>([]);
   const [total, setTotal] = useState(0);
   const [matched, setMatched] = useState(0);
@@ -42,17 +44,18 @@ export default function DigitalSoulApp() {
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true); setError(""); setSelected(null);
-    const params = new URLSearchParams({ page: String(page), q: query, sort, age });
+    const params = new URLSearchParams({ page: String(page), q: query, sort, age, response: responseId });
     fetch(`/api/den-digitale-sjael?${params}`, { cache: "no-store", signal: controller.signal }).then(async response => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Besvarelserne kunne ikke læses.");
       if (controller.signal.aborted) return;
       setRows(data.rows);
+      if (openLinkedResponse.current) { setSelected(data.rows.length ? 0 : null); openLinkedResponse.current = false; }
       if (pendingSelection.current !== null) { setSelected(pendingSelection.current === -1 ? data.rows.length - 1 : 0); pendingSelection.current = null; }
       setTotal(data.total); setMatched(data.matched); setAverageAge(data.averageAge);
     }).catch(failure => { if (failure.name !== "AbortError") setError(failure.message); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [page, query, sort, age, reload]);
+  }, [page, query, sort, age, reload, responseId]);
   useEffect(() => {
     if (selected !== null) {
       if (!dialog.current?.open) dialog.current?.showModal();
@@ -76,7 +79,7 @@ export default function DigitalSoulApp() {
   useEffect(() => { if (confirmDelete) deleteInput.current?.focus(); }, [confirmDelete]);
   const current = selected === null ? null : rows[selected];
   const pending = loading || searchPending;
-  const filtered = Boolean(search || age !== "all");
+  const filtered = Boolean(responseId || search || age !== "all");
   async function deleteResponse() {
     if (!current || deleteText !== "SLET" || deleting) return;
     const target = current;
@@ -94,7 +97,7 @@ export default function DigitalSoulApp() {
     finally { setDeleting(false); }
   }
   function changePage(direction: number) { scrollToCollection.current = true; setPage(value => value + direction); }
-  function reset() { setSearch(""); setQuery(""); setAge("all"); setPage(0); }
+  function reset() { setSearch(""); setQuery(""); setAge("all"); setPage(0); setResponseId(""); window.history.replaceState(null, "", "/den-digitale-sjael"); }
   function move(direction: number) {
     const next = (selected ?? 0) + direction;
     if (next < 0 || next >= rows.length) {

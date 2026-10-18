@@ -20,7 +20,7 @@ Kør migrationsfilerne i `supabase/migrations` i Supabase SQL Editor, i tidsstem
 
 ### SJÆLEN
 
-`/sjaelen/ordnetvaerk` er et interaktivt SVG-ordnetværk med `d3-force`. Hovedsiden viser selve netværket. Kuratering, filtre, antal ord og linjeindstillinger ligger på `/sjaelen/kuratering`, som også er tilgængelig som underpunkt i menuen. Visningsvalgene følger med i URL’en, når netværket åbnes fra indstillingerne. Det læser kun offentligt godkendte citaters `quote_text` via `/api/sjaelen`; alle sider fra Supabase læses, så optællingen ikke stopper ved en standardgrænse. Metadata bruges kun til filtrering og kildehenvisninger. Hver citatpost er ét bidrag. Kilder, PDF’er, spørgeskemaer og workshopmateriale indgår ikke endnu; de vises som utilknyttede materialetyper.
+`/sjaelen/ordnetvaerk` er et interaktivt SVG-ordnetværk med `d3-force`. Hovedsiden viser selve netværket. Kuratering, filtre, antal ord og linjeindstillinger ligger på `/sjaelen/kuratering`, som også er tilgængelig som underpunkt i menuen. Visningsvalgene følger med i URL’en, når netværket åbnes fra indstillingerne. Det læser godkendte citaters `quote_text` samt alle udfyldte svarfelter fra “Aalborg Karneval er…” via det passwordbeskyttede `/api/sjaelen`. Alle databasesider læses. Hver citatpost og hvert enkelt svarfelt er ét bidrag med sit eget ID; forbindelser dannes kun inden for samme bidrag. Den faste sætningsstart fjernes fra analysen, mens originalteksten bevares i eksemplerne. Netværket henter ingen navne, alder, e-mailadresser eller andre spørgsmål fra spørgeskemaet. Kilder, PDF’er og workshopmateriale indgår ikke. Nye svar indgår ved åbning eller opdatering af materialet.
 
 Analysen i `lib/soul-analysis.ts` normaliserer Unicode, store/små bogstaver og tegnsætning. `lib/soul-stopwords.ts` er den udvidelige danske stopordsliste. Enkeltord tælles højst én gang pr. bidrag. Vendinger på 2–4 sammenhængende ord kræver gentagelse i mindst to forskellige bidrag og krydser ikke tegnsætning. Som frasegrænser bruges indholdsord; “være” i begyndelsen og “selv” til sidst tillades også. Der foretages ingen automatisk bøjning, oversættelse, synonymafgørelse eller AI-analyse.
 
@@ -34,7 +34,7 @@ Kontrol (Node.js 22+): `npm test`, `npm run typecheck`, `npm run build`. Projekt
 
 ### Leg med ord
 
-`/sjaelen/leg-med-ord` er en separat legeflade uden forbindelseslinjer. Den bruger enkeltord fra de samme citattekster. Træk bobler sammen, navngiv samlingen, del den igen, eller fjern ord med minus. Samlede boblers areal følger antallet af unikke citater, der indeholder mindst ét af ordene; samme citat tæller aldrig dobbelt. Skalaen holdes fast ved sammenlægning. Samlinger og fravalg gemmes kun i browserens localStorage og ændrer hverken citater eller fælles kuratering. Fortryd husker de seneste 30 handlinger i sessionen; Nulstil genskaber alle ord. Der kræves ingen migrationer eller nye pakker.
+`/sjaelen/leg-med-ord` er en separat legeflade uden forbindelseslinjer. Den bruger enkeltord fra de samme citater og spørgeskemasvar. Træk bobler sammen, navngiv samlingen, del den igen, eller fjern ord med minus. Samlede boblers areal følger antallet af unikke bidrag, der indeholder mindst ét af ordene; samme bidrag tæller aldrig dobbelt. Skalaen holdes fast ved sammenlægning. Samlinger og fravalg gemmes kun i browserens localStorage og ændrer hverken citater eller fælles kuratering. Fortryd husker de seneste 30 handlinger i sessionen; Nulstil genskaber alle ord. Der kræves ingen migrationer eller nye pakker.
 
 ### Kilderegister
 

@@ -1,7 +1,8 @@
 export type Contribution = {
   id: string;
   text: string;
-  type: "quote";
+  type: "quote" | "survey";
+  analysisText?: string;
   category: string;
   contextHref: string;
   source: string | null;
