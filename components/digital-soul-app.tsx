@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SURVEY_QUESTIONS, type SurveyResponse } from "@/lib/survey";
 import { ARCHIVE_AGES, ARCHIVE_SORTS, ARCHIVE_PAGE_SIZE } from "@/lib/survey-archive";
+import { fetchJson } from "@/lib/fetch-json";
 import UiIcon from "./ui-icon";
 import styles from "./digital-soul-app.module.css";
 
@@ -14,6 +15,8 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
   const [total, setTotal] = useState(0);
   const [matched, setMatched] = useState(0);
   const [averageAge, setAverageAge] = useState<number | null>(null);
+  const [summaryLoading, setSummaryLoading] = useState(true);
+  const [summaryError, setSummaryError] = useState("");
   const [page, setPage] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [search, setSearch] = useState("");
@@ -43,17 +46,24 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
   }, [search]);
   useEffect(() => {
     const controller = new AbortController();
+    setSummaryLoading(true); setSummaryError("");
+    fetchJson<{ total: number; averageAge: number | null }>("/api/den-digitale-sjael?summary=1", controller.signal).then(data => {
+      if (controller.signal.aborted) return;
+      setTotal(data.total); setAverageAge(data.averageAge);
+    }).catch(failure => { if (!controller.signal.aborted) setSummaryError(failure.message); }).finally(() => { if (!controller.signal.aborted) setSummaryLoading(false); });
+    return () => controller.abort();
+  }, [reload]);
+  useEffect(() => {
+    const controller = new AbortController();
     setLoading(true); setError(""); setSelected(null);
     const params = new URLSearchParams({ page: String(page), q: query, sort, age, response: responseId });
-    fetch(`/api/den-digitale-sjael?${params}`, { cache: "no-store", signal: controller.signal }).then(async response => {
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Besvarelserne kunne ikke læses.");
+    fetchJson<{ rows: SurveyResponse[]; matched: number }>(`/api/den-digitale-sjael?${params}`, controller.signal).then(data => {
       if (controller.signal.aborted) return;
       setRows(data.rows);
       if (openLinkedResponse.current) { setSelected(data.rows.length ? 0 : null); openLinkedResponse.current = false; }
       if (pendingSelection.current !== null) { setSelected(pendingSelection.current === -1 ? data.rows.length - 1 : 0); pendingSelection.current = null; }
-      setTotal(data.total); setMatched(data.matched); setAverageAge(data.averageAge);
-    }).catch(failure => { if (failure.name !== "AbortError") setError(failure.message); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
+      setMatched(data.matched);
+    }).catch(failure => { if (!controller.signal.aborted) setError(failure.message); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
   }, [page, query, sort, age, reload, responseId]);
   useEffect(() => {
@@ -91,7 +101,7 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
       dialog.current?.close(); setSelected(null); pendingSelection.current = null;
       setNotice(`Besvarelsen fra ${target.first_name} er slettet.`);
       if (rows.length === 1 && page > 0) setPage(value => value - 1);
-      else setReload(value => value + 1);
+      setReload(value => value + 1);
       collectionHeading.current?.focus({ preventScroll: true });
     } catch (failure) { setDeleteError(failure instanceof Error ? failure.message : "Besvarelsen kunne ikke slettes."); }
     finally { setDeleting(false); }
@@ -114,10 +124,11 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
     </header>
 
     <section className={styles.overview} aria-label="Nøgletal for alle besvarelser">
-      <dl className={styles.metrics}><div><dt>Besvarelser i alt</dt><dd>{error || loading && !total ? "—" : total}</dd></div><div><dt>Gennemsnitsalder</dt><dd>{error || averageAge === null ? "—" : <>{new Intl.NumberFormat("da-DK", { maximumFractionDigits: 1 }).format(averageAge)} <span>år</span></>}</dd></div></dl>
-      <div className={styles.overviewNote}><p>Hver besvarelse er et menneskes<br />helt eget Aalborg Karneval.</p><button className={styles.refresh} disabled={pending} onClick={() => setReload(value => value + 1)}><UiIcon name="refresh" />{loading ? "Opdaterer …" : "Opdatér svar"}</button></div>
+      <dl className={styles.metrics}><div><dt>Besvarelser i alt</dt><dd>{summaryError || summaryLoading ? "—" : total}</dd></div><div><dt>Gennemsnitsalder</dt><dd>{summaryError || summaryLoading || averageAge === null ? "—" : <>{new Intl.NumberFormat("da-DK", { maximumFractionDigits: 1 }).format(averageAge)} <span>år</span></>}</dd></div></dl>
+      <div className={styles.overviewNote}><p>Hver besvarelse er et menneskes<br />helt eget Aalborg Karneval.</p><button className={styles.refresh} disabled={pending || summaryLoading} onClick={() => setReload(value => value + 1)}><UiIcon name="refresh" />{loading || summaryLoading ? "Opdaterer …" : "Opdatér svar"}</button></div>
     </section>
 
+    {summaryError && <p className={styles.notice} role="alert">Nøgletallene kunne ikke hentes. {summaryError} <button className={styles.textButton} onClick={() => setReload(value => value + 1)}>Prøv igen</button></p>}
     <section className={styles.collection} aria-labelledby="archive-title">
       <div className={styles.collectionHeading}><h2 id="archive-title" ref={collectionHeading} tabIndex={-1}>Alle stemmer<span aria-live="polite">{pending ? "Henter …" : error ? "" : `${matched} ${filtered ? "fundet" : "besvarelser"}`}</span></h2>{filtered && <button className={styles.textButton} onClick={reset}>Nulstil filtre <UiIcon name="close" /></button>}</div>
       {notice && <p className={styles.notice} role="status">{notice}</p>}

@@ -10,8 +10,13 @@ export async function GET(request: NextRequest) {
   const { page, filters, order } = archiveQuery(request.nextUrl.searchParams);
   try {
     const before = new Date().toISOString();
-    const [response, summary] = await Promise.all([dbRequest(`survey_responses?select=${columns}&created_at=lte.${encodeURIComponent(before)}&order=${order}${filters}&offset=${page * ARCHIVE_PAGE_SIZE}&limit=${ARCHIVE_PAGE_SIZE}`, { headers: { Prefer: "count=exact" } }), readSurveySummary(dbRequest, before)]);
-    return NextResponse.json({ rows: await response.json(), matched: Number(response.headers.get("content-range")?.split("/")[1] || 0), total: summary.total, averageAge: summary.averageAge, page }, { headers: { "Cache-Control": "private, no-store" } });
+    const signal = AbortSignal.timeout(10000);
+    if (request.nextUrl.searchParams.get("summary") === "1") {
+      const summary = await readSurveySummary((path, init) => dbRequest(path, { ...init, signal }), before);
+      return NextResponse.json(summary, { headers: { "Cache-Control": "private, no-store" } });
+    }
+    const response = await dbRequest(`survey_responses?select=${columns}&created_at=lte.${encodeURIComponent(before)}&order=${order}${filters}&offset=${page * ARCHIVE_PAGE_SIZE}&limit=${ARCHIVE_PAGE_SIZE}`, { headers: { Prefer: "count=exact" }, signal });
+    return NextResponse.json({ rows: await response.json(), matched: Number(response.headers.get("content-range")?.split("/")[1] || 0), page }, { headers: { "Cache-Control": "private, no-store" } });
   } catch { return NextResponse.json({ error: "Besvarelserne kunne ikke hentes. Prøv igen." }, { status: 503 }); }
 }
 

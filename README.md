@@ -51,7 +51,7 @@ Researchrummet kræver nu fælles password. Supabase-servernøglen ligger kun so
 
 `/sjaelen` er den offentlige formular med ét trin ad gangen, gentagelige sætninger, tilbage-navigation og gennemsyn før indsendelse. Ingen kladde eller personoplysninger gemmes i localStorage. Et stabilt tilfældigt indsendelses-ID gør genforsøg idempotente. Materialet blandes ikke ind i SJÆLEN eller Leg med ord.
 
-`/den-digitale-sjael` viser komplette besvarelser med fornavn og alder, navigation mellem personer og sideinddeling på 50 besvarelser. Mailadresse og fuldt navn gemmes særskilt i `survey_contacts`. Læse-API’et vælger eksplicit kolonner fra `survey_responses` og læser aldrig kontakttabellen. Spørgeskemaets egen gennemgang viser kun den aktuelle deltagers egne oplysninger fra formularens hukommelse.
+`/den-digitale-sjael` viser komplette besvarelser med fornavn og alder, navigation mellem personer og sideinddeling på 25 besvarelser. Mailadresse og fuldt navn gemmes særskilt i `survey_contacts`. Læse-API’et vælger eksplicit kolonner fra `survey_responses` og læser aldrig kontakttabellen. Spørgeskemaets egen gennemgang viser kun den aktuelle deltagers egne oplysninger fra formularens hukommelse.
 
 Login er et fælles serverkontrolleret password, uden brugerkonti. Sessionen er en HMAC-SHA256-signeret HttpOnly/SameSite=Lax-cookie, Secure på HTTPS, gyldig i 12 timer. Passwordskift invaliderer alle eksisterende sessioner. Middleware beskytter researchsider og API’er; alle datahandlers kontrollerer også sessionen selv. Ændrende browserkald kræver samme Origin. Statiske billed- og logoaktiver forbliver offentlige; researchdata og PDF-adgang kræver login. Log ud fjerner browserens session.
 
@@ -72,3 +72,9 @@ Den tidligere formularadresse `/spoergeskema` viderestiller til `/sjaelen` og be
 ### Analyse af spørgeskemaet
 
 `/den-digitale-sjael/analyse` viser aldersfordeling, deltagelser og en separat ordanalyse af `answers.carnival_is`. Den passwordbeskyttede API henter kun ID, alder, deltagelser og dette ene svarfelt, på tværs af alle databasesider. Den sender fordelinger, optællinger og op til fem teksteksempler pr. vist term til browseren; kontaktoplysninger indgår ikke. Et ord tæller som standard højst én gang pr. besvarelse, og visningen kan skiftes til optælling pr. enkeltstående svar. Vendinger på 2–4 ord kræver mindst to besvarelser. Den eksisterende danske stopordsliste genbruges, den faste indledning fjernes i starten af et svar, og der anvendes ingen AI, automatisk synonymgruppering eller sammenblanding med citatnetværket. Ingen nye tabeller, migrationer eller pakker er nødvendige.
+
+### Svartid i besvarelsesarkivet
+
+Oversigten henter højst 25 besvarelser ad gangen. Nøgletal hentes uafhængigt med `/api/den-digitale-sjael?summary=1`, kun ved åbning, manuel opdatering og sletning; søgning, sortering og sideskift genberegner dem ikke. Et langsomt statistikopslag blokerer ikke listen. Statistikken læser kun aldre i serverbatches og overfører aldrig alle besvarelser til browseren. Læseforespørgsler har 10 sekunders databasefrist og 15 sekunders klientfrist inklusive JSON-body, med synlig fejl og genforsøg. Auth og no-store bevares.
+
+Verificeret med 1.000 isolerede svar, 40 sider, søgning, aldersfilter, sortering og direkte besvarelseslink. I den lokale produktionstest kom første side på 24 ms, mens statistik med vilje var forsinket til 834 ms; dette er ikke en måling eller garanti for Vercel-svartid eller samtidig belastning fra 1.000 brugere.
