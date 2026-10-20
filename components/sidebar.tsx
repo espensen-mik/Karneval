@@ -21,7 +21,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <Link className="brand" href="/">
-        <span className="brand-mark brand-mark-image"><img src="/logo/Karmanaut_head_icon.svg" alt="" aria-hidden="true" /></span>
+        <span className="brand-mark brand-mark-image"><img src="/logo/karmanaut_fav.svg" alt="" aria-hidden="true" /></span>
         <span>
           <span className="brand-name">Sjælen af Karneval</span>
         </span>
