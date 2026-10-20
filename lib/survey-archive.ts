@@ -24,5 +24,8 @@ export function archiveQuery(params: URLSearchParams) {
   const page = Math.max(0, Math.min(100000, Math.floor(Number(params.get("page")) || 0)));
   const responseId = params.get("response") || "";
   const responseFilter = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(responseId) ? `&id=eq.${responseId}` : "";
-  return { page, filters: `${responseFilter}${ageFilter}${search ? `&first_name=ilike.${encodeURIComponent(`*${search}*`)}` : ""}`, order };
+  // Search only the respondent's words, never JSON keys, question text or contacts.
+  const fields = ["first_name", ...["invitation", "carnival_is", "words", "difference", "traditions", "memory", "community"].map(key => `answers->>${key}`)];
+  const searchFilter = search ? `&or=(${fields.map(field => `${field}.ilike.${encodeURIComponent(`*${search}*`)}`).join(",")})` : "";
+  return { page, filters: `${responseFilter}${ageFilter}${searchFilter}`, order };
 }
