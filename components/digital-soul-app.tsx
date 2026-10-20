@@ -6,9 +6,12 @@ import { ARCHIVE_AGES, ARCHIVE_SORTS, ARCHIVE_PAGE_SIZE } from "@/lib/survey-arc
 import { fetchJson } from "@/lib/fetch-json";
 import UiIcon from "./ui-icon";
 import styles from "./digital-soul-app.module.css";
+import VoicePicker from "./voice-picker";
+import type { VoiceTarget } from "@/lib/digital-voices";
 
 const date = (value: string) => new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Copenhagen" }).format(new Date(value));
 export default function DigitalSoulApp({ initialResponseId = "" }: { initialResponseId?: string }) {
+  const [voiceTarget, setVoiceTarget] = useState<VoiceTarget | null>(null);
   const [responseId, setResponseId] = useState(initialResponseId);
   const openLinkedResponse = useRef(Boolean(initialResponseId));
   const [rows, setRows] = useState<SurveyResponse[]>([]);
@@ -120,7 +123,7 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
   return <div className={styles.archive}>
     <header className={styles.header}>
       <div><span className={styles.eyebrow}>MENNESKENE BAG KARNEVALLET</span><h1>Den digitale sjæl<span>.</span></h1><p>Find en stemme. Læs en historie. Bliv klogere på vores karneval.</p></div>
-      <div className={styles.headerActions}><Link className={styles.outlineButton} href="/den-digitale-sjael/analyse">Analyse <UiIcon name="arrow" /></Link><a className={styles.outlineButton} href="https://karneval.karmanaut.dk/sjaelen" target="_blank" rel="noopener noreferrer">Åbn spørgeskema <UiIcon name="arrow" /></a></div>
+      <div className={styles.headerActions}><Link className={styles.outlineButton} href="/sjaelen/digitale-stemmer">Digitale stemmer <UiIcon name="arrow" /></Link><Link className={styles.outlineButton} href="/den-digitale-sjael/analyse">Analyse <UiIcon name="arrow" /></Link><a className={styles.outlineButton} href="https://karneval.karmanaut.dk/sjaelen" target="_blank" rel="noopener noreferrer">Åbn spørgeskema <UiIcon name="arrow" /></a></div>
     </header>
 
     <section className={styles.overview} aria-label="Nøgletal for alle besvarelser">
@@ -150,7 +153,7 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
       {current && <div className={styles.readerContent} ref={readerTop}>
         <div className={styles.readerBar}><span>Besvarelse {page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1} af {matched}</span><button className={styles.closeButton} disabled={deleting} onClick={() => dialog.current?.close()} aria-label="Luk besvarelse"><UiIcon name="close" /></button></div>
         <header className={styles.person}><span className={styles.eyebrow}>ET MENNESKES KARNEVAL</span><h2 id="response-title" ref={readerTitle} tabIndex={-1}>{current.first_name}<span>{current.age} år</span></h2><dl><div><dt>Modtaget</dt><dd>{date(current.created_at)}</dd></div><div><dt>Postnummer</dt><dd>{current.postal_code}</dd></div><div><dt>Deltaget</dt><dd>Cirka {current.participations} gange</dd></div></dl></header>
-        <article className={styles.answers}>{SURVEY_QUESTIONS.filter(question => question.id !== "words" || current.answers.words?.length).map((question, index) => <section key={question.id}><h3><span>{String(index + 1).padStart(2, "0")}</span>{question.title}</h3><div>{current.answers[question.id]?.length ? current.answers[question.id].map((answer, i) => <p key={i}>{question.kind === "sentences" ? "Aalborg Karneval er… " : ""}{answer}</p>) : <p className={styles.unanswered}>Ikke besvaret</p>}</div></section>)}</article>
+        <article className={styles.answers}>{SURVEY_QUESTIONS.filter(question => question.id !== "words" || current.answers.words?.length).map((question, index) => <section key={question.id}><h3><span>{String(index + 1).padStart(2, "0")}</span>{question.title}</h3><div>{current.answers[question.id]?.length ? current.answers[question.id].map((answer, i) => <button key={i} className={styles.selectAnswer} aria-label={`Tilføj svar ${i + 1} til SJÆL: ${question.title}`} onClick={() => setVoiceTarget({ response_id: current.id, question_id: question.id, answer_index: i, text: answer })}><span className={styles.answerText}>{question.kind === "sentences" ? "Aalborg Karneval er… " : ""}{answer}</span><span className={styles.answerAction}>Tilføj til SJÆL <UiIcon name="arrow" /></span></button>) : <p className={styles.unanswered}>Ikke besvaret</p>}</div></section>)}</article>
         <footer className={styles.readerFooter}><p>{current.publication_permission ? "Må citeres med fornavn og alder." : "Må ikke citeres offentligt."}<br />{current.contact_permission ? "Har sagt ja til senere kontakt." : "Ønsker ikke senere kontakt."}</p><div><button className={styles.outlineButton} disabled={deleting || (page === 0 && selected === 0)} onClick={() => move(-1)}>← Forrige svar</button><button className={styles.readButton} disabled={deleting || page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1 >= matched} onClick={() => move(1)}>Næste svar →</button></div><button className={styles.textButton} disabled={deleting} onClick={() => dialog.current?.close()}>Tilbage til overblikket</button>
           <section className={styles.deleteArea} aria-label="Slet besvarelse">
             {confirmDelete ? <>
@@ -164,6 +167,7 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
           </section>
         </footer>
       </div>}
+      {voiceTarget && <VoicePicker key={`${voiceTarget.response_id}:${voiceTarget.question_id}:${voiceTarget.answer_index}`} target={voiceTarget} onClose={() => setVoiceTarget(null)} onSaved={() => setNotice("Temaerne er gemt i Digitale stemmer.")} />}
     </dialog>
   </div>;
 }

@@ -78,3 +78,13 @@ Den tidligere formularadresse `/spoergeskema` viderestiller til `/sjaelen` og be
 Oversigten henter højst 25 besvarelser ad gangen. Nøgletal hentes uafhængigt med `/api/den-digitale-sjael?summary=1`, kun ved åbning, manuel opdatering og sletning; søgning, sortering og sideskift genberegner dem ikke. Et langsomt statistikopslag blokerer ikke listen. Statistikken læser kun aldre i serverbatches og overfører aldrig alle besvarelser til browseren. Læseforespørgsler har 10 sekunders databasefrist og 15 sekunders klientfrist inklusive JSON-body, med synlig fejl og genforsøg. Auth og no-store bevares.
 
 Verificeret med 1.000 isolerede svar, 40 sider, søgning, aldersfilter, sortering og direkte besvarelseslink. I den lokale produktionstest kom første side på 24 ms, mens statistik med vilje var forsinket til 834 ms; dette er ikke en måling eller garanti for Vercel-svartid eller samtidig belastning fra 1.000 brugere.
+
+### Digitale stemmer
+
+`/sjaelen/digitale-stemmer` samler manuelt udvalgte, enkelte svar fra spørgeskemaet. I besvarelsens læsepanel åbner et klik på svaret eller “Tilføj til SJÆL” en modal med fælles temaer. Temaer kan oprettes i vælgeren; et svar kan knyttes til højst 20 temaer. Tomt temavalg fjerner kun udvalget. Samlingen har temafiltre, tekstsøgning og sideinddeling på 24 stemmer. “Hele besvarelsen” åbner den præcise kilde via det eksisterende passwordbeskyttede arkiv.
+
+Migration `20261020134701_digital_voices.sql` opretter `soul_voice_themes`, `soul_voices`, `soul_voice_theme_links` og to funktioner med invoker-rettigheder. Tabeller har RLS uden browserpolicies, ingen anon/authenticated-rettigheder og kun service_role-adgang gennem `/api/sjaelen/stemmer`. Funktionernes PUBLIC-execute er tilbagekaldt. Ingen nye pakker eller miljøvariabler.
+
+Svartekst og fornavn/alder læses fra originalbesvarelsen ved visning; kun kilde-ID, spørgsmåls-ID, svarfeltets indeks og tematilknytninger gemmes. E-mail/kontakttabellen læses aldrig. Unik kildeidentitet og atomisk upsert forhindrer kopier ved gentagne gemninger. Kildesletning rydder automatisk udvalget via FK-cascade. Temaerne er redaktionelle og ændrer hverken kildetekster eller ordnetværkets kategorier.
+
+Verificeret med transaktionstest og rollback for flere temaer, gentagen gemning, ændring/fjernelse, præcist svarfelt og kildesletning, samt browserflow på desktop og mobil med isolerede testdata. Produktionssamlingen starter tom uden opfundne temaer.
