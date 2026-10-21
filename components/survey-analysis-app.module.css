@@ -80,3 +80,12 @@
 }
 
 .examples mark { background: #f0cfc0; color: var(--navy); border-radius: 2px; padding: 0 2px; }
+
+.geography { margin-bottom: 40px; }
+.geography .distribution { max-height: 560px; overflow-y: auto; padding-right: 10px; }
+.geography .distribution li { grid-template-columns: minmax(145px,200px) minmax(0,1fr) 64px; }
+.geography > button { margin-top: 20px; }
+.geography > p:last-child { margin: 18px 0 0; max-width: 850px; }
+.geography a { color: #b82226; text-decoration: underline; text-underline-offset: 3px; }
+.geography .distribution:focus-visible { outline: 2px solid #b82226; outline-offset: 4px; }
+@media (max-width: 720px) { .geography .distribution li { grid-template-columns: minmax(105px,130px) minmax(0,1fr) 48px; gap: 8px; } .geography .distribution { padding-right: 4px; } }

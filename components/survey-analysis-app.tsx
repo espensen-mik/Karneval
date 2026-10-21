@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import type { SurveyAnalysis } from '@/lib/survey-analysis';
 import UiIcon from './ui-icon';
@@ -10,11 +10,12 @@ function Highlight({ text, term }: { text: string; term: string }) {
   const pattern = new RegExp(`(?<!\\p{L})(${term.split(" ").join("[ \\t]+")})(?!\\p{L})`, "giu");
   return text.normalize("NFC").split(pattern).map((part, index) => index % 2 ? <mark key={index}>{part}</mark> : part);
 }
-function Distribution({ title, intro, rows, total }: { title: string; intro: string; rows: { label: string; count: number }[]; total: number }) {
-  return <section className={styles.card}><h2>{title}</h2><p>{intro}</p>{total ? <ul className={styles.distribution}>{rows.map(row => <li key={row.label}><span>{row.label}</span><div className={styles.track} role="meter" aria-label={row.label} aria-valuemin={0} aria-valuemax={total} aria-valuenow={row.count} aria-valuetext={`${row.count} besvarelser, ${percent(row.count, total)}`}><i style={{ width: `${row.count / total * 100}%` }} /></div><strong>{row.count}<small>{percent(row.count, total)}</small></strong></li>)}</ul> : <div className={styles.empty}>Fordelingen vises, når der er besvarelser.</div>}<span className={styles.chartNote}>{total} besvarelser · Andel af alle besvarelser</span></section>;
+function Distribution({ title, intro, rows, total, children, className = "" }: { title: string; intro: string; rows: { label: string; count: number; postalCodes?: string[] }[]; total: number; children?: ReactNode; className?: string }) {
+  return <section className={`${styles.card} ${className}`}><h2>{title}</h2><p>{intro}</p>{total ? <ul className={styles.distribution} tabIndex={className ? 0 : undefined} aria-label={title}>{rows.map(row => <li key={row.label}><span>{row.label}{row.postalCodes && <small>{row.postalCodes.join(", ")}</small>}</span><div className={styles.track} role="meter" aria-label={row.label} aria-valuemin={0} aria-valuemax={total} aria-valuenow={row.count} aria-valuetext={`${row.count} besvarelser, ${percent(row.count, total)}`}><i style={{ width: `${row.count / total * 100}%` }} /></div><strong>{row.count}<small>{percent(row.count, total)}</small></strong></li>)}</ul> : <div className={styles.empty}>Fordelingen vises, når der er besvarelser.</div>}<span className={styles.chartNote}>{total} besvarelser · Andel af alle besvarelser</span>{children}</section>;
 }
 export default function SurveyAnalysisApp() {
   const examples = useRef<HTMLElement>(null);
+  const [allPlaces, setAllPlaces] = useState(false);
   const [data, setData] = useState<SurveyAnalysis | null>(null);
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState('');
@@ -45,6 +46,10 @@ export default function SurveyAnalysisApp() {
     <div className={styles.summary}><dl><div><dt>Besvarelser</dt><dd>{data && !error ? number(data.total) : '—'}</dd></div><div><dt>Gennemsnitsalder</dt><dd>{data && !error ? number(data.averageAge) : '—'}<small> år</small></dd></div><div><dt>Deltaget i gennemsnit</dt><dd>{data && !error ? number(data.averageParticipations) : '—'}<small> gange</small></dd></div></dl><button disabled={loading} onClick={() => setReload(value => value + 1)}><UiIcon name="refresh" /> Opdatér</button></div>
     {error ? <div className={styles.empty} role="alert"><h2>Vi kunne ikke hente analysen</h2><p>{error}</p><button className={styles.outline} onClick={() => setReload(value => value + 1)}>Prøv igen</button></div> : !data ? <div className={styles.empty} role="status">Henter besvarelser og beregner analysen …</div> : <>
       <div className={styles.charts}><Distribution title="Aldersfordeling" intro="Respondenternes alder fordelt på aldersgrupper." rows={data.ages} total={data.total} /><Distribution title="Hvor mange gange har de været med?" intro="Antal deltagelser — både som aktiv deltager og tilskuer." rows={data.participations} total={data.total} /></div>
+      <Distribution className={styles.geography} title="Hvor kommer deltagerne fra?" intro="Fordelingen følger det oplyste postnummer og viser postbyens navn. Hver besvarelse tæller én gang." rows={allPlaces ? data.places : data.places.slice(0, 10)} total={data.total}>
+        {data.places.length > 10 && <button className={styles.outline} aria-expanded={allPlaces} onClick={() => setAllPlaces(value => !value)}>{allPlaces ? 'Vis de 10 største områder' : `Vis alle ${data.places.length} områder`}</button>}
+        <p className={styles.chartNote}>Et postnummerområde kan omfatte flere byer. Fx vises Aalborg, Aalborg SV og Nørresundby hver for sig. Ukendte postnumre beholdes i fordelingen. Postbynavne: <a href="https://www.statistikbanken.dk/POSTNR2" target="_blank" rel="noopener noreferrer">Danmarks Statistik · POSTNR2</a>.</p>
+      </Distribution>
       <section className={styles.words} aria-labelledby="survey-words-title"><header><span className={styles.eyebrow}>ORDENE I BESVARELSERNE</span><h2 id="survey-words-title">Aalborg Karneval er…</h2><p>{data.statements} enkelte svar fra {data.answeredPeople} besvarelser. Udforsk de ord og vendinger, de faktisk har skrevet.</p></header>
         <div className={styles.filters}><label>Søg i ord og vendinger<input type="search" placeholder="Hvilket ord leder du efter?" value={query} maxLength={100} onChange={event => setQuery(event.target.value)} /></label><label>Vis<select value={kind} onChange={event => setKind(event.target.value)}><option value="word">Enkeltord</option><option value="phrase">Gentagne vendinger</option></select></label><label>Tæl<select value={unit} onChange={event => setUnit(event.target.value)}><option value="people">Forskellige besvarelser</option><option value="answers">Enkelte svar</option></select></label><label>Mindst<select value={minimum} onChange={event => setMinimum(event.target.value)}>{[1, 2, 3, 5].map(value => <option key={value} value={value}>{value}</option>)}</select></label></div>
         <p className={styles.resultNote} role="status">{pending ? 'Opdaterer ordanalysen …' : `${data.terms.length} af ${data.availableTerms} ${data.kind === 'word' ? 'ord' : 'vendinger'} · Tæller ${data.unit === 'people' ? 'besvarelser' : 'svar'}`}</p>

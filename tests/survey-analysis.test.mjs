@@ -43,6 +43,6 @@ test('analysis fetches all database pages using only the required columns', asyn
     return Response.json(Array.from({length:Math.min(500,1200-offset)},(_,i)=>row(String(offset+i),30,2,['fest'])), {headers:{'content-range':`*/1200`}});
   });
   assert.equal(result.length,1200); assert.equal(paths.length,3);
-  assert.ok(paths.every(path=>path.startsWith('survey_responses?select=id,age,participations,carnival_is:answers->carnival_is&')));
+  assert.ok(paths.every(path=>path.startsWith('survey_responses?select=id,age,participations,postal_code,carnival_is:answers->carnival_is&')));
   assert.ok(paths.every(path=>!path.includes('email')&&!path.includes('first_name')));
 });

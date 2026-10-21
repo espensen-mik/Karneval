@@ -88,3 +88,9 @@ Migration `20261020134701_digital_voices.sql` opretter `soul_voice_themes`, `sou
 Svartekst og fornavn/alder læses fra originalbesvarelsen ved visning; kun kilde-ID, spørgsmåls-ID, svarfeltets indeks og tematilknytninger gemmes. E-mail/kontakttabellen læses aldrig. Unik kildeidentitet og atomisk upsert forhindrer kopier ved gentagne gemninger. Kildesletning rydder automatisk udvalget via FK-cascade. Temaerne er redaktionelle og ændrer hverken kildetekster eller ordnetværkets kategorier.
 
 Verificeret med transaktionstest og rollback for flere temaer, gentagen gemning, ændring/fjernelse, præcist svarfelt og kildesletning, samt browserflow på desktop og mobil med isolerede testdata. Produktionssamlingen starter tom uden opfundne temaer.
+
+### Geografisk fordeling
+
+Analysesiden viser fordelingen efter postby med antal, andel af alle besvarelser og tilhørende postnumre. De 10 største områder vises først; alle kan åbnes. Hvert deduplikeret besvarelses-ID tæller én gang uanset antal svarfelter. Postområder som Aalborg og Aalborg SV holdes adskilt, og ukendte/manglende postnumre udelades ikke.
+
+`lib/data/postal-cities.ts` er en lokal opslagstabel med 1.063 postnumre udledt fra Danmarks Statistiks POSTNR2/PNR20-metadata, hentet 21. oktober 2026: https://api.statbank.dk/v1/tableinfo/POSTNR2?format=JSON&lang=da. Kilde: Danmarks Statistik, CC BY 4.0; kildehenvisning vises på siden. Tabellen omfatter også postområder fra statistikkens historiske serier. Intet API kaldes ved visning, og ingen deltagerdata sendes til opslagstjenester. Den tidligere DAWA-postnummertjeneste returnerede HTTP 410 og bruges ikke.
