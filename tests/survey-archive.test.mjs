@@ -22,3 +22,13 @@ test('untrusted query parameters cannot introduce PostgREST operators or orders'
   assert.equal(result.filters.split(',').length, 8);
   assert.ok(!result.filters.includes('email.ilike.'));
 });
+
+
+test('favorite filter is applied in the database before pagination and combines with other filters', () => {
+  const result = archiveQuery(new URLSearchParams({ favorites: '1', age: 'under25', q: 'fest', page: '2' }));
+  assert.ok(result.filters.includes('&is_favorite=eq.true'));
+  assert.ok(result.filters.includes('&age=lt.25'));
+  assert.ok(result.filters.includes('answers->>memory.ilike.*fest*'));
+  assert.equal(result.page, 2);
+  assert.ok(!archiveQuery(new URLSearchParams('favorites=true')).filters.includes('is_favorite'));
+});

@@ -4,7 +4,8 @@ import { dbRequest } from "@/lib/server-db";
 import { readSurveySummary } from "@/lib/survey-summary";
 import { archiveQuery, ARCHIVE_PAGE_SIZE } from "@/lib/survey-archive";
 import { validateSurveyDeletion } from "@/lib/survey-delete";
-const columns = "id,first_name,age,postal_code,participations,answers,publication_permission,contact_permission,created_at";
+import { validateSurveyFavorite } from "@/lib/survey-favorite";
+const columns = "id,first_name,age,postal_code,participations,answers,publication_permission,contact_permission,created_at,is_favorite";
 export async function GET(request: NextRequest) {
   const denied = await requireResearchSession(); if (denied) return denied;
   const { page, filters, order } = archiveQuery(request.nextUrl.searchParams);
@@ -32,4 +33,21 @@ export async function DELETE(request: NextRequest) {
     if (!deleted.length) return NextResponse.json({ error: "Besvarelsen findes ikke længere. Opdatér oversigten." }, { status: 404 });
     return NextResponse.json({ success: true }, { headers: { "Cache-Control": "private, no-store" } });
   } catch { return NextResponse.json({ error: "Besvarelsen kunne ikke slettes. Prøv igen." }, { status: 503 }); }
+}
+
+
+export async function PATCH(request: NextRequest) {
+  const denied = await requireResearchSession(); if (denied) return denied;
+  let favorite: ReturnType<typeof validateSurveyFavorite>;
+  try { favorite = validateSurveyFavorite(await request.json()); }
+  catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Ugyldig favorit." }, { status: 400 }); }
+  try {
+    const response = await dbRequest(`survey_responses?id=eq.${favorite.id}&select=id,is_favorite`, {
+      method: "PATCH", headers: { Prefer: "return=representation" },
+      body: JSON.stringify({ is_favorite: favorite.is_favorite }), signal: AbortSignal.timeout(10000),
+    });
+    const [saved] = await response.json();
+    if (!saved) return NextResponse.json({ error: "Besvarelsen findes ikke længere." }, { status: 404 });
+    return NextResponse.json(saved, { headers: { "Cache-Control": "private, no-store" } });
+  } catch { return NextResponse.json({ error: "Favoritten kunne ikke gemmes. Prøv igen." }, { status: 503 }); }
 }

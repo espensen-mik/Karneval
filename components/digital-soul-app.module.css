@@ -44,6 +44,24 @@
 .table .readButton:hover { background: transparent; color: var(--navy); text-decoration: underline; text-underline-offset: 5px; }
 .table .readButton :global(.ui-icon) { width: 16px; height: 16px; }
 .nameButton { background: transparent; border: 0; padding: 6px 0; color: var(--navy); font-weight: 600 !important; text-align: left; cursor: pointer; font-size: 18px !important; }
+.respondentName { display: flex; align-items: center; gap: 10px; }
+.favoriteButton { display: inline-grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; padding: 8px; border: 1px solid transparent; border-radius: 50%; background: transparent; color: #7b8290; cursor: pointer; }
+.favoriteButton :global(.ui-icon) { width: 23px; height: 23px; }
+.favoriteButton[aria-pressed="true"] { color: #b82226; background: #f8e9e6; }
+.favoriteButton[aria-pressed="true"] :global(.ui-icon) { fill: currentColor; }
+.favoriteButton:hover { border-color: currentColor; }
+.favoriteButton:disabled { opacity: .55; cursor: wait; }
+.favoriteButton:focus-visible, .favoriteFilter:focus-visible { outline: 2px solid #b82226; outline-offset: 3px; }
+.favoriteToolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 18px; margin: 0 0 18px; }
+.favoriteToolbar > span { color: #53617b; font-size: 15px; }
+.favoriteFilter { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 9px 16px; border: 1px solid #dfc9bd; border-radius: 24px; color: #b82226; background: transparent; font: inherit; font-size: 16px; cursor: pointer; }
+.favoriteFilter[aria-pressed="true"] { background: #b82226; border-color: #b82226; color: white; }
+.favoriteFilter[aria-pressed="true"] :global(.ui-icon) { fill: currentColor; }
+.readerBarActions { display: flex; align-items: center; gap: 8px; }
+.readerFavorite { color: white; }
+.readerFavorite[aria-pressed="true"] { color: white; background: #ffffff26; }
+.readerFavorite:focus-visible { outline-color: white; }
+@media (max-width: 700px) { .respondentName { gap: 4px; } .favoriteButton { width: 44px; height: 44px; flex-basis: 44px; } .favoriteToolbar > span { font-size: 14px; } }
 .table time { white-space: nowrap; }
 .pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 0; font-size: 15px; color: #53617b; }
 .pagination p { margin: 0; }

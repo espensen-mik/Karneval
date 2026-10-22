@@ -27,5 +27,5 @@ export function archiveQuery(params: URLSearchParams) {
   // Search only the respondent's words, never JSON keys, question text or contacts.
   const fields = ["first_name", ...["invitation", "carnival_is", "words", "difference", "traditions", "memory", "community"].map(key => `answers->>${key}`)];
   const searchFilter = search ? `&or=(${fields.map(field => `${field}.ilike.${encodeURIComponent(`*${search}*`)}`).join(",")})` : "";
-  return { page, filters: `${responseFilter}${ageFilter}${searchFilter}`, order };
+  return { page, filters: `${responseFilter}${ageFilter}${searchFilter}${params.get("favorites") === "1" ? "&is_favorite=eq.true" : ""}`, order };
 }

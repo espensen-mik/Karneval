@@ -37,4 +37,4 @@ export function validateSurvey(value: unknown) {
   if (JSON.stringify(answers).length > 40_000) throw new Error("Besvarelsen er for lang. Forkort nogle af dine svar.");
   return { id: body.id, name, email, first_name: name.split(/\s+/u)[0], age, postal_code, participations, answers, publication_permission: true, contact_permission: body.contact_permission === "yes", questionnaire_version: SURVEY_VERSION };
 }
-export type SurveyResponse = { id: string; first_name: string; age: number; postal_code: string; participations: number; created_at: string; answers: SurveyAnswers; publication_permission: boolean; contact_permission: boolean };
+export type SurveyResponse = { is_favorite: boolean; id: string; first_name: string; age: number; postal_code: string; participations: number; created_at: string; answers: SurveyAnswers; publication_permission: boolean; contact_permission: boolean };
