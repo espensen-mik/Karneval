@@ -173,6 +173,7 @@ export default function QuotesApp({ images }: { images: string[] }) {
       organization: String(data.get("organization") || ""),
       quote_source: String(data.get("quote_source") || ""),
       category: String(data.get("category") || "Generel"),
+      survey_answer_key: draft?.survey_answer_key,
     };
     try {
       const response = await fetch("/api/citater", {

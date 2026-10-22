@@ -1,3 +1,4 @@
+import { parseSurveyAnswerKey } from "@/lib/quote-draft";
 import { requireResearchSession } from "@/lib/research-auth";
 import { sourceConfig as config, sourceHeaders as headers } from "@/lib/server-db";
 import { NextRequest, NextResponse } from "next/server";
@@ -5,16 +6,21 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 const categories = ["Generel", "Parade", "Kildeparken", "Børnekarneval", "Gløden"] as const;
-const columns = "id,quote_text,person_name,person_title,organization,quote_source,category,created_at";
+const columns = "id,quote_text,person_name,person_title,organization,quote_source,category,created_at,survey_answer_key";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const denied = await requireResearchSession(); if (denied) return denied;
   const supabase = config();
   if (!supabase) return NextResponse.json({ error: "Citater er ikke sat op endnu." }, { status: 503 });
 
   try {
     const url = new URL(`${supabase.url}/rest/v1/quotes`);
-    url.searchParams.set("select", columns);
+    const surveyResponse = request.nextUrl.searchParams.get("survey_response");
+    if (surveyResponse) {
+      if (!/^[0-9a-f-]{36}$/i.test(surveyResponse)) return NextResponse.json({ error: "Ugyldig besvarelse." }, { status: 400 });
+      url.searchParams.set("survey_answer_key", `like.${surveyResponse}:*`);
+    }
+    url.searchParams.set("select", surveyResponse ? "id,survey_answer_key" : columns);
     url.searchParams.set("order", "created_at.desc");
     url.searchParams.set("limit", "1000");
     const response = await fetch(url, { headers: headers(supabase.key), cache: "no-store" });
@@ -54,6 +60,18 @@ export async function POST(request: NextRequest) {
     if (organization.length > 200 || quote_source.length > 500) return NextResponse.json({ error: "Et af de valgfrie felter er for langt." }, { status: 400 });
     if (!categories.includes(category as (typeof categories)[number])) return NextResponse.json({ error: "Vælg en gyldig kategori." }, { status: 400 });
 
+    const origin = body.survey_answer_key == null ? null : parseSurveyAnswerKey(body.survey_answer_key);
+    if (body.survey_answer_key != null && !origin) return NextResponse.json({ error: "Ugyldig reference til besvarelsen." }, { status: 400 });
+    if (origin) {
+      const sourceUrl = new URL(`${supabase.url}/rest/v1/survey_responses`);
+      sourceUrl.searchParams.set("id", `eq.${origin.response}`);
+      sourceUrl.searchParams.set("select", "answers,publication_permission");
+      const sourceResponse = await fetch(sourceUrl, { headers: headers(supabase.key), cache: "no-store" });
+      if (!sourceResponse.ok) return NextResponse.json({ error: "Besvarelsen kunne ikke kontrolleres. Prøv igen." }, { status: 502 });
+      const [source] = await sourceResponse.json();
+      if (!source?.publication_permission || typeof source.answers?.[origin.question]?.[origin.index] !== "string") return NextResponse.json({ error: "Udtalelsen findes ikke eller må ikke citeres." }, { status: 400 });
+    }
+
     const response = await fetch(`${supabase.url}/rest/v1/quotes?select=${columns}`, {
       method: "POST",
       headers: headers(supabase.key, "return=representation"),
@@ -62,6 +80,7 @@ export async function POST(request: NextRequest) {
         organization: organization || null,
         quote_source: quote_source || null,
         category,
+        survey_answer_key: origin ? `${origin.response.toLowerCase()}:${origin.question.toLowerCase()}:${origin.index}` : null,
         // Legacy publication flag required by the existing public-mode policies.
         // Submissions are published directly; the form has no consent checkbox.
         publication_consent: true,
@@ -69,6 +88,7 @@ export async function POST(request: NextRequest) {
       }),
       cache: "no-store",
     });
+    if (response.status === 409 && origin) return NextResponse.json({ error: "Denne udtalelse er allerede tilføjet som citat. Find den i citatbanken." }, { status: 409 });
     if (!response.ok) return NextResponse.json({ error: "Citatet kunne ikke gemmes. Tjek at Supabase-migrationen er kørt." }, { status: 502 });
     const rows = await response.json();
     return NextResponse.json(rows[0], { status: 201, headers: { "Cache-Control": "no-store" } });
