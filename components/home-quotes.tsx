@@ -28,46 +28,83 @@ export default function HomeQuotes({ images }: { images: string[] }) {
   const [fullscreen, setFullscreen] = useState(false);
   const [fallbackFullscreen, setFallbackFullscreen] = useState(false);
 
+  const [fullscreenClosing, setFullscreenClosing] = useState(false);
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const expanded = fullscreen || fallbackFullscreen;
+
+  useEffect(() => {
+    document.body.classList.add("quote-presentation-ready");
+    const sidebar = document.querySelector<HTMLElement>(".sidebar");
+    const measure = () => document.body.style.setProperty("--presentation-sidebar-height", `${sidebar?.offsetHeight ?? 0}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    if (sidebar) observer.observe(sidebar);
+    return () => {
+      observer.disconnect();
+      document.body.style.removeProperty("--presentation-sidebar-height");
+      document.body.classList.remove("quote-presentation-ready", "quote-presentation-active");
+      if (exitTimer.current) clearTimeout(exitTimer.current);
+    };
+  }, []);
+
   useEffect(() => {
     function syncFullscreen() {
-      const active = document.fullscreenElement === stage.current;
+      const active = document.fullscreenElement === document.documentElement;
       setFullscreen(active);
-      if (!active) fullscreenButton.current?.focus({ preventScroll: true });
+      if (!active) {
+        if (exitTimer.current) { clearTimeout(exitTimer.current); exitTimer.current = null; }
+        setFullscreenClosing(false);
+        fullscreenButton.current?.focus({ preventScroll: true });
+      }
     }
     document.addEventListener("fullscreenchange", syncFullscreen);
     return () => document.removeEventListener("fullscreenchange", syncFullscreen);
   }, []);
 
   useEffect(() => {
-    if (!fallbackFullscreen) return;
+    document.body.classList.toggle("quote-presentation-active", expanded && !fullscreenClosing);
+    const sidebar = document.querySelector<HTMLElement>(".sidebar");
+    if (sidebar) sidebar.inert = expanded && !fullscreenClosing;
+    if (!expanded) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     function escape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setFallbackFullscreen(false);
-        fullscreenButton.current?.focus({ preventScroll: true });
-      }
+      if (event.key === "Escape" && fallbackFullscreen) closeFullscreen();
     }
     window.addEventListener("keydown", escape);
     return () => {
       document.body.style.overflow = previousOverflow;
+      if (sidebar) sidebar.inert = false;
       window.removeEventListener("keydown", escape);
     };
-  }, [fallbackFullscreen]);
+  }, [expanded, fullscreenClosing, fallbackFullscreen]);
+
+  function closeFullscreen() {
+    if (exitTimer.current) return;
+    setFullscreenClosing(true);
+    const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 600;
+    exitTimer.current = setTimeout(async () => {
+      exitTimer.current = null;
+      if (document.fullscreenElement === document.documentElement) {
+        try { await document.exitFullscreen(); } catch { /* The browser may already have closed fullscreen with Escape. */ }
+      }
+      setFallbackFullscreen(false);
+      setFullscreen(false);
+      setFullscreenClosing(false);
+      fullscreenButton.current?.focus({ preventScroll: true });
+    }, duration);
+  }
 
   async function toggleFullscreen() {
-    if (fallbackFullscreen) { setFallbackFullscreen(false); return; }
-    if (document.fullscreenElement === stage.current) { await document.exitFullscreen(); return; }
+    if (expanded) { closeFullscreen(); return; }
     try {
-      if (!stage.current?.requestFullscreen) throw new Error("Fullscreen unavailable");
-      await stage.current.requestFullscreen();
+      if (!document.documentElement.requestFullscreen) throw new Error("Fullscreen unavailable");
+      // Keep the shell in the fullscreen element so its sidebar can animate naturally.
+      await document.documentElement.requestFullscreen();
     } catch {
-      // Browsers without element fullscreen still get an edge-to-edge presentation.
       setFallbackFullscreen(true);
     }
   }
-
-  const expanded = fullscreen || fallbackFullscreen;
 
   useEffect(() => {
     setImageIndex(Math.floor(Math.random() * images.length));
@@ -134,7 +171,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
   }, [cannotChange, refresh]);
 
   return (
-    <section ref={stage} className={`quote-image-stage${fallbackFullscreen ? " quote-image-stage-expanded" : ""}`} aria-label="Et citat fra Aalborg Karneval">
+    <section ref={stage} className="quote-image-stage" aria-label="Et citat fra Aalborg Karneval">
       {images.length > 0 && <Image
         key={images[imageIndex]}
         className="quote-image-photo"
@@ -175,6 +212,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
       </button>
       <button
         ref={fullscreenButton}
+        disabled={fullscreenClosing}
         className="quote-image-refresh"
         type="button"
         onClick={() => { void toggleFullscreen(); }}
