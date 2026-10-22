@@ -57,6 +57,9 @@
 .readerBar { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 32px; background: #d9232b; color: white; font-size: 16px; }
 .closeButton { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #ffffff88; border-radius: 50%; background: transparent; color: white; cursor: pointer; }
 .closeButton:focus-visible { outline-color: white !important; }
+.readerIdentity { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 18px; min-width: 0; }
+.readerName { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+.readerBar .closeButton { flex-shrink: 0; }
 .person { padding: 36px 40px; background: #f5ece8; }
 .person h2 { display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap; margin: 14px 0 24px; font: 500 42px/1.15 "Funnel Display", sans-serif; letter-spacing: -.03em; outline: none; overflow-wrap: anywhere; }
 .person h2 > span { color: #b82226; font-size: 28px; }
