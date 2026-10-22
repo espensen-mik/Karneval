@@ -1,8 +1,7 @@
 "use client";
 
 import UiIcon from "./ui-icon";
-import QuoteImageContent from "./quote-image-content";
-import Image from "next/image";
+import QuoteSlideshow from "./quote-slideshow";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type Quote = {
@@ -172,17 +171,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
 
   return (
     <section ref={stage} className="quote-image-stage" aria-label="Et citat fra Aalborg Karneval">
-      {images.length > 0 && <Image
-        key={images[imageIndex]}
-        className="quote-image-photo"
-        src={images[imageIndex]}
-        alt=""
-        fill
-        priority
-        sizes={expanded ? "100vw" : "(max-width: 720px) 100vw, calc(100vw - 244px)"}
-      />}
-      <div className="quote-image-shade" />
-      {selected ? <QuoteImageContent quote={selected} live={playing ? "off" : "polite"} /> : <div className="quote-image-content" aria-live="polite"><blockquote>{loading ? "…" : "Her er plads til den første stemme fra karneval."}</blockquote></div>}
+      <QuoteSlideshow source={images[imageIndex] ?? null} quote={selected} playing={playing} loading={loading} expanded={expanded} onDisplayed={() => { setProgress(0); setCycle(value => value + 1); }} />
       <div className="quote-image-controls">
       <button
         className="quote-image-play"
