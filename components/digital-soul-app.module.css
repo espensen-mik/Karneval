@@ -45,9 +45,19 @@
 .table .readButton :global(.ui-icon) { width: 16px; height: 16px; }
 .nameButton { background: transparent; border: 0; padding: 6px 0; color: var(--navy); font-weight: 600 !important; text-align: left; cursor: pointer; font-size: 18px !important; }
 .table time { white-space: nowrap; }
-.pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 0; font-size: 15px; color: #53617b; }
+.pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 0; font-size: 15px; color: #53617b; }
 .pagination p { margin: 0; }
 .pagination > div { display: flex; align-items: center; gap: 18px; }
+.pageNumbers { display: flex; flex-wrap: wrap; gap: 4px; }
+.pageNumbers > span { display: inline-flex; align-items: center; gap: 4px; }
+.pageNumber { min-width: 44px; min-height: 44px; border: 1px solid #e9e1dd; border-radius: 6px; background: transparent; color: var(--navy); font: inherit; cursor: pointer; }
+.pageNumber:hover { border-color: #b82226; color: #b82226; }
+.pageNumber[aria-current="page"] { background: #b82226; border-color: #b82226; color: white; font-weight: 600; }
+.pageNumber:focus-visible { outline: 3px solid #b82226; outline-offset: 3px; }
+.pageGap { padding: 0 4px; }
+.pageJump { display: flex; align-items: center; gap: 10px; }
+.pageJump select { min-height: 44px; min-width: 76px; font-size: 16px; }
+@media (max-width: 700px) { .pagination > div { justify-content: flex-start; } .pageNumbers { order: 3; flex-basis: 100%; } }
 .empty { padding: 64px 24px; text-align: center; border: 1px solid #e9e1dd; border-radius: 8px; font-size: 18px; color: #53617b; }
 .empty h3 { margin: 0 0 12px; color: var(--navy); font: 500 28px/1.3 "Funnel Display", sans-serif; }
 .empty p { line-height: 1.6; }
