@@ -2,6 +2,7 @@
 
 import UiIcon from "./ui-icon";
 import QuotePreview from "./quote-preview";
+import { QUOTE_DRAFT_KEY, readQuoteDraft, type QuoteDraft } from "@/lib/quote-draft";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const categories = ["Generel", "Parade", "Kildeparken", "Børnekarneval", "Gløden"] as const;
@@ -96,6 +97,18 @@ export default function QuotesApp({ images }: { images: string[] }) {
   const [success, setSuccess] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [draft, setDraft] = useState<QuoteDraft | null>(null);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("opret") !== "1") return;
+    try {
+      const value = sessionStorage.getItem(QUOTE_DRAFT_KEY);
+      sessionStorage.removeItem(QUOTE_DRAFT_KEY);
+      const incoming = value ? readQuoteDraft(value) : null;
+      if (incoming) { setDraft(incoming); setAddModalOpen(true); }
+    } catch { /* The regular quote form remains available without browser storage. */ }
+    window.history.replaceState(null, "", "/citater");
+  }, []);
 
   async function loadQuotes() {
     setLoading(true);
@@ -252,7 +265,7 @@ export default function QuotesApp({ images }: { images: string[] }) {
           <h1>Citater<span className="title-period">.</span></h1>
           <p>Oplevelser, holdninger og øjeblikke fra Aalborg Karneval.</p>
         </div>
-        <button className="add-quote-button" type="button" onClick={() => { setFormError(""); setAddModalOpen(true); }}>
+        <button className="add-quote-button" type="button" onClick={() => { setFormError(""); setDraft(null); setAddModalOpen(true); }}>
           <span aria-hidden="true">＋</span> Tilføj citat
         </button>
       </header>
@@ -334,12 +347,12 @@ export default function QuotesApp({ images }: { images: string[] }) {
             </header>
             <form className="quotes-form" onSubmit={submit}>
               <label className="form-field form-wide">Citat
-                <textarea name="quote_text" rows={4} maxLength={3000} required placeholder="Skriv citatet her…" />
+                <textarea name="quote_text" rows={4} maxLength={3000} required defaultValue={draft?.quote_text} placeholder="Skriv citatet her…" />
               </label>
-              <label className="form-field">Navn<input name="person_name" maxLength={160} required placeholder="Personens navn" /></label>
-              <label className="form-field">Titel<input name="person_title" maxLength={200} required placeholder="Fx arrangør" /></label>
+              <label className="form-field">Navn<input name="person_name" maxLength={160} required defaultValue={draft?.person_name} placeholder="Personens navn" /></label>
+              <label className="form-field">Titel<input name="person_title" maxLength={200} required defaultValue={draft?.person_title} placeholder="Fx arrangør" /></label>
               <label className="form-field">Firma eller organisation <span>(valgfrit)</span><input name="organization" maxLength={200} placeholder="Organisation" /></label>
-              <label className="form-field">Kilde eller anledning <span>(valgfrit)</span><input name="quote_source" maxLength={500} placeholder="Fx interview, workshop eller spørgeskema" /></label>
+              <label className="form-field">Kilde eller anledning <span>(valgfrit)</span><input name="quote_source" maxLength={500} defaultValue={draft?.quote_source} placeholder="Fx interview, workshop eller spørgeskema" /></label>
               <label className="form-field form-wide">Kategori
                 <select name="category" defaultValue="Generel">{categories.map((category) => <option key={category}>{category}</option>)}</select>
               </label>
