@@ -16,18 +16,19 @@
 .themeList { display: flex; flex-wrap: wrap; gap: 9px; }
 .themeList button, .cardThemes button { display: inline-flex; gap: 10px; align-items: center; border: 1px solid #dfcfc6; border-radius: 40px; padding: 10px 16px; min-height: 44px; background: #fcf9f6; color: var(--navy); font: inherit; font-size: 15px; cursor: pointer; }
 .themeList button[aria-pressed="true"] { background: #d9232b; border-color: #d9232b; color: white; }
-.themeList button span { opacity: .8; font-variant-numeric: tabular-nums; }
+.themeList button span, .themeCount { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 20px; background: #ecdcd4; color: #91272a; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.themeList button[aria-pressed="true"] span { background: #ffffff26; color: white; }
 .search { display: grid; gap: 10px; max-width: 560px; font-size: 15px; }
 .search input, .createTheme input { width: 100%; min-width: 0; min-height: 48px; padding: 12px 14px; border: 1px solid #c7cbd3; border-radius: 6px; font: inherit; font-size: 16px; color: var(--navy); background: white; }
 .resultBar { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-block: 1px solid #e4dcd7; padding: 10px 0; margin-bottom: 24px; font-size: 15px; }
 .textButton { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; border: 0; background: transparent; color: #b82226; font: inherit; font-size: 15px; cursor: pointer; padding: 8px 0; }
 .textButton:hover { text-decoration: underline; text-underline-offset: 4px; }
-.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; align-items: start; }
-.card { padding: 28px; background: #fcf8f4; border: 1px solid #e5d9d1; border-top: 3px solid #d9232b; border-radius: 8px; min-width: 0; }
-.cardThemes { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 22px; }
+.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; align-items: start; }
+.card { padding: 22px; background: #fcf8f4; border: 1px solid #e5d9d1; border-top: 3px solid #d9232b; border-radius: 8px; min-width: 0; }
+.cardThemes { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
 .cardThemes button { min-height: 36px; padding: 6px 12px; color: #a42429; background: #f6e7e1; border: 0; font-size: 14px; }
 .question { font-size: 14px; line-height: 1.5; color: #53617b; }
-.card blockquote { margin: 20px 0 26px; font: 400 24px/1.55 "Funnel Display",sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
+.card blockquote { margin: 14px 0; font: 400 18px/1.65 "Funnel Sans",sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
 .person { font-size: 17px; font-weight: 600; display: flex; flex-wrap: wrap; gap: 12px; }
 .person span { font-weight: 400; color: #53617b; }
 .card footer { margin-top: 20px; border-top: 1px solid #e5d9d1; padding-top: 10px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
@@ -60,8 +61,8 @@
   .page { padding: 28px 20px 40px; }
   .header h1 { font-size: 38px; }
   .exploreNav { gap: 16px; }
-  .card { padding: 22px; }
-  .card blockquote { font-size: 22px; }
+  .card { padding: 20px; }
+  .card blockquote { font-size: 17px; }
   .themeList button { font-size: 14px; padding: 10px 13px; }
   .pagination { flex-wrap: wrap; gap: 10px; }
   .pagination .outline { padding: 10px 12px; }
@@ -74,3 +75,8 @@
 
 .themeList button, .cardThemes button, .choices label { max-width: 100%; overflow-wrap: anywhere; text-align: left; }
 .primary { white-space: nowrap; }
+
+.excerpt { margin-bottom: 18px; }
+.expandButton { display: inline-flex; align-items: center; gap: 12px; min-height: 40px; padding: 4px 0; background: transparent; border: 0; color: #b82226; font: inherit; font-size: 14px; cursor: pointer; }
+.expandButton:hover { text-decoration: underline; text-underline-offset: 4px; }
+.expandButton > span { font-size: 20px; }
