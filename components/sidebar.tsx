@@ -39,6 +39,7 @@ export default function Sidebar() {
             {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
             {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/leg-med-ord" ? " active" : ""}`} href="/sjaelen/leg-med-ord" aria-current={pathname === "/sjaelen/leg-med-ord" ? "page" : undefined}>Leg med ord</Link>}
             {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/digitale-stemmer" ? " active" : ""}`} href="/sjaelen/digitale-stemmer" aria-current={pathname === "/sjaelen/digitale-stemmer" ? "page" : undefined}>Digitale stemmer</Link>}
+            {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/ordsky" ? " active" : ""}`} href="/sjaelen/ordsky" aria-current={pathname === "/sjaelen/ordsky" ? "page" : undefined}>Ordsky</Link>}
             </Fragment>
           );
         })}
