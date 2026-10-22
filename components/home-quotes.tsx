@@ -11,6 +11,7 @@ type Quote = {
   person_name: string;
   person_title: string;
   organization: string | null;
+  quote_source: string | null;
   category: string;
 };
 

@@ -431,6 +431,7 @@ a.discover-card:hover { border-color: #d9b5b4; transform: translateY(-2px); }
 .quote-image-content blockquote { margin: 0; color: white; font: 400 clamp(28px, 3.2vw, 48px)/1.22 "Funnel Display", sans-serif; letter-spacing: -.035em; text-wrap: pretty; }
 .quote-image-attribution { display: grid; gap: 5px; margin-top: 26px; color: #ffffffc9; font-size: 16px; }
 .quote-image-attribution strong { color: white; font-size: 19px; font-weight: 600; }
+.quote-image-source { overflow-wrap: anywhere; line-height: 1.4; }
 .quote-image-controls { position: absolute; z-index: 3; top: 34px; right: 36px; display: flex; align-items: center; gap: 8px; }
 .quote-image-refresh { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid #ffffff70; border-radius: 50%; background: #0c1e454d; color: white; cursor: pointer; backdrop-filter: blur(8px); transition: transform .2s, background .2s; }
 .quote-image-play { display: flex; align-items: center; gap: 3px; padding: 3px 11px 3px 3px; border: 1px solid #ffffff70; border-radius: 40px; background: #0c1e454d; color: white; cursor: pointer; backdrop-filter: blur(8px); font: inherit; font-size: 12px; }

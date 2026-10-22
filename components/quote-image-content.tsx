@@ -3,6 +3,7 @@ export type ImageQuote = {
   person_name: string;
   person_title: string;
   organization: string | null;
+  quote_source?: string | null;
 };
 
 export default function QuoteImageContent({ quote, live = "polite" }: { quote: ImageQuote; live?: "off" | "polite" }) {
@@ -13,6 +14,7 @@ export default function QuoteImageContent({ quote, live = "polite" }: { quote: I
     <div className="quote-image-attribution">
       <strong>{quote.person_name}</strong>
       <span>{quote.person_title}{quote.organization ? " · " + quote.organization : ""}</span>
+      {quote.quote_source?.trim() && <span className="quote-image-source">Kilde: {quote.quote_source.trim()}</span>}
     </div>
   </div>;
 }
