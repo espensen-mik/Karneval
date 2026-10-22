@@ -26,7 +26,6 @@ export async function exportQuoteJpeg(stage: HTMLElement, source: string) {
   const content = stage.querySelector<HTMLElement>(".quote-image-content")!;
   const author = stage.querySelector(".quote-image-attribution strong")!;
   const detail = stage.querySelector(".quote-image-attribution span")!;
-  const citation = stage.querySelector(".quote-image-source");
   const contentStyle = getComputedStyle(content);
   const quoteStyle = getComputedStyle(quote);
   const authorStyle = getComputedStyle(author);
@@ -66,9 +65,8 @@ export async function exportQuoteJpeg(stage: HTMLElement, source: string) {
   const authorSize = parseFloat(authorStyle.fontSize), detailSize = parseFloat(detailStyle.fontSize);
   const authorLines = wrap(author.textContent || "", authorStyle, authorSize);
   const detailLines = wrap(detail.textContent || "", detailStyle, detailSize);
-  const citationLines = citation ? wrap(citation.textContent || "", detailStyle, detailSize) : [];
   const gap = mobile ? 18 : 26;
-  const attributionHeight = authorLines.length * authorSize * 1.35 + 5 + detailLines.length * detailSize * 1.35 + (citationLines.length ? 5 + citationLines.length * detailSize * 1.4 : 0);
+  const attributionHeight = authorLines.length * authorSize * 1.35 + 5 + detailLines.length * detailSize * 1.4;
   let size = parseFloat(quoteStyle.fontSize);
   const lineRatio = parseFloat(quoteStyle.lineHeight) / size;
   let lines = wrap(quote.textContent || "", quoteStyle, size);
@@ -87,11 +85,7 @@ export async function exportQuoteJpeg(stage: HTMLElement, source: string) {
   y += gap;
   paint(authorLines, authorStyle, authorSize, authorSize * 1.35, "white");
   y += 5;
-  paint(detailLines, detailStyle, detailSize, detailSize * 1.35, "#ffffffc9");
-  if (citationLines.length) {
-    y += 5;
-    paint(citationLines, detailStyle, detailSize, detailSize * 1.4, "#ffffffc9");
-  }
+  paint(detailLines, detailStyle, detailSize, detailSize * 1.4, "#ffffffc9");
   const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(result => result ? resolve(result) : reject(new Error("Billedet kunne ikke gemmes.")), "image/jpeg", .94));
   return blob;
 }

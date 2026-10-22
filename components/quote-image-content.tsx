@@ -13,8 +13,7 @@ export default function QuoteImageContent({ quote, live = "polite" }: { quote: I
     <blockquote>{quote.quote_text.trim().replace(/^[“„"]+|[”"]+$/g, "").trim()}</blockquote>
     <div className="quote-image-attribution">
       <strong>{quote.person_name}</strong>
-      <span>{quote.person_title}{quote.organization ? " · " + quote.organization : ""}</span>
-      {quote.quote_source?.trim() && <span className="quote-image-source">Kilde: {quote.quote_source.trim()}</span>}
+      <span className="quote-image-source">{[quote.person_title, quote.organization, quote.quote_source?.trim() ? `Kilde: ${quote.quote_source.trim()}` : null].filter(Boolean).join(" · ")}</span>
     </div>
   </div>;
 }
