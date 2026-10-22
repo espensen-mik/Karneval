@@ -3,7 +3,7 @@
 import UiIcon from "./ui-icon";
 import QuoteImageContent from "./quote-image-content";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Quote = {
   id: string;
@@ -23,6 +23,51 @@ export default function HomeQuotes({ images }: { images: string[] }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [cycle, setCycle] = useState(0);
+  const stage = useRef<HTMLElement>(null);
+  const fullscreenButton = useRef<HTMLButtonElement>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [fallbackFullscreen, setFallbackFullscreen] = useState(false);
+
+  useEffect(() => {
+    function syncFullscreen() {
+      const active = document.fullscreenElement === stage.current;
+      setFullscreen(active);
+      if (!active) fullscreenButton.current?.focus({ preventScroll: true });
+    }
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    return () => document.removeEventListener("fullscreenchange", syncFullscreen);
+  }, []);
+
+  useEffect(() => {
+    if (!fallbackFullscreen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function escape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setFallbackFullscreen(false);
+        fullscreenButton.current?.focus({ preventScroll: true });
+      }
+    }
+    window.addEventListener("keydown", escape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", escape);
+    };
+  }, [fallbackFullscreen]);
+
+  async function toggleFullscreen() {
+    if (fallbackFullscreen) { setFallbackFullscreen(false); return; }
+    if (document.fullscreenElement === stage.current) { await document.exitFullscreen(); return; }
+    try {
+      if (!stage.current?.requestFullscreen) throw new Error("Fullscreen unavailable");
+      await stage.current.requestFullscreen();
+    } catch {
+      // Browsers without element fullscreen still get an edge-to-edge presentation.
+      setFallbackFullscreen(true);
+    }
+  }
+
+  const expanded = fullscreen || fallbackFullscreen;
 
   useEffect(() => {
     setImageIndex(Math.floor(Math.random() * images.length));
@@ -89,7 +134,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
   }, [cannotChange, refresh]);
 
   return (
-    <section className="quote-image-stage" aria-label="Et citat fra Aalborg Karneval">
+    <section ref={stage} className={`quote-image-stage${fallbackFullscreen ? " quote-image-stage-expanded" : ""}`} aria-label="Et citat fra Aalborg Karneval">
       {images.length > 0 && <Image
         key={images[imageIndex]}
         className="quote-image-photo"
@@ -97,7 +142,7 @@ export default function HomeQuotes({ images }: { images: string[] }) {
         alt=""
         fill
         priority
-        sizes="(max-width: 720px) 100vw, calc(100vw - 244px)"
+        sizes={expanded ? "100vw" : "(max-width: 720px) 100vw, calc(100vw - 244px)"}
       />}
       <div className="quote-image-shade" />
       {selected ? <QuoteImageContent quote={selected} live={playing ? "off" : "polite"} /> : <div className="quote-image-content" aria-live="polite"><blockquote>{loading ? "…" : "Her er plads til den første stemme fra karneval."}</blockquote></div>}
@@ -128,6 +173,15 @@ export default function HomeQuotes({ images }: { images: string[] }) {
       >
         <span aria-hidden="true"><UiIcon name="refresh" /></span>
       </button>
+      <button
+        ref={fullscreenButton}
+        className="quote-image-refresh"
+        type="button"
+        onClick={() => { void toggleFullscreen(); }}
+        aria-label={expanded ? "Luk fuld skærm" : "Vis citat og billede i fuld skærm"}
+        aria-pressed={expanded}
+        title={expanded ? "Luk fuld skærm" : "Fuld skærm"}
+      ><UiIcon name={expanded ? "close" : "expand"} /></button>
       </div>
     </section>
   );
