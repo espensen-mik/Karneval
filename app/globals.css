@@ -1244,3 +1244,11 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
   .primary-nav { grid-template-columns: repeat(6, minmax(0,1fr)); }
   .primary-nav .nav-workshop-sub { display: none; }
 }
+
+.sidebar-footer { margin-top: auto; flex-shrink: 0; }
+.sidebar-footer .sidebar-credit { margin-top: 0; padding-top: 18px; }
+.sidebar-word-count { display: grid; gap: 4px; margin: 18px 12px 0; padding: 15px 0 0; border-top: 1px solid #d9cecf; text-align: center; }
+.sidebar-word-count > span { color: #53617b; font-size: 13px; }
+.sidebar-word-count strong { color: #b82226; font: 500 28px/1.15 "Funnel Display",sans-serif; font-variant-numeric: tabular-nums; }
+.sidebar-word-count small { color: #6f7790; font-size: 12px; }
+@media (max-width: 720px) { .sidebar-footer { display: contents; } .sidebar-word-count { display: none; } }

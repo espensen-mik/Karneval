@@ -3,6 +3,7 @@
 import UiIcon, { type IconName } from "./ui-icon";
 import Link from "next/link";
 import { WORKSHOP_PAGES } from "@/lib/workshop";
+import SidebarWordCount from "./sidebar-word-count";
 import KarmanautCredit from "./karmanaut-credit";
 import { Fragment, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -47,8 +48,11 @@ export default function Sidebar() {
           );
         })}
       </nav>
+      <div className="sidebar-footer">
+      <SidebarWordCount />
       <KarmanautCredit className="sidebar-credit" />
       <div className="sidebar-session"><button disabled={loggingOut} onClick={async () => { setLoggingOut(true); setLogoutError(""); try { const response = await fetch("/api/session", { method: "DELETE" }); if (!response.ok) throw new Error(); window.location.assign("/login"); } catch { setLogoutError("Prøv igen."); setLoggingOut(false); } }}>{loggingOut ? "Logger ud …" : "Log ud"}</button>{logoutError && <span role="alert">{logoutError}</span>}</div>
+      </div>
     </aside>
   );
 }
