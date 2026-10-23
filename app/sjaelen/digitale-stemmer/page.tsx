@@ -1,3 +1,9 @@
-import DigitalVoicesApp from '@/components/digital-voices-app';
-export const metadata = { title: 'Digitale stemmer · Sjælen af Karneval', robots: { index: false, follow: false } };
-export default function DigitalVoicesPage() { return <DigitalVoicesApp />; }
+import { redirect } from "next/navigation";
+export default async function LegacyVoicesPage({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}) {
+ const params=new URLSearchParams();
+ for (const [key,value] of Object.entries(await searchParams)) {
+  if(Array.isArray(value)) value.forEach(item=>params.append(key,item));
+  else if(value!==undefined) params.set(key,value);
+ }
+ redirect(`/den-digitale-sjael/udvalgte-stemmer${params.size ? `?${params}` : ""}`);
+}

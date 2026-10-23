@@ -170,7 +170,7 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
   return <div className={styles.archive}>
     <header className={styles.header}>
       <div><span className={styles.eyebrow}>MENNESKENE BAG KARNEVALLET</span><h1>Den digitale sjæl<span>.</span></h1><p>Find en stemme. Læs en historie. Bliv klogere på vores karneval.</p></div>
-      <div className={styles.headerActions}><Link className={styles.outlineButton} href="/sjaelen/digitale-stemmer">Digitale stemmer <UiIcon name="arrow" /></Link><Link className={styles.outlineButton} href="/den-digitale-sjael/analyse">Analyse <UiIcon name="arrow" /></Link><a className={styles.outlineButton} href="https://karneval.karmanaut.dk/sjaelen" target="_blank" rel="noopener noreferrer">Åbn spørgeskema <UiIcon name="arrow" /></a></div>
+      <div className={styles.headerActions}><Link className={styles.outlineButton} href="/den-digitale-sjael/udvalgte-stemmer">Udvalgte stemmer <UiIcon name="arrow" /></Link><Link className={styles.outlineButton} href="/den-digitale-sjael/analyse">Analyse <UiIcon name="arrow" /></Link><a className={styles.outlineButton} href="https://karneval.karmanaut.dk/sjaelen" target="_blank" rel="noopener noreferrer">Åbn spørgeskema <UiIcon name="arrow" /></a></div>
     </header>
 
     <section className={styles.overview} aria-label="Nøgletal for alle besvarelser">
@@ -217,7 +217,7 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
           </section>
         </footer>
       </div>}
-      {voiceTarget && <VoicePicker key={`${voiceTarget.response_id}:${voiceTarget.question_id}:${voiceTarget.answer_index}`} target={voiceTarget} onClose={() => setVoiceTarget(null)} onSaved={() => setNotice("Temaerne er gemt i Digitale stemmer.")} />}
+      {voiceTarget && <VoicePicker key={`${voiceTarget.response_id}:${voiceTarget.question_id}:${voiceTarget.answer_index}`} target={voiceTarget} onClose={() => setVoiceTarget(null)} onSaved={() => setNotice("Temaerne er gemt i Udvalgte stemmer.")} />}
     </dialog>
   </div>;
 }

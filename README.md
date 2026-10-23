@@ -79,9 +79,9 @@ Oversigten henter højst 25 besvarelser ad gangen. Nøgletal hentes uafhængigt 
 
 Verificeret med 1.000 isolerede svar, 40 sider, søgning, aldersfilter, sortering og direkte besvarelseslink. I den lokale produktionstest kom første side på 24 ms, mens statistik med vilje var forsinket til 834 ms; dette er ikke en måling eller garanti for Vercel-svartid eller samtidig belastning fra 1.000 brugere.
 
-### Digitale stemmer
+### Udvalgte stemmer
 
-`/sjaelen/digitale-stemmer` samler manuelt udvalgte, enkelte svar fra spørgeskemaet. I besvarelsens læsepanel åbner et klik på svaret eller “Tilføj til SJÆL” en modal med fælles temaer. Temaer kan oprettes i vælgeren; et svar kan knyttes til højst 20 temaer. Tomt temavalg fjerner kun udvalget. Samlingen har temafiltre, tekstsøgning og sideinddeling på 24 stemmer. “Hele besvarelsen” åbner den præcise kilde via det eksisterende passwordbeskyttede arkiv.
+`/den-digitale-sjael/udvalgte-stemmer` samler manuelt udvalgte, enkelte svar fra spørgeskemaet. I besvarelsens læsepanel åbner et klik på svaret eller “Tilføj til SJÆL” en modal med fælles temaer. Temaer kan oprettes i vælgeren; et svar kan knyttes til højst 20 temaer. Tomt temavalg fjerner kun udvalget. Samlingen har temafiltre, tekstsøgning og sideinddeling på 24 stemmer. “Hele besvarelsen” åbner den præcise kilde via det eksisterende passwordbeskyttede arkiv.
 
 Migration `20261020134701_digital_voices.sql` opretter `soul_voice_themes`, `soul_voices`, `soul_voice_theme_links` og to funktioner med invoker-rettigheder. Tabeller har RLS uden browserpolicies, ingen anon/authenticated-rettigheder og kun service_role-adgang gennem `/api/sjaelen/stemmer`. Funktionernes PUBLIC-execute er tilbagekaldt. Ingen nye pakker eller miljøvariabler.
 
@@ -95,7 +95,7 @@ Analysesiden viser fordelingen efter postby med antal, andel af alle besvarelser
 
 `lib/data/postal-cities.ts` er en lokal opslagstabel med 1.063 postnumre udledt fra Danmarks Statistiks POSTNR2/PNR20-metadata, hentet 21. oktober 2026: https://api.statbank.dk/v1/tableinfo/POSTNR2?format=JSON&lang=da. Kilde: Danmarks Statistik, CC BY 4.0; kildehenvisning vises på siden. Tabellen omfatter også postområder fra statistikkens historiske serier. Intet API kaldes ved visning, og ingen deltagerdata sendes til opslagstjenester. Den tidligere DAWA-postnummertjeneste returnerede HTTP 410 og bruges ikke.
 
-Ordskyens fælles kategorier, synonym-/variantgrupper og redaktionelle forbindelser blev nulstillet 22. oktober 2026 efter brugerens ønske. Digitale stemmers temaer og udvalg samt alle kildedata blev bevaret. Leg med ord bruger samme udvidede tekstgrundlag; dens lokale browserleg ændres ikke af nulstillingen af fælles kuratering.
+Ordskyens fælles kategorier, synonym-/variantgrupper og redaktionelle forbindelser blev nulstillet 22. oktober 2026 efter brugerens ønske. Udvalgte stemmers temaer og udvalg samt alle kildedata blev bevaret. Leg med ord bruger samme udvidede tekstgrundlag; dens lokale browserleg ændres ikke af nulstillingen af fælles kuratering.
 
 ### Ordsky med kontekst
 
