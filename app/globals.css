@@ -31,6 +31,7 @@ button { font: inherit; }
 .brand small { display: block; margin-top: 5px; color: var(--navy); font-size: 9px; letter-spacing: .15em; }
 .nav-label { padding: 0 11px 12px; color: #7b7890; font-size: 9px; letter-spacing: .15em; }
 .primary-nav { display: grid; gap: 4px; }
+@media (min-width: 721px) { .primary-nav { min-height: 0; overflow-y: auto; overscroll-behavior: contain; } }
 .nav-link {
   display: flex; gap: 12px; align-items: center; min-height: 43px; padding: 0 11px;
   color: #495573; border-radius: 5px; font-size: 13px; transition: background .18s, color .18s;
@@ -1234,3 +1235,9 @@ input[type="file"]::file-selector-button { margin-right: 12px; padding: 7px 11px
 
 .nav-digital-sub { font-size: 13px; }
 @media (max-width: 720px) { .primary-nav .nav-digital-sub { display: none; } }
+
+/* Workshop subpages have their own tabs on mobile. */
+@media (max-width: 720px) {
+  .primary-nav { grid-template-columns: repeat(6, minmax(0,1fr)); }
+  .primary-nav .nav-workshop-sub { display: none; }
+}

@@ -108,3 +108,10 @@ Skriftstørrelse følger lokal bidragstælling. Forbindelser er dokumenteret sam
 Nuancevisning uden valgte spor prioriterer den mindst hyppige del af ordforrådet over minimum. Med valgte spor prioriteres andelen i udsnittet divideret med andelen i det valgte grundmateriale; ingen signifikanstest. Dominerende ord kan skjules og gendannes, uden at bidragstællinger ændres. Ingen tilstand lagres i database eller browserlager. Fælles kuratering bruges ikke i denne uafhængige visning.
 
 SVG-kortet har pan, hjulzoom, zoomknapper, tilpas til hele kortet, node-træk og tastaturvalg/placering. Et træk registreres ikke som klik. Rektangulær tekstkollision holder ordene adskilt; layout falder til ro, og reduceret bevægelse respekteres. Unit tests dækker snit, filtrering, dokumenterede linjer, deterministiske grupper, sjældne ord, lokal specificitet, fraser og skjul/gendan uden datatab.
+
+
+### Sjælemøde
+
+Workshopmaterialet indtastes under `/sjaelemoede/karneval-er`, `/sjaelemoede/min-oplevelse` og `/sjaelemoede/sjaelen-af-karneval`. De tre grupper er faste (1–3). Egne overskrifter kan lukkes og genåbnes, og hvert udsagn har et selvstændigt ID og en reference til sin overskrift og gruppe. Enter gemmer et udsagn og gør feltet klar til det næste; Shift + Enter indsætter linjeskift. Historier gemmes med navn, og der er højst én samlet formulering pr. gruppe. Eksisterende materiale kan rettes uden at blive kopieret.
+
+`/api/sjaelemoede` bruger den eksisterende passwordsession, same-origin-kontrol og server-secret key. Migration `20261023060111_workshop_material.sql` opretter fire private tabeller med RLS og rettigheder udelukkende til `service_role`. Statement-RPC’en låser overskriften ved gemning, afviser nye udsagn under lukkede overskrifter og accepterer sikre genforsøg med samme ID. UI’en opretter nye ID’er efter succes, så ens udsagn fra forskellige bidrag stadig kan registreres særskilt. Redigering bruger `updated_at` som versionskontrol. Tekster bevares ved gemmefejl; arkivlister har serverpagination. Workshoptekster indgår foreløbigt ikke automatisk i de eksisterende ordanalyser eller citatbanken.

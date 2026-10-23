@@ -2,6 +2,7 @@
 
 import UiIcon, { type IconName } from "./ui-icon";
 import Link from "next/link";
+import { WORKSHOP_PAGES } from "@/lib/workshop";
 import KarmanautCredit from "./karmanaut-credit";
 import { Fragment, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -11,6 +12,7 @@ const links = [
   { href: "/kilder", label: "Kilder", icon: "arrow" },
   { href: "/citater", label: "Citater", icon: "quote" },
   { href: "/den-digitale-sjael", label: "Den digitale sjæl", icon: "digital" },
+  { href: "/sjaelemoede", label: "Sjælemøde", icon: "digital" },
   { href: "/sjaelen/ordnetvaerk", label: "SJÆLEN", icon: "soul" },
 ];
 
@@ -35,6 +37,7 @@ export default function Sidebar() {
               <span>{link.label}</span>
               {active && <span className="nav-dot" />}
             </Link>
+            {link.href === "/sjaelemoede" && pathname.startsWith("/sjaelemoede") && WORKSHOP_PAGES.map(page=><Link key={page.slug} className={`nav-soul-sub nav-workshop-sub${pathname===`/sjaelemoede/${page.slug}`?" active":""}`} href={`/sjaelemoede/${page.slug}`} aria-current={pathname===`/sjaelemoede/${page.slug}`?"page":undefined}>{page.label}</Link>)}
             {link.href === "/den-digitale-sjael" && pathname.startsWith("/den-digitale-sjael") && <Link className={`nav-soul-sub nav-digital-sub${pathname === "/den-digitale-sjael/analyse" ? " active" : ""}`} href="/den-digitale-sjael/analyse" aria-current={pathname === "/den-digitale-sjael/analyse" ? "page" : undefined}>Analyse</Link>}
             {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
             {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/leg-med-ord" ? " active" : ""}`} href="/sjaelen/leg-med-ord" aria-current={pathname === "/sjaelen/leg-med-ord" ? "page" : undefined}>Leg med ord</Link>}
