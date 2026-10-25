@@ -8,7 +8,7 @@
 .outline:hover { background: #f7efeb; border-color: #b82226; }
 .page :is(button,input,select,a,summary):focus-visible { outline: 3px solid #b82226; outline-offset: 4px; }
 .summary { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 28px 32px; border-radius: 9px; background: #d9232b; color: white; margin-bottom: 28px; }
-.summary dl { display: flex; gap: clamp(28px,4vw,64px); margin: 0; }
+.summary dl { display: flex; flex-wrap: wrap; row-gap: 24px; column-gap: clamp(28px,4vw,64px); margin: 0; }
 .summary dt { font-size: 15px; margin-bottom: 10px; }
 .summary dd { margin: 0; font: 500 38px/1 "Funnel Display",sans-serif; font-variant-numeric: tabular-nums; }
 .summary small { font-size: 17px; }
@@ -68,7 +68,6 @@
   .header h1 { font-size: 34px; }
   .summary { padding: 24px; }
   .summary dl { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  .summary dl > div:last-child { grid-column: 1/-1; }
   .summary dd { font-size: 34px; }
   .filters { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
   .filters > label:first-child { grid-column: 1/-1; }

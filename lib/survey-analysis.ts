@@ -26,6 +26,7 @@ export function analyzeSurvey(input: AnalysisResponse[]) {
   const histogram = (bins: typeof AGE_BINS | typeof VISIT_BINS, key: 'age' | 'participations') => bins.map(([label, min, max]) => ({ label, count: rows.filter(row => row[key] >= min && row[key] <= max).length }));
   const total = rows.length;
   return {
+    postalCodeCount: new Set(rows.map(row => row.postal_code?.trim()).filter(code => typeof code === "string" && /^\d{4}$/.test(code))).size,
     total, averageAge: total ? rows.reduce((sum, row) => sum + row.age, 0) / total : null,
     averageParticipations: total ? rows.reduce((sum, row) => sum + row.participations, 0) / total : null,
     ages: histogram(AGE_BINS, 'age'), participations: histogram(VISIT_BINS, 'participations'),

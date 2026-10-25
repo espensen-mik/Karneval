@@ -46,3 +46,10 @@ test('analysis fetches all database pages using only the required columns', asyn
   assert.ok(paths.every(path=>path.startsWith('survey_responses?select=id,age,participations,postal_code,carnival_is:answers->carnival_is&')));
   assert.ok(paths.every(path=>!path.includes('email')&&!path.includes('first_name')));
 });
+
+test('postcode KPI counts distinct reported four-digit codes, excluding missing and malformed values', () => {
+  const codes = ['9000', ' 9000 ', '9200', '9210', null, '', 'Aalborg', '123'];
+  const rows = codes.map((postal_code, i) => ({ ...row(String(i), 30, 2, []), postal_code }));
+  assert.equal(analyzeSurvey([...rows, rows[0]]).postalCodeCount, 3);
+  assert.equal(analyzeSurvey([]).postalCodeCount, 0);
+});
