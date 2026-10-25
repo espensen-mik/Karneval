@@ -112,9 +112,9 @@ SVG-kortet har pan, hjulzoom, zoomknapper, tilpas til hele kortet, node-træk og
 
 ### Sjælemøde
 
-Workshopmaterialet indtastes under `/sjaelemoede/karneval-er`, `/sjaelemoede/min-oplevelse` og `/sjaelemoede/sjaelen-af-karneval`. De tre grupper er faste (1–3). Egne overskrifter kan lukkes og genåbnes, og hvert udsagn har et selvstændigt ID og en reference til sin overskrift og gruppe. Enter gemmer et udsagn og gør feltet klar til det næste; Shift + Enter indsætter linjeskift. Historier gemmes med navn, og der er højst én samlet formulering pr. gruppe. Eksisterende materiale kan rettes uden at blive kopieret.
+Workshoppen er nu et rent læsearkiv under `/sjaelemoede/karneval-er`, `/sjaelemoede/min-oplevelse` og `/sjaelemoede/sjaelen-af-karneval`. Gruppe 1–3 og alle oprindelige overskrifter og tekster bevares. Udsagn vises i gruppernes egne samlinger med søgning og overskriftsgenveje; historier kan foldes ud; de tre gruppeformuleringer kan sammenlignes på samme side. Historierne havde ikke gruppetilknytning i datamodellen og får ingen opdigtet gruppering.
 
-`/api/sjaelemoede` bruger den eksisterende passwordsession, same-origin-kontrol og server-secret key. Migration `20261023060111_workshop_material.sql` opretter fire private tabeller med RLS og rettigheder udelukkende til `service_role`. Statement-RPC’en låser overskriften ved gemning, afviser nye udsagn under lukkede overskrifter og accepterer sikre genforsøg med samme ID. UI’en opretter nye ID’er efter succes, så ens udsagn fra forskellige bidrag stadig kan registreres særskilt. Redigering bruger `updated_at` som versionskontrol. Tekster bevares ved gemmefejl; arkivlister har serverpagination. Workshoptekster indgår foreløbigt ikke automatisk i de eksisterende ordanalyser eller citatbanken.
+`/api/sjaelemoede` tillader kun GET bag den eksisterende passwordsession. Serveren henter samtlige sider af de fire tabeller med stabile sorteringer og eksakte optællinger; der vises fejl frem for et ufuldstændigt arkiv. Migration `20261025194107_workshop_read_only.sql` fjerner skrive- og RPC-rettigheder fra serverrollen uden at ændre eller slette indhold. Tabeller, RLS og læseadgang bevares, og workshoptekster tæller stadig i sidemenuens ordtal. De indgår fortsat ikke automatisk i ordanalyserne eller citatbanken.
 
 ### Ordtal i sidebar
 

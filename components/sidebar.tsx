@@ -22,7 +22,7 @@ export default function Sidebar() {
   const [loggingOut, setLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${pathname.startsWith("/sjaelemoede") ? " sidebar-workshop" : ""}`}>
       <Link className="brand" href="/">
         <span className="brand-mark brand-mark-image"><img src="/logo/karmanaut_fav.svg" alt="" aria-hidden="true" /></span>
         <span>

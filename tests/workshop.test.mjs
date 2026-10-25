@@ -1,32 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { workshopMutation, workshopGroup, workshopId, WORKSHOP_PAGES } from '../lib/workshop.ts';
-const id='29f3012d-808a-4bce-8664-bd96b3cb1559';
-const heading='29f3012d-808a-4bce-8664-bd96b3cb1560';
-const updated_at='2026-10-23T08:00:00.000Z';
-test('three workshop pages and groups exist without fabricated material',()=>{
+import { WORKSHOP_PAGES, workshopGroups, readWorkshopArchive } from '../lib/workshop.ts';
+const archive={headings:[{id:'a',group_number:1,title:'Fællesskab'},{id:'b',group_number:2,title:'Frihed'},{id:'c',group_number:3,title:'Farver'}],statements:[{id:'1',heading_id:'a',text:'Plads til alle'},{id:'2',heading_id:'a',text:'Plads til alle'},{id:'3',heading_id:'b',text:'Venner'},{id:'4',heading_id:'c',text:'Kostumer'}],stories:[{id:'s',name:'Navn',text:'Original historie'}],summaries:[{group_number:1,text:'Gruppens egne ord'}]};
+test('archive keeps all three groups, original headings and repeated independent statements',()=>{
  assert.equal(WORKSHOP_PAGES.length,3);
- for(const group of [1,2,3])assert.equal(workshopGroup(group),group);
- for(const group of [0,4,'1',null])assert.throws(()=>workshopGroup(group));
+ const groups=workshopGroups(archive);
+ assert.deepEqual(groups.map(g=>g.number),[1,2,3]);
+ assert.deepEqual(groups.map(g=>g.totalStatements),[2,1,1]);
+ assert.equal(groups.flatMap(g=>g.headings.flatMap(h=>h.statements)).length,4);
+ assert.deepEqual(groups[0].headings[0].statements,archive.statements.slice(0,2));
 });
-test('statement identity and original heading survive idempotent retries',()=>{
- const body={resource:'statements',id,heading_id:heading,text:'  Plads til alle  ',group_number:99,closed:true};
- assert.deepEqual(workshopMutation(body,'POST').data,{id,heading_id:heading,text:'Plads til alle'});
- assert.deepEqual(workshopMutation(body,'POST'),workshopMutation(body,'POST'));
- assert.throws(()=>workshopMutation({...body,text:''},'POST'));
- assert.throws(()=>workshopMutation({...body,heading_id:'*'},'POST'));
+test('search narrows only the view and retains original group totals and untouched material',()=>{
+ const before=JSON.stringify(archive);
+ assert.equal(workshopGroups(archive,'plads')[0].matchedStatements,2);
+ assert.equal(workshopGroups(archive,'FÆLLESSKAB')[0].matchedStatements,2);
+ const filtered=workshopGroups(archive,'venner');
+ assert.equal(filtered[0].headings.length,0);assert.equal(filtered[0].totalStatements,2);
+ assert.equal(filtered[1].matchedStatements,1);assert.equal(JSON.stringify(archive),before);
 });
-test('heading transitions require an explicit boolean and a known version',()=>{
- assert.deepEqual(workshopMutation({resource:'headings',id,closed:true,updated_at},'PATCH').data,{id,closed:true});
- assert.throws(()=>workshopMutation({resource:'headings',id,closed:'true',updated_at},'PATCH'));
- assert.throws(()=>workshopMutation({resource:'headings',id,closed:true},'PATCH'));
- assert.deepEqual(workshopMutation({resource:'headings',id,group_number:2,title:'  Sammen  '},'POST').data,{id,group_number:2,title:'Sammen'});
+test('reader retrieves every page for every resource even under a lower server page cap',async()=>{
+ const sizes={workshop_headings:7,workshop_statements:1203,workshop_stories:15,workshop_summaries:3};
+ const result=await readWorkshopArchive(async path=>{
+  const url=new URL(path,'https://example.test/');const table=url.pathname.slice(1),offset=Number(url.searchParams.get('offset'));
+  return Response.json(Array.from({length:Math.min(100,sizes[table]-offset)},(_,i)=>({id:offset+i})),{headers:{'content-range':`*/${sizes[table]}`}});
+ });
+ assert.equal(result.statements.length,1203);assert.equal(result.headings.length,7);assert.equal(result.stories.length,15);assert.equal(result.summaries.length,3);
 });
-test('named stories and group summaries validate independently and ignore injected fields',()=>{
- assert.deepEqual(workshopMutation({resource:'stories',id,name:' Anna ',text:' En oplevelse ',email:'private@example.org'},'POST').data,{id,name:'Anna',text:'En oplevelse'});
- assert.deepEqual(workshopMutation({resource:'summaries',group_number:3,text:'Gruppens ord',updated_at},'PATCH').data,{group_number:3,text:'Gruppens ord'});
- assert.throws(()=>workshopMutation({resource:'summaries',group_number:4,text:'Ord'},'POST'));
- assert.throws(()=>workshopMutation({resource:'stories',id,name:'',text:'Ord'},'POST'));
- assert.throws(()=>workshopMutation({resource:'quotes',id,text:'Ord'},'POST'));
- assert.throws(()=>workshopId('*'));
+test('incomplete reads fail explicitly instead of presenting a partial archive',async()=>{
+ await assert.rejects(readWorkshopArchive(async()=>Response.json([],{headers:{'content-range':'*/100'}})));
+ assert.deepEqual(workshopGroups({headings:[],statements:[],stories:[],summaries:[]}).map(g=>g.totalStatements),[0,0,0]);
 });
