@@ -80,7 +80,23 @@ export function frequentWords(documents: SearchDocument[]) {
       seen.add(word); words.set(word, entry);
     }
   }
-  return [...words.values()].sort((a, b) => b.count - a.count || a.word.localeCompare(b.word, 'da')).slice(0, 20);
+  return [...words.values()].sort((a, b) => b.count - a.count || a.word.localeCompare(b.word, 'da'));
+}
+
+/** Draw from the entire eligible vocabulary, preferring words outside the last draw. */
+export function randomDiscoveryWords<T extends { word: string; count: number }>(words: T[], previous: string[] = [], random = Math.random): T[] {
+  const eligible = [...new Map(words.filter(word => word.count > 20).map(word => [word.word, word])).values()];
+  const shuffle = (items: T[]) => {
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    return items;
+  };
+  const seen = new Set(previous);
+  const fresh = shuffle(eligible.filter(word => !seen.has(word.word)));
+  const repeated = shuffle(eligible.filter(word => seen.has(word.word)));
+  return shuffle([...fresh, ...repeated].slice(0, 20));
 }
 
 export function searchMaterial(documents: SearchDocument[], query: string, source = '', page = 0) {

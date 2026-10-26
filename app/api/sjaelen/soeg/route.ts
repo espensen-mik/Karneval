@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const found = searchMaterial(documents, query, source, page);
     // Return bounded excerpts only; the full corpus stays on the protected server.
     const results = found.results.map(({ text, ...result }) => { void text; return result; });
-    return NextResponse.json({ ...found, results, words, documents: documents.length }, { headers: { 'Cache-Control': 'private, no-store' } });
+    return NextResponse.json({ ...found, results, words: words.filter(word => word.count > 20), documents: documents.length }, { headers: { 'Cache-Control': 'private, no-store' } });
   } catch {
     return NextResponse.json({ error: 'Søgningen kunne ikke hente alt materialet. Prøv igen om lidt.' }, { status: 503, headers: { 'Cache-Control': 'private, no-store' } });
   }

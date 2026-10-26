@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import UiIcon from './ui-icon';
-import { SEARCH_SOURCES, type SearchDocument } from '@/lib/soul-search';
+import { randomDiscoveryWords, SEARCH_SOURCES, type SearchDocument } from '@/lib/soul-search';
 import s from './soul-search.module.css';
 
 type Result = Omit<SearchDocument, 'text' | 'wordText'> & { excerpt: string };
@@ -23,6 +23,8 @@ export default function SoulSearchApp() {
   const page = Math.max(0, Number(params.get('page')) || 0);
   const [input, setInput] = useState(query);
   const [data, setData] = useState<SearchData | null>(null);
+  const [suggestions, setSuggestions] = useState<SearchData['words']>([]);
+  const [wordRefresh, setWordRefresh] = useState(0);
   const [loading, setLoading] = useState(true), [error, setError] = useState(''), [retry, setRetry] = useState(0);
   const resultsHeading = useRef<HTMLHeadingElement>(null);
   const hero = useRef<HTMLElement>(null);
@@ -41,7 +43,7 @@ export default function SoulSearchApp() {
     fetch(`/api/sjaelen/soeg?${search}`, { signal: controller.signal, cache: 'no-store' }).then(async response => {
       const value = await response.json();
       if (!response.ok) throw new Error(value.error || 'Søgningen kunne ikke gennemføres.');
-      if (!controller.signal.aborted) setData(value);
+      if (!controller.signal.aborted) { setData(value); setSuggestions(randomDiscoveryWords(value.words)); }
     }).catch(failure => { if (!controller.signal.aborted) setError(failure.message); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
@@ -66,8 +68,8 @@ export default function SoulSearchApp() {
       </form>
       <p className={s.intro}>Find ordene. Følg historierne. Opdag det, der binder os sammen.</p>
     </header>
-    {!query && <section className={s.words} aria-labelledby="frequent-heading"><h2 id="frequent-heading">20 ord, der går igen</h2>
-      {data && <><div className={s.wordList}>{data.words.map(word => <button key={word.word} onClick={() => navigate(word.word, '')} title={`${word.count} forekomster i ${word.texts} tekster`}>{word.word}<span>{word.count.toLocaleString('da-DK')}</span></button>)}</div><p className={s.caption}>Antal forekomster i citater og deltagernes tekster fra spørgeskema og Sjælemøde. Fyldeord og den faste sætningsstart er sorteret fra. Ordformer tælles hver for sig.</p>{!data.words.length && <p>Der er endnu ingen ord at vise.</p>}</>}
+    {!query && <section className={s.words} aria-labelledby="frequent-heading"><div className={s.wordsHeading}><h2 id="frequent-heading">Ord at gå på opdagelse i</h2><button className={s.refreshWords} type="button" disabled={loading || !data?.words.length} aria-label="Vis nye tilfældige ord" title="Vis nye tilfældige ord" onClick={() => { if (data) setSuggestions(previous => randomDiscoveryWords(data.words, previous.map(word => word.word))); setWordRefresh(value => value + 1); }}><UiIcon key={wordRefresh} name="refresh" className={wordRefresh ? s.refreshing : ''} /></button></div>
+      {data && <><div className={s.wordList} aria-live="polite" aria-atomic="true">{suggestions.map(word => <button key={word.word} onClick={() => navigate(word.word, '')} title={`${word.count} forekomster i ${word.texts} tekster`}>{word.word}<span>{word.count.toLocaleString('da-DK')}</span></button>)}</div><p className={s.caption}>Et tilfældigt udvalg af op til 20 ord med mere end 20 forekomster i citater, spørgeskemasvar og Sjælemøde. Fyldeord og den faste sætningsstart er sorteret fra. Ordformer tælles hver for sig.</p>{!suggestions.length && <p>Der er endnu ingen ord med mere end 20 forekomster.</p>}</>}
     </section>}
     {query && <section className={s.results} aria-labelledby="search-results">
       <nav className={s.filters} aria-label="Materialetype">{[['', 'Alt materiale'], ...Object.entries(SEARCH_SOURCES)].map(([key, label]) => <button key={key} aria-pressed={source === key} onClick={() => navigate(query, key)}>{label}</button>)}</nav>

@@ -14,7 +14,15 @@
 .searchForm button svg { width: 21px; height: 21px; }
 .intro { margin: 20px 0 0; color: #68748b; font-size: 16px; line-height: 1.6; }
 .words { max-width: 760px; margin: 64px auto 60px; text-align: center; }
-.words h2 { margin: 0 0 22px; font-size: 13px; font-weight: 400; color: #727a88; letter-spacing: .08em; }
+.wordsHeading { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 18px; }
+.words h2 { margin: 0; font-size: 13px; font-weight: 400; color: #727a88; letter-spacing: .08em; }
+.refreshWords { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #a34543; cursor: pointer; }
+.refreshWords:hover:not(:disabled) { background: #f7e8e5; color: #b82226; }
+.refreshWords:disabled { opacity: .4; cursor: default; }
+.refreshWords svg { width: 16px; height: 16px; }
+.refreshing { animation: refreshWords .3s ease-out; }
+@keyframes refreshWords { from { transform: rotate(-120deg); } to { transform: rotate(0); } }
+@media (prefers-reduced-motion: reduce) { .refreshing { animation: none; } }
 .wordList { display: flex; flex-wrap: wrap; justify-content: center; column-gap: 22px; row-gap: 8px; }
 .wordList button { display: inline-flex; gap: 6px; align-items: baseline; border: 0; border-radius: 4px; padding: 5px 0; background: transparent; color: var(--navy); font: inherit; font-size: 18px; cursor: pointer; }
 .wordList button:hover { color: #bc2428; }
@@ -63,6 +71,7 @@
   .searchForm button { width: 44px; height: 44px; }
   .intro { font-size: 14px; padding: 0 8px; }
   .words { margin: 42px auto; }
+  .refreshWords { width: 44px; height: 44px; }
   .wordList { column-gap: 17px; row-gap: 6px; }
   .wordList button { font-size: 17px; min-height: 40px; }
   .searching .hero h1 { font-size: 36px; }

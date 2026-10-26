@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readSearchMaterial, searchDocuments, searchMaterial, frequentWords, SEARCH_TABLES } from '../lib/soul-search.ts';
+import { readSearchMaterial, searchDocuments, searchMaterial, frequentWords, randomDiscoveryWords, SEARCH_TABLES } from '../lib/soul-search.ts';
 
 const tables = {
  quotes: [{id:'q1', quote_text:'Nye venner. Nye møder!',person_name:'Citatnavn',quote_source:'Avisen'}],
@@ -30,6 +30,20 @@ test('original destinations identify workshop group, source, quote and full surv
  assert.equal(docs.find(d=>d.id==='survey:r1:memory:0').href,'/den-digitale-sjael?response=r1');
  assert.equal(docs.find(d=>d.id==='quote:q1').href,'/citater#citat-q1');
  assert.equal(docs.find(d=>d.id==='source:k1').href,'/kilder#source-k1');
+});
+test('discovery draws from the full vocabulary above twenty and avoids the previous draw when possible',()=>{
+ const pool=Array.from({length:80},(_,i)=>({word:`ord${i}`,count:21+i,texts:i+1}));
+ const first=randomDiscoveryWords([...pool,{word:'kun-tyve',count:20}],[],()=>0);
+ assert.equal(first.length,20);assert.equal(new Set(first.map(w=>w.word)).size,20);
+ assert.ok(first.every(w=>w.count>20));
+ const next=randomDiscoveryWords(pool,first.map(w=>w.word),()=>0);
+ assert.equal(next.length,20);
+ assert.ok(next.every(w=>!first.some(old=>old.word===w.word)));
+ const few=randomDiscoveryWords(pool.slice(0,7),pool.slice(0,7).map(w=>w.word),()=>0);
+ assert.equal(few.length,7);assert.equal(new Set(few.map(w=>w.word)).size,7);
+ assert.deepEqual(randomDiscoveryWords([{word:'sjældent',count:20}]),[]);
+ const all=frequentWords([{wordText:Array.from({length:30},(_,i)=>`test${String.fromCharCode(97+Math.floor(i/26))}${String.fromCharCode(97+i%26)}`).join(' ')}]);
+ assert.equal(all.length,30); // candidate vocabulary must not be capped at the old top twenty
 });
 test('word counts are occurrences, exclude metadata, stopwords, fixed prompt and structured no',()=>{
  const words=frequentWords(searchDocuments(tables));
