@@ -6,8 +6,9 @@ import { fetchJson } from "@/lib/fetch-json";
 import { WORKSHOP_PAGES, workshopGroups, type WorkshopArchive, type WorkshopSection } from "@/lib/workshop";
 import s from "./workshop.module.css";
 
-function StoryText({text}:{text:string}) {
+function StoryText({text,forceExpanded=false}:{text:string;forceExpanded?:boolean}) {
   const [expanded,setExpanded]=useState(false);
+  useEffect(()=>{if(forceExpanded)setExpanded(true);},[forceExpanded]);
   const collapsible=text.length>280||text.split(/\r?\n/).length>5;
   return <><p className={expanded||!collapsible?s.storyText:`${s.storyText} ${s.storyPreview}`}>{text}</p>{collapsible&&<button type="button" className={s.readMore} aria-expanded={expanded} onClick={()=>setExpanded(value=>!value)}>{expanded?"Fold historien sammen":"Læs hele historien"}<span aria-hidden="true">{expanded?"−":"+"}</span></button>}</>;
 }
@@ -17,6 +18,15 @@ export default function WorkshopApp({section}:{section:WorkshopSection}) {
   const [archive,setArchive]=useState<WorkshopArchive|null>(null);
   const [loading,setLoading]=useState(true),[error,setError]=useState("");
   const [reload,setReload]=useState(0),[group,setGroup]=useState(1),[search,setSearch]=useState("");
+  const [anchor,setAnchor]=useState("");
+  useEffect(()=>{
+    const selected=Number(new URLSearchParams(window.location.search).get("gruppe"));
+    if([1,2,3].includes(selected))setGroup(selected);
+    setAnchor(window.location.hash.slice(1));
+  },[]);
+  useEffect(()=>{
+    if(!loading&&anchor)document.getElementById(anchor)?.scrollIntoView({block:"start"});
+  },[loading,anchor,group]);
   useEffect(()=>{
     const controller=new AbortController();setLoading(true);setError("");
     fetchJson<WorkshopArchive>("/api/sjaelemoede",controller.signal,20000)
@@ -44,8 +54,8 @@ export default function WorkshopApp({section}:{section:WorkshopSection}) {
         <div className={s.groupHeading}><h2>Gruppe {group}</h2><p>{query?`${current.matchedStatements} udsagn matcher din søgning`:`${current.totalHeadings} overskrifter · ${current.totalStatements} udsagn`}</p></div>
         {current.headings.length>0?<><nav className={s.headingIndex} aria-label={`Overskrifter fra gruppe ${group}`}>{current.headings.map(heading=><a key={heading.id} href={`#workshop-${heading.id}`}>{heading.title}<span>{heading.statements.length}</span></a>)}</nav><div className={s.statementGrid}>{current.headings.map((heading,index)=><section key={heading.id} id={`workshop-${heading.id}`} className={s.statementCard}><header><span className={s.cardNumber}>{String(index+1).padStart(2,"0")}</span><div><h3>{heading.title}</h3><span>{heading.statements.length} udsagn</span></div></header>{heading.statements.length?<ul>{heading.statements.map(statement=><li key={statement.id}>{statement.text}</li>)}</ul>:<p className={s.muted}>Der er ikke registreret udsagn under denne overskrift.</p>}</section>)}</div></>:<div className={s.empty}>{query?"Ingen udsagn matcher. Prøv et andet ord eller vælg en anden gruppe.":"Der er ikke registreret udsagn fra denne gruppe."}</div>}
       </>}
-      {section==="min-oplevelse"&&<>{query&&<p className={s.collectionNote} role="status">{stories.length} af {archive.stories.length} historier</p>}{stories.length?<div className={s.storyGrid}>{stories.map((story,index)=><article key={story.id} className={s.story}><header><span className={s.cardNumber}>{String(index+1).padStart(2,"0")}</span><h2>{story.name}</h2></header><StoryText text={story.text}/></article>)}</div>:<div className={s.empty}>{query?"Ingen historier matcher din søgning.":"Der er ikke registreret personlige historier."}</div>}</>}
-      {section==="sjaelen-af-karneval"&&<div className={s.summaries}>{[1,2,3].map(number=>{const summary=archive.summaries.find(item=>item.group_number===number);return <section className={s.summary} key={number}><header><span className={s.summaryNumber}>{String(number).padStart(2,"0")}</span><h2>Gruppe {number}</h2></header>{summary?<p>{summary.text}</p>:<p className={s.muted}>Ingen formulering er registreret fra denne gruppe.</p>}</section>;})}</div>}
+      {section==="min-oplevelse"&&<>{query&&<p className={s.collectionNote} role="status">{stories.length} af {archive.stories.length} historier</p>}{stories.length?<div className={s.storyGrid}>{stories.map((story,index)=><article key={story.id} id={`story-${story.id}`} className={s.story}><header><span className={s.cardNumber}>{String(index+1).padStart(2,"0")}</span><h2>{story.name}</h2></header><StoryText text={story.text} forceExpanded={anchor===`story-${story.id}`}/></article>)}</div>:<div className={s.empty}>{query?"Ingen historier matcher din søgning.":"Der er ikke registreret personlige historier."}</div>}</>}
+      {section==="sjaelen-af-karneval"&&<div className={s.summaries}>{[1,2,3].map(number=>{const summary=archive.summaries.find(item=>item.group_number===number);return <section className={s.summary} key={number} id={`summary-${number}`}><header><span className={s.summaryNumber}>{String(number).padStart(2,"0")}</span><h2>Gruppe {number}</h2></header>{summary?<p>{summary.text}</p>:<p className={s.muted}>Ingen formulering er registreret fra denne gruppe.</p>}</section>;})}</div>}
     </>}
   </div>;
 }

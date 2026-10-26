@@ -31,6 +31,9 @@ export default function SourcesApp() {
     finally { setLoading(false); }
   }
   useEffect(() => { void loadSources(); }, []);
+  useEffect(() => {
+    if (!loading && window.location.hash.startsWith("#source-")) document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ block: "center" });
+  }, [loading]);
 
   async function saveSource(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -94,7 +97,7 @@ export default function SourcesApp() {
         <section className="sources-collection" aria-labelledby="source-collection-heading" aria-busy={loading}>
           <div className="sources-collection-top"><h2 id="source-collection-heading">Kilderegister</h2>{!loading && !loadError && <span className="result-count">{sources.length} KILDER</span>}</div>
           {loading ? <p className="sources-empty" role="status">Henter kilder …</p> : loadError ? <div className="sources-empty"><p className="form-message error" role="alert">{loadError}</p><button className="quiet-button" onClick={() => void loadSources()}>Prøv igen</button></div> : sources.length === 0 ? <div className="sources-empty"><h3>Ingen kilder endnu</h3><p>Tilføj den første kilde med et link eller en PDF.</p></div> : sources.map((source) => (
-            <article className="registered-source" key={source.id}>
+            <article className="registered-source" key={source.id} id={`source-${source.id}`}>
               <div className="source-kind">{source.file_path ? "PDF" : "URL"}</div>
               <h3>{source.title}</h3>
               <p className="source-creator">{source.creator} · <time dateTime={source.source_date}>{new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(source.source_date))}</time></p>

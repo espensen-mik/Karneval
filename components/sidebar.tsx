@@ -14,7 +14,7 @@ const links = [
   { href: "/citater", label: "Citater", icon: "quote" },
   { href: "/den-digitale-sjael", label: "Den digitale sjæl", icon: "digital" },
   { href: "/sjaelemoede", label: "Sjælemøde", icon: "digital" },
-  { href: "/sjaelen/ordnetvaerk", label: "SJÆLEN", icon: "soul" },
+  { href: "/sjaelen/soeg", label: "SJÆLEN", icon: "soul" },
 ];
 
 export default function Sidebar() {
@@ -22,7 +22,7 @@ export default function Sidebar() {
   const [loggingOut, setLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
   return (
-    <aside className={`sidebar${pathname.startsWith("/sjaelemoede") ? " sidebar-workshop" : ""}`}>
+    <aside className={`sidebar${pathname.startsWith("/sjaelemoede") ? " sidebar-workshop" : pathname.startsWith("/sjaelen/") ? " sidebar-soul" : ""}`}>
       <Link className="brand" href="/">
         <span className="brand-mark brand-mark-image"><img src="/logo/karmanaut_fav.svg" alt="" aria-hidden="true" /></span>
         <span>
@@ -31,9 +31,9 @@ export default function Sidebar() {
       </Link>
       <nav className="primary-nav" aria-label="Hovedmenu">
         {links.map((link) => {
-          const active = link.href === "/" ? pathname === "/" : link.href === "/sjaelen/ordnetvaerk" ? pathname.startsWith("/sjaelen/") : pathname.startsWith(link.href);
+          const active = link.href === "/" ? pathname === "/" : link.href === "/sjaelen/soeg" ? pathname.startsWith("/sjaelen/") : pathname.startsWith(link.href);
           return (
-            <Fragment key={link.href}><Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen/ordnetvaerk" ? " nav-soul" : ""}`} href={link.href}>
+            <Fragment key={link.href}><Link className={`${active ? "nav-link active" : "nav-link"}${link.href === "/sjaelen/soeg" ? " nav-soul" : ""}`} href={link.href}>
               <span className="nav-icon" aria-hidden="true"><UiIcon name={link.icon as IconName} /></span>
               <span>{link.label}</span>
               {active && <span className="nav-dot" />}
@@ -41,9 +41,10 @@ export default function Sidebar() {
             {link.href === "/sjaelemoede" && pathname.startsWith("/sjaelemoede") && WORKSHOP_PAGES.map(page=><Link key={page.slug} className={`nav-soul-sub nav-workshop-sub${pathname===`/sjaelemoede/${page.slug}`?" active":""}`} href={`/sjaelemoede/${page.slug}`} aria-current={pathname===`/sjaelemoede/${page.slug}`?"page":undefined}>{page.label}</Link>)}
             {link.href === "/den-digitale-sjael" && pathname.startsWith("/den-digitale-sjael") && <Link className={`nav-soul-sub nav-digital-sub${pathname === "/den-digitale-sjael/udvalgte-stemmer" ? " active" : ""}`} href="/den-digitale-sjael/udvalgte-stemmer" aria-current={pathname === "/den-digitale-sjael/udvalgte-stemmer" ? "page" : undefined}>Udvalgte stemmer</Link>}
             {link.href === "/den-digitale-sjael" && pathname.startsWith("/den-digitale-sjael") && <Link className={`nav-soul-sub nav-digital-sub${pathname === "/den-digitale-sjael/analyse" ? " active" : ""}`} href="/den-digitale-sjael/analyse" aria-current={pathname === "/den-digitale-sjael/analyse" ? "page" : undefined}>Analyse</Link>}
-            {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
-            {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/leg-med-ord" ? " active" : ""}`} href="/sjaelen/leg-med-ord" aria-current={pathname === "/sjaelen/leg-med-ord" ? "page" : undefined}>Leg med ord</Link>}
-            {link.href === "/sjaelen/ordnetvaerk" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/ordsky" ? " active" : ""}`} href="/sjaelen/ordsky" aria-current={pathname === "/sjaelen/ordsky" ? "page" : undefined}>Ordsky</Link>}
+            {link.href === "/sjaelen/soeg" && pathname.startsWith("/sjaelen/") && <Link className={`nav-soul-sub${pathname === "/sjaelen/ordnetvaerk" ? " active" : ""}`} href="/sjaelen/ordnetvaerk" aria-current={pathname === "/sjaelen/ordnetvaerk" ? "page" : undefined}>Sjælerejse</Link>}
+            {link.href === "/sjaelen/soeg" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/kuratering" ? " active" : ""}`} href="/sjaelen/kuratering" aria-current={pathname === "/sjaelen/kuratering" ? "page" : undefined}>Kuratering & visning</Link>}
+            {link.href === "/sjaelen/soeg" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/leg-med-ord" ? " active" : ""}`} href="/sjaelen/leg-med-ord" aria-current={pathname === "/sjaelen/leg-med-ord" ? "page" : undefined}>Leg med ord</Link>}
+            {link.href === "/sjaelen/soeg" && pathname.startsWith("/sjaelen") && <Link className={`nav-soul-sub${pathname === "/sjaelen/ordsky" ? " active" : ""}`} href="/sjaelen/ordsky" aria-current={pathname === "/sjaelen/ordsky" ? "page" : undefined}>Ordsky</Link>}
             </Fragment>
           );
         })}

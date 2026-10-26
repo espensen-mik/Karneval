@@ -119,3 +119,11 @@ Workshoppen er nu et rent læsearkiv under `/sjaelemoede/karneval-er`, `/sjaelem
 ### Ordtal i sidebar
 
 Desktopmenuen viser det samlede antal ord i citattekster, alle spørgeskemaets tekstfelter og de tre typer workshoptekster. Navne, spørgsmål, workshopoverskrifter og øvrige metadata indgår ikke. Gentagelser tælles; et spørgeskemasvar, der også findes som citat, tæller begge steder. Bindestreger og apostroffer inde i et ord bevares ved optællingen. `material_word_count()` returnerer kun aggregerede tal og kan udelukkende kaldes af serverens `service_role`. `/api/ordtal` kræver passwordsession og deler servercache i 60 sekunder. Desktopklienten opdaterer ved navigation og cirka hvert minut, når siden er synlig. Der hentes intet ordtal på mobil.
+
+### Søg i sjælen
+
+`/sjaelen/soeg` er den nye passwordbeskyttede indgang fra menupunktet SJÆLEN. Den offentlige formular `/sjaelen` er uændret. Den eksisterende visualisering på `/sjaelen/ordnetvaerk` hedder nu Sjælerejse og bevarer sine links og visningsindstillinger.
+
+Søge-API'et `/api/sjaelen/soeg` læser alle sider af citater, alle kendte spørgeskemafelter (et resultat pr. enkeltstående svar), workshopoverskrifter/udsagn/historier/gruppeformuleringer og kilderegisterets titel/forfatter/filnavn. PDF-indhold og eksterne artiklers indhold er ikke indekseret. Kontakttabellen læses aldrig. Udvalgte stemmer findes via deres oprindelige besvarelser; kuraterings- og systemtabeller indekseres ikke som selvstændige tekster.
+
+Søgningen er bogstavuafhængig deltekstssøgning med alle søgeord i samme resultat, materialefilter og 20 resultater pr. side. Originaltekst og metadata bevares; browseren får kun uddrag. Indekset deles i op til 30 sekunder pr. serverinstans, hvorefter det genindlæses. Ingen nye tabeller, migrationer eller pakker. Top-20 tæller ordforekomster i bidragsteksterne, uden metadata, stopord, enkeltbogstaver og den faste sætningsindledning. Ordformer holdes adskilt, og overførte citater tæller også i den oprindelige besvarelse. Manglende læsning af en datakilde giver en fejl frem for et ufuldstændigt resultat.
