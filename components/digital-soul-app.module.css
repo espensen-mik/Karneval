@@ -177,7 +177,9 @@
 .selectAnswer:focus-visible { outline: 3px solid #b82226; outline-offset: 3px; }
 .answerText { display: block; font-size: 19px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
 .answerAction { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 500; color: #b82226; margin-top: 10px; min-height: 32px; }
-.quoteAction { display: inline-flex; align-items: center; gap: 8px; margin: -4px 12px 24px; padding: 8px 0; border: 0; border-bottom: 1px solid #dfc9bd; background: transparent; color: #b82226; font: inherit; font-size: 14px; cursor: pointer; min-height: 40px; }
-.quoteAction:hover { color: var(--navy); border-color: currentColor; }
+.quoteAction { display: inline-flex; align-items: center; justify-content: center; gap: 9px; max-width: calc(100% - 24px); margin: 0 12px 24px; padding: 10px 14px; border: 1px solid #d6dae2; border-radius: 6px; background: #f2f4f8; color: var(--navy); font: inherit; font-size: 14px; font-weight: 500; line-height: 1.4; text-align: left; cursor: pointer; min-height: 44px; transition: background 150ms ease, border-color 150ms ease; }
+.quoteAction svg { width: 18px; height: 18px; flex-shrink: 0; }
+.quoteAction:hover:not(:disabled) { background: #e6eaf1; border-color: #929db0; }
+.quoteAction:disabled { opacity: .55; cursor: wait; }
 .quoteAction:focus-visible { outline: 3px solid #b82226; outline-offset: 4px; }
 @media (max-width: 700px) { .selectAnswer { padding: 12px 8px; } .answerText { font-size: 18px; } .answerAction { min-height: 40px; } }
