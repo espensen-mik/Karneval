@@ -35,12 +35,7 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
   const [age, setAge] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [deleteText, setDeleteText] = useState("");
-  const [deleting, setDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState("");
   const [notice, setNotice] = useState("");
-  const deleteInput = useRef<HTMLInputElement>(null);
   const [reload, setReload] = useState(0);
   const pendingSelection = useRef<number | null>(null);
   const scrollToCollection = useRef(false);
@@ -95,8 +90,6 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
       scrollToCollection.current = false;
     }
   }, [loading]);
-  useEffect(() => { setConfirmDelete(false); setDeleteText(""); setDeleteError(""); }, [selected]);
-  useEffect(() => { if (confirmDelete) deleteInput.current?.focus(); }, [confirmDelete]);
   const current = selected === null ? null : rows[selected];
   const currentResponseId = current?.id;
   useEffect(() => {
@@ -112,22 +105,6 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
   const pageNumbers = Array.from({ length: pageCount }, (_, index) => index).filter(index => pageCount <= 7 || index === 0 || index === pageCount - 1 || Math.abs(index - page) <= 1);
   const pending = loading || searchPending;
   const filtered = Boolean(responseId || search || age !== "all" || favoritesOnly);
-  async function deleteResponse() {
-    if (!current || deleteText !== "SLET" || deleting) return;
-    const target = current;
-    setDeleting(true); setDeleteError("");
-    try {
-      const response = await fetch("/api/den-digitale-sjael", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: target.id, confirmation: deleteText }) });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Besvarelsen kunne ikke slettes.");
-      dialog.current?.close(); setSelected(null); pendingSelection.current = null;
-      setNotice(`Besvarelsen fra ${target.first_name} er slettet.`);
-      if (rows.length === 1 && page > 0) setPage(value => value - 1);
-      setReload(value => value + 1);
-      collectionHeading.current?.focus({ preventScroll: true });
-    } catch (failure) { setDeleteError(failure instanceof Error ? failure.message : "Besvarelsen kunne ikke slettes."); }
-    finally { setDeleting(false); }
-  }
   useEffect(() => {
     if (selected === null && favoriteDirty.current) {
       favoriteDirty.current = false;
@@ -200,21 +177,11 @@ export default function DigitalSoulApp({ initialResponseId = "" }: { initialResp
 
     <dialog className={styles.reader} ref={dialog} aria-labelledby="response-title" onClose={() => { if (!dialog.current?.open) setSelected(null); }} onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
       {current && <div className={styles.readerContent} ref={readerTop}>
-        <div className={styles.readerBar}><div className={styles.readerIdentity}><span>Besvarelse {page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1} af {matched}</span><span className={styles.readerName}>{current.first_name} · {current.age} år</span></div><div className={styles.readerBarActions}>{favoriteButton(current, true)}<button className={styles.closeButton} disabled={deleting} onClick={() => dialog.current?.close()} aria-label="Luk besvarelse"><UiIcon name="close" /></button></div></div>
+        <div className={styles.readerBar}><div className={styles.readerIdentity}><span>Besvarelse {page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1} af {matched}</span><span className={styles.readerName}>{current.first_name} · {current.age} år</span></div><div className={styles.readerBarActions}>{favoriteButton(current, true)}<button className={styles.closeButton} onClick={() => dialog.current?.close()} aria-label="Luk besvarelse"><UiIcon name="close" /></button></div></div>
         <header className={styles.person}><span className={styles.eyebrow}>ET MENNESKES KARNEVAL</span><h2 id="response-title" ref={readerTitle} tabIndex={-1}>{current.first_name}<span>{current.age} år</span></h2><dl><div><dt>Modtaget</dt><dd>{date(current.created_at)}</dd></div><div><dt>Postnummer</dt><dd>{current.postal_code}</dd></div><div><dt>Deltaget</dt><dd>Cirka {current.participations} gange</dd></div></dl></header>
         {quoteStatus?.response === current.id && quoteStatus.error && <p className={styles.notice} role="alert">{quoteStatus.error} <button className={styles.textButton} onClick={() => setQuoteReload(value => value + 1)}>Prøv igen</button></p>}
         {favoriteError && <p className={styles.notice} role="alert">{favoriteError}</p>}<article className={styles.answers}>{SURVEY_QUESTIONS.filter(question => question.id !== "words" || current.answers.words?.length).map((question, index) => <section key={question.id}><h3><span>{String(index + 1).padStart(2, "0")}</span>{question.title}</h3><div>{current.answers[question.id]?.length ? current.answers[question.id].map((answer, i) => <div key={i}><button className={styles.selectAnswer} aria-label={`Tilføj svar ${i + 1} til SJÆL: ${question.title}`} onClick={() => setVoiceTarget({ response_id: current.id, question_id: question.id, answer_index: i, text: answer })}><span className={styles.answerText}>{question.kind === "sentences" ? "Aalborg Karneval er… " : ""}{answer}</span><span className={styles.answerAction}>Tilføj til SJÆL <UiIcon name="arrow" /></span></button>{current.publication_permission && <button type="button" className={styles.quoteAction} disabled={quoteStatus?.response !== current.id || Boolean(quoteStatus.error)} onClick={() => { const key = surveyAnswerKey(current.id, question.id, i); const existing = quoteStatus?.ids[key]; if (existing) { window.location.assign(`/citater#citat-${existing}`); return; } try { sessionStorage.setItem(QUOTE_DRAFT_KEY, JSON.stringify({ ...surveyQuoteDraft(answer, current.first_name, current.age, question.kind === "sentences"), survey_answer_key: key })); window.location.assign("/citater?opret=1"); } catch { setNotice("Citatet kunne ikke overføres. Prøv at tillade browserens lokale lager."); } }}>{quoteStatus?.response !== current.id ? <><UiIcon name="message" />Tjekker citatstatus…</> : quoteStatus.ids[surveyAnswerKey(current.id, question.id, i)] ? <>Allerede tilføjet · Se citat <UiIcon name="check" /></> : <><UiIcon name="message" />Tilføj som citat</>}</button>}</div>) : <p className={styles.unanswered}>Ikke besvaret</p>}</div></section>)}</article>
-        <footer className={styles.readerFooter}><p>{current.publication_permission ? "Må citeres med fornavn og alder." : "Må ikke citeres offentligt."}<br />{current.contact_permission ? "Har sagt ja til senere kontakt." : "Ønsker ikke senere kontakt."}</p><div><button className={styles.outlineButton} disabled={deleting || (page === 0 && selected === 0)} onClick={() => move(-1)}>← Forrige svar</button><button className={styles.readButton} disabled={deleting || page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1 >= matched} onClick={() => move(1)}>Næste svar →</button></div><button className={styles.textButton} disabled={deleting} onClick={() => dialog.current?.close()}>Tilbage til overblikket</button>
-          <section className={styles.deleteArea} aria-label="Slet besvarelse">
-            {confirmDelete ? <>
-              <h3>Slet besvarelsen fra {current.first_name}, {current.age} år?</h3>
-              <p>Alle svar og tilknyttede kontaktoplysninger slettes permanent. Det kan ikke fortrydes.</p>
-              <label htmlFor="delete-survey-confirmation">Skriv <strong>SLET</strong> for at bekræfte</label>
-              <input id="delete-survey-confirmation" ref={deleteInput} value={deleteText} disabled={deleting} onChange={event => setDeleteText(event.target.value)} autoComplete="off" autoCapitalize="characters" spellCheck={false} />
-              {deleteError && <p role="alert">{deleteError}</p>}
-              <div><button className={styles.outlineButton} disabled={deleting} onClick={() => { setConfirmDelete(false); setDeleteText(""); setDeleteError(""); }}>Annuller</button><button className={styles.readButton} disabled={deleting || deleteText !== "SLET"} onClick={() => void deleteResponse()}>{deleting ? "Sletter …" : "Slet permanent"}</button></div>
-            </> : <button className={styles.deleteTrigger} disabled={deleting} onClick={() => setConfirmDelete(true)}>Slet besvarelse</button>}
-          </section>
+        <footer className={styles.readerFooter}><p>{current.publication_permission ? "Må citeres med fornavn og alder." : "Må ikke citeres offentligt."}<br />{current.contact_permission ? "Har sagt ja til senere kontakt." : "Ønsker ikke senere kontakt."}</p><div><button className={styles.outlineButton} disabled={page === 0 && selected === 0} onClick={() => move(-1)}>← Forrige svar</button><button className={styles.readButton} disabled={page * ARCHIVE_PAGE_SIZE + (selected ?? 0) + 1 >= matched} onClick={() => move(1)}>Næste svar →</button></div><button className={styles.textButton} onClick={() => dialog.current?.close()}>Tilbage til overblikket</button>
         </footer>
       </div>}
       {voiceTarget && <VoicePicker key={`${voiceTarget.response_id}:${voiceTarget.question_id}:${voiceTarget.answer_index}`} target={voiceTarget} onClose={() => setVoiceTarget(null)} onSaved={() => setNotice("Temaerne er gemt i Udvalgte stemmer.")} />}
